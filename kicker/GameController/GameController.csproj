@@ -1,0 +1,95 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <ProjectGuid>{768221EA-AEDD-45E5-8A42-00C2420CF60A}</ProjectGuid>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyOriginatorKeyFile />
+    <FileUpgradeFlags />
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AssemblyTitle>GameController</AssemblyTitle>
+    <Company>Hochschule Regensburg</Company>
+    <Product>Kickermat</Product>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Copyright>Copyright © 2010</Copyright>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="EmguController\EmguControllerUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="EmguController\EmguControllerUserControl.Designer.cs">
+      <DependentUpon>EmguControllerUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Manual\ManualGameControllerUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Manual\ManualGameControllerUserControl.Designer.cs">
+      <DependentUpon>ManualGameControllerUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Update="SmoothingAdvanced\SmoothingAdvancedGameControllerUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="SmoothingAdvanced\SmoothingAdvancedGameControllerUserControl.Designer.cs">
+      <DependentUpon>SmoothingAdvancedGameControllerUserControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Calibration\Calibration.csproj" />
+    <ProjectReference Include="..\Coach\Coach.csproj" />
+    <ProjectReference Include="..\Communication\Communication.csproj" />
+    <ProjectReference Include="..\Game\Game.csproj" />
+    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
+    <ProjectReference Include="..\ObjectDetection\ObjectDetection.csproj" />
+    <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="EmguController\EmguControllerUserControl.resx">
+      <DependentUpon>EmguControllerUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Manual\ManualGameControllerUserControl.resx">
+      <DependentUpon>ManualGameControllerUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SmoothingAdvanced\SmoothingAdvancedGameControllerUserControl.resx">
+      <DependentUpon>SmoothingAdvancedGameControllerUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+</Project>

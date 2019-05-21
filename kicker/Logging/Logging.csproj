@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <ProjectGuid>{C6DF55CC-4FC8-4C0C-AD11-2AD23D9F4FB3}</ProjectGuid>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyOriginatorKeyFile />
+    <FileUpgradeFlags />
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AssemblyTitle>Logging</AssemblyTitle>
+    <Company>Hochschule Regensburg</Company>
+    <Product>Kickermat</Product>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Copyright>Copyright © 2010</Copyright>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="log4net\Appenders\ListBoxAppenderUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="log4net\Appenders\ListBoxAppenderUserControl.Designer.cs">
+      <DependentUpon>ListBoxAppenderUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Update="SerialLogReader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="SerialLogReader.Designer.cs">
+      <DependentUpon>SerialLogReader.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="log4net\Appenders\ListBoxAppenderUserControl.resx">
+      <DependentUpon>ListBoxAppenderUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SerialLogReader.resx">
+      <DependentUpon>SerialLogReader.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
