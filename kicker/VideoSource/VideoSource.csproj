@@ -1,92 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <ProjectGuid>{DABB69DD-30F1-47E3-949C-2D6748D47F2B}</ProjectGuid>
-    <TargetFramework>net472</TargetFramework>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyTitle>VideoSource</AssemblyTitle>
-    <Company>Hochschule Regensburg</Company>
-    <Product>Kickermat</Product>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Copyright>Copyright © 2010</Copyright>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Platforms>x64;x86</Platforms>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
+    <PackageReference Include="OpenCvSharp3-AnyCPU" Version="4.0.0.20181129" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="VimbaNET" Condition="'$(Platform)'=='x86'">
-      <HintPath>$(VIMBA_HOME)\VimbaNET\Bin\Win32\VimbaNET.dll</HintPath>
-    </Reference>
-    <Reference Include="VimbaNET" Condition="'$(Platform)'=='x64'">
-      <HintPath>$(VIMBA_HOME)\VimbaNET\Bin\Win64\VimbaNET.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Game\Game.csproj" />
-    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
-    <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
-    <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EMGU.CV" Version="4.0.1.3373" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x86\vcruntime140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x86\opencv_ffmpeg401.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x86\msvcp140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x86\cvextern.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x86\concrt140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x64\vcruntime140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x64\opencv_ffmpeg401_64.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x64\msvcp140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x64\cvextern.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\Andreas\.nuget\packages\emgu.cv\4.0.1.3373\build\x64\concrt140.dll" />
-  </ItemGroup>
+
 </Project>

@@ -41,9 +41,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Util
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp", "Webapp\Webapp.csproj", "{7C1BAFC0-DF1C-4FA5-8588-CCCC41C24B9C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DalsaVideoSource", "DalsaVideoSource\DalsaVideoSource.vcxproj", "{A2047211-A53A-4942-AC4C-19898F647B60}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4A2BDAA-3738-4C19-8B3F-D6967095F6AA}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+
 	EndProjectSection
 EndProject
 Global
@@ -68,16 +71,18 @@ Global
 		{3A5CA133-1B36-4EDE-9888-011DF15C7B32}.Release|x64.Build.0 = Release|Any CPU
 		{3A5CA133-1B36-4EDE-9888-011DF15C7B32}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A5CA133-1B36-4EDE-9888-011DF15C7B32}.Release|x86.Build.0 = Release|Any CPU
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x64.ActiveCfg = Debug|x64
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x64.Build.0 = Debug|x64
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x86.ActiveCfg = Debug|x86
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x86.Build.0 = Debug|x86
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|Any CPU.ActiveCfg = Release|x86
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x64.ActiveCfg = Release|x64
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x64.Build.0 = Release|x64
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x86.ActiveCfg = Release|x86
-		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x86.Build.0 = Release|x86
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x64.Build.0 = Debug|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Debug|x86.Build.0 = Debug|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x64.ActiveCfg = Release|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x64.Build.0 = Release|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x86.ActiveCfg = Release|Any CPU
+		{DABB69DD-30F1-47E3-949C-2D6748D47F2B}.Release|x86.Build.0 = Release|Any CPU
 		{C4BC378C-6BA2-4CB8-9CA7-06FC61BD068C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4BC378C-6BA2-4CB8-9CA7-06FC61BD068C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4BC378C-6BA2-4CB8-9CA7-06FC61BD068C}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -282,6 +287,14 @@ Global
 		{7C1BAFC0-DF1C-4FA5-8588-CCCC41C24B9C}.Release|x64.Build.0 = Release|Any CPU
 		{7C1BAFC0-DF1C-4FA5-8588-CCCC41C24B9C}.Release|x86.ActiveCfg = Release|Any CPU
 		{7C1BAFC0-DF1C-4FA5-8588-CCCC41C24B9C}.Release|x86.Build.0 = Release|Any CPU
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Debug|x64.ActiveCfg = Debug|x64
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Debug|x86.ActiveCfg = Debug|Win32
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x64.ActiveCfg = Release|x64
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x64.Build.0 = Release|x64
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x86.ActiveCfg = Release|Win32
+		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
