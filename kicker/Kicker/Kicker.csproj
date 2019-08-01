@@ -31,26 +31,14 @@
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PreBuildEvent />
-    <PreBuildEvent />
-    <PreBuildEvent />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    <DocumentationFile>..\bin\$(Configuration)\Kicker.XML</DocumentationFile>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    <DocumentationFile>$(SolutionDir)bin\$(Configuration)\Kicker.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    <DocumentationFile>..\bin\$(Configuration)\Kicker.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent />
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    <DocumentationFile>$(SolutionDir)bin\$(Configuration)\Kicker.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
