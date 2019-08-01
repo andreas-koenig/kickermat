@@ -3,7 +3,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{3A5CA133-1B36-4EDE-9888-011DF15C7B32}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <StartupObject>Kicker.Program</StartupObject>
     <AssemblyOriginatorKeyFile />
     <IsWebBootstrapper>false</IsWebBootstrapper>

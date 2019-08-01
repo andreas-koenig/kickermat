@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -50,14 +51,26 @@ namespace webapp
             app.UseMvc();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseSpa(spa =>
+
+            if (env.IsDevelopment())
             {
-                spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment())
+                app.UseSpa(spa =>
                 {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                }
-            });
+                    spa.Options.SourcePath = "ClientApp";
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    }
+                });
+            }
+            else
+            {
+                app.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "ClientApp";
+                    spa.UseAngularCliServer("npm start");
+                });
+            }
         }
     }
 }
