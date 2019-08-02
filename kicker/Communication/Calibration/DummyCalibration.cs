@@ -1,7 +1,6 @@
 ﻿namespace Communication.Calibration
 {
     using System;
-    using System.Windows.Forms;
     using Communication.NetworkLayer.Packets.Udp.Enums;
     using GlobalDataTypes;
 

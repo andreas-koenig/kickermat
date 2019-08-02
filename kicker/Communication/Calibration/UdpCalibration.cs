@@ -10,14 +10,14 @@ namespace Communication.Calibration.UdpGateway
     using Utilities;
 
     /// <summary>
-    /// Implementation of calibration call to the controller via UDP.
+    /// Implementation of calibration call for the motors via controller with UDP.
     /// </summary>
-    public class UdpCalibration : ICalibrationControl
+    public class MotorCalibration : ICalibrationControl
     {
         /// <summary>
         /// Ask Stefan Seifert.
         /// </summary>
-        private readonly UdpNetworkLayer networkLayer;
+        private readonly NetworkLayer networkLayer;
 
         /// <summary>
         /// Ask Stefan Seifert.
@@ -25,17 +25,25 @@ namespace Communication.Calibration.UdpGateway
         private readonly byte[] datagram;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpCalibration"/> class.
+        /// Length of the UDP-datagram
         /// </summary>
-        public UdpCalibration()
-        {
-            this.datagram = new byte[Constants.DatagramLength];
+        public const int datagramLength = 24;
 
-            this.networkLayer = ServiceLocator.LocateService<UdpNetworkLayer>();
-            if (this.networkLayer == null)
-            {
-                SwissKnife.ShowError(this, "No network service available.");
-            }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotorCalibration"/> class.
+        /// </summary>
+        public MotorCalibration()
+        {
+            this.datagram = new byte[datagramLength];
+
+            //TODO: Substitute Plugin System
+            this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
+
+            //TODO: Try-Catch with proper Exception-Handling instead of Swissknife
+            //if (this.networkLayer == null)
+            //{
+            //    SwissKnife.ShowError(this, "No network service available.");
+            //}
         }
 
         /// <summary>
@@ -46,12 +54,12 @@ namespace Communication.Calibration.UdpGateway
         {
             get
             {
+                //TODO: Try-Catch with proper Exception-Handling
                 Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0, this.datagram, 0, 2);
-                FillDatadatagram(this.datagram, 2);
+                this.ZeroFillDatagramFromOffset(2);
 
                 this.networkLayer.Send(this.datagram);
 
-                // TODO: error handling
                 byte[] retVal = this.networkLayer.Read();
                 return (ControllerStatus)BitConverter.ToUInt16(retVal, 2);
             }
@@ -61,32 +69,11 @@ namespace Communication.Calibration.UdpGateway
         /// Moves all bars to their maximum positions.
         /// </summary>
         /// <returns>
-        /// true if the operation has been successfully, else false
+        /// void if the operation has been successfully, else an exception
         /// </returns>
-        public ReturnType MoveAllBarsToMaximumPosition()
+        public void MoveAllBarsToMaximumPosition()
         {
-            ReturnType returnType = ReturnType.Ok;
-
-            foreach (Bar barName in Enum.GetValues(typeof(Bar)))
-            {
-                if (barName != Bar.All)
-                {
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetMaxPosition), 0, this.datagram, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)barName), 0, this.datagram, 2, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)255), 0, this.datagram, 4, 2);
-                    FillDatadatagram(this.datagram, 6);
-
-                    this.networkLayer.Send(this.datagram);
-                    byte[] returnDatagram = this.networkLayer.Read();
-
-                    if ((ControllerStatus)BitConverter.ToUInt16(returnDatagram, 2) != ControllerStatus.Ok)
-                    {
-                        returnType = ReturnType.NotOk;
-                    }
-                }
-            }
-
-            return returnType;
+            MoveAllBarsToPosition(UdpPacketType.SetMaxPosition);
         }
 
         /// <summary>
@@ -95,31 +82,34 @@ namespace Communication.Calibration.UdpGateway
         /// <returns>
         /// true if the operation has been successfully, else false
         /// </returns>
-        public ReturnType MoveAllBarsToMinimumPosition()
+        public void MoveAllBarsToMinimumPosition()
         {
-            ReturnType returnType = ReturnType.Ok;
+            MoveAllBarsToPosition(UdpPacketType.SetMinPosition);
+        }
 
+        public void MoveAllBarsToPosition(UdpPacketType position)
+        {
             foreach (Bar barName in Enum.GetValues(typeof(Bar)))
             {
                 if (barName != Bar.All)
                 {
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetMinPosition), 0, this.datagram, 0, 2);
+                    //TODO: Try-Catch
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)position), 0, this.datagram, 0, 2);
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)barName), 0, this.datagram, 2, 2);
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, this.datagram, 4, 2);
-                    FillDatadatagram(this.datagram, 6);
+                    this.ZeroFillDatagramFromOffset(6);
 
                     this.networkLayer.Send(this.datagram);
 
                     byte[] returnDatagram = this.networkLayer.Read();
 
-                    if ((ControllerStatus)BitConverter.ToUInt16(returnDatagram, 2) != ControllerStatus.Ok)
-                    {
-                        returnType = ReturnType.NotOk;
-                    }
+                    //TODO: Throw Exception
+                    //if ((ControllerStatus)BitConverter.ToUInt16(returnDatagram, 2) != ControllerStatus.Ok)
+                    //{
+                    //    returnType = ReturnType.NotOk;
+                    //}
                 }
             }
-
-            return returnType;
         }
 
         /// <summary>
@@ -133,7 +123,7 @@ namespace Communication.Calibration.UdpGateway
             Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetBarLengthInPixel), 0, this.datagram, 0, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(udpId), 0, this.datagram, 2, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(barLengthInPixel), 0, this.datagram, 4, 2);
-            FillDatadatagram(this.datagram, 6);
+            this.ZeroFillDatagramFromOffset(6);
 
             this.networkLayer.Send(this.datagram);
         }
@@ -145,12 +135,8 @@ namespace Communication.Calibration.UdpGateway
         /// <param name="angle">The angle.</param>
         public void SetBarAngleForZero(Bar selectedBar, int angle)
         {
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetNullAngle), 0, this.datagram, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)selectedBar), 0, this.datagram, 2, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes((short)angle), 0, this.datagram, 0, 4);
-            FillDatadatagram(this.datagram, 6);
-
-            this.networkLayer.Send(this.datagram);
+            // Removed implementation as this legacy-code was never called
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -161,7 +147,7 @@ namespace Communication.Calibration.UdpGateway
         /// <returns>
         ///     <c>Ok</c> if the operation was successful, else <c>NotOk.</c>
         /// </returns>
-        public ReturnType SetAllAnglesAndPositionsToZero()
+        public void SetAllAnglesAndPositionsToZero()
         {
             PositionNetworkObject positionNetworkObject = new PositionNetworkObject();
             positionNetworkObject.OptionsValidFor = PositionBits.All;
@@ -171,22 +157,20 @@ namespace Communication.Calibration.UdpGateway
             this.networkLayer.Send(positionNetworkObject);
             this.networkLayer.Send(positionNetworkObject);
             this.networkLayer.Send(positionNetworkObject);
-            return ReturnType.Ok;
         }
 
         /// <summary>
-        /// Fills the datadatagram.
+        /// Fills the datadatagram with zeroes from the offset to the end.
         /// </summary>
-        /// <param name="datagram">The datagram.</param>
         /// <param name="offset">The offset.</param>
-        private static void FillDatadatagram(byte[] datagram, int offset)
+        private void ZeroFillDatagramFromOffset( int offset)
         {
-            if (offset > datagram.Length)
+            if (offset > this.datagram.Length)
             {
                 throw new ArgumentException("Offset is out of datagram bounds");
             }
 
-            for (int i = offset; i < datagram.Length; i++)
+            for (int i = offset; i < this.datagram.Length; i++)
             {
                 datagram[i] = 0x00;
             }

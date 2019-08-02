@@ -15,7 +15,7 @@ namespace Communication.NetworkLayer.Udp
     /// <summary>
     /// The netwoklayer service.
     /// </summary>
-    public sealed class UdpNetworkLayer : IDisposable
+    public sealed class NetworkLayer : IDisposable
     {
         /// <summary>
         /// UDP client for communication with the gateway.
@@ -44,9 +44,9 @@ namespace Communication.NetworkLayer.Udp
         private Thread tcpReader;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpNetworkLayer"/> class.
+        /// Initializes a new instance of the <see cref="NetworkLayer"/> class.
         /// </summary>
-        public UdpNetworkLayer()
+        public NetworkLayer()
         {
             this.sequenceNumber = 0;
             this.udpClient = new UdpClient();

@@ -73,11 +73,11 @@
         /// </summary>
         public void Connect()
         {
-            UdpNetworkLayer networkLayer = ServiceLocator.LocateService<UdpNetworkLayer>();
+            NetworkLayer networkLayer = ServiceLocator.LocateService<NetworkLayer>();
             if (networkLayer == null)
             {
-                networkLayer = new UdpNetworkLayer();
-                ServiceLocator.RegisterService<UdpNetworkLayer>(networkLayer);                
+                networkLayer = new NetworkLayer();
+                ServiceLocator.RegisterService<NetworkLayer>(networkLayer);                
             }
 
             try
@@ -90,7 +90,7 @@
             }
 
             this.PlayerControl = new UdpPlayerControl();
-            this.CalibrationControl = new UdpCalibration();
+            this.CalibrationControl = new MotorCalibration();
 
             ((UdpPlayerControl)this.PlayerControl).MessageIntervall = this.Settings.PositionMessageInterval;
         }
@@ -100,9 +100,9 @@
         /// </summary>
         public void Disconnect()
         {
-            if (ServiceLocator.LocateService<UdpNetworkLayer>() != null)
+            if (ServiceLocator.LocateService<NetworkLayer>() != null)
             {
-                ServiceLocator.LocateService<UdpNetworkLayer>().Disconnect();
+                ServiceLocator.LocateService<NetworkLayer>().Disconnect();
             }
         }
     }

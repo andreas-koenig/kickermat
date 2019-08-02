@@ -18,7 +18,7 @@ namespace Communication.PlayerControl.UdpGateway
         /// <summary>
         /// The netwokr layer instance which is used for sending/receiving packages.
         /// </summary>
-        private readonly UdpNetworkLayer networkLayer;               
+        private readonly NetworkLayer networkLayer;               
 
         /// <summary>
         /// Lock object for <see cref="networkObject"/>
@@ -43,7 +43,7 @@ namespace Communication.PlayerControl.UdpGateway
             Game.GameStarted += this.Game_GameStarted;
             Game.GameStopped += this.Game_GameStopped;
 
-            this.networkLayer = ServiceLocator.LocateService<UdpNetworkLayer>();
+            this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
             if (this.networkLayer == null)
             {
                 SwissKnife.ShowError(this, "No network service available.");

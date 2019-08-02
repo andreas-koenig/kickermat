@@ -30,7 +30,7 @@
     <Copyright>Copyright © 2010</Copyright>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
     <PreBuildEvent />
     <PreBuildEvent />
     <PreBuildEvent />
