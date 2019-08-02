@@ -65,107 +65,108 @@
                 // initStep 1: an maximale Position fahren
                 // initStep 2: an minimale Position fahren
                 // in jedem Schritt jeweils die eigenen Spieler suchen
+                //TODO: Exception Handling
                 for (uint initStep = 1; initStep <= 2; initStep++)
                 {
                     if (initStep == 1)
                     {
                         // Alle Stangen auf maximale Position fahren
-                        if (Controller.MoveAllBarsToMaximumPosition() == ReturnType.NotOk)
-                        {
-                            SwissKnife.ShowError(this, "Failed to move bars to maximum positions.");
-                            return false;
-                        }
+                        Controller.MoveAllBarsToMaximumPosition();
                         Thread.Sleep(500);
                     }
                     else
                     {
                         // Alle Stangen auf minimale Position fahren
-                        if (Controller.MoveAllBarsToMinimumPosition() == ReturnType.NotOk)
-                        {
-                            SwissKnife.ShowError(this, "Failed to move bars to minimum positions.");
-                            return false;
-                        }
+                        Controller.MoveAllBarsToMinimumPosition();
                         Thread.Sleep(500);
                     }
+                }
 
-                    for (int runCounter = 0; runCounter < 20; runCounter++)
+                for (int runCounter = 0; runCounter < 20; runCounter++)
+                {
+                    bool allPlayersFound = true;
+
+                    // get a new image, this triggers the image processing and object detection
+                    videoSource.GetNewImage();
+
+                    // wait until current detection is finished
+                    while (ownBarDetection.IsRunning)
                     {
-                        bool allPlayersFound = true;
-
-                        // get a new image, this triggers the image processing and object detection
-                        videoSource.GetNewImage();
-
-                        // wait until current detection is finished
-                        while (ownBarDetection.IsRunning)
-                        {
-                            Application.DoEvents();
-                        }
-
-                        foreach (Player player in Enum.GetValues(typeof(Player)))
-                        {
-                            Position pos = ownBarDetection.GetPlayerPosition(player);
-                            if (pos == null || !pos.Valid)
-                            {
-                                allPlayersFound = false;
-                            }
-                        }
-
-                        if (allPlayersFound)
-                        {
-                            break;
-                        }
+                        Application.DoEvents();
                     }
 
                     foreach (Player player in Enum.GetValues(typeof(Player)))
                     {
                         Position pos = ownBarDetection.GetPlayerPosition(player);
-                        //FormImageDisplay.Instance.Labels.Update(labelHandles[player], pos);
-
                         if (pos == null || !pos.Valid)
                         {
-                            //SwissKnife.ShowError(this, "Position of " + player + " not found, please check configuration and try again.");
-                            //return false;
+                            allPlayersFound = false;
                         }
                     }
 
-                    foreach (Player playerName in Enum.GetValues(typeof(Player)))
+                    if (allPlayersFound)
                     {
-                        if (initStep == 1)
-                        {
-                            var currpos = ownBarDetection.GetPlayerPosition(playerName);
-                            maxPositions[playerName] = currpos;
-                        }
-                        else
-                        {
-                            var currpos = ownBarDetection.GetPlayerPosition(playerName);
-                            minPositions[playerName] = currpos;
-                        }
+                        break;
                     }
                 }
 
-                return true;
+                foreach (Player player in Enum.GetValues(typeof(Player)))
+                {
+                    Position pos = ownBarDetection.GetPlayerPosition(player);
+                    //FormImageDisplay.Instance.Labels.Update(labelHandles[player], pos);
+
+                    if (pos == null || !pos.Valid)
+                    {
+                        //SwissKnife.ShowError(this, "Position of " + player + " not found, please check configuration and try again.");
+                        //return false;
+                    }
+                }
+
+                foreach (Player playerName in Enum.GetValues(typeof(Player)))
+                {
+                    if (initStep == 1)
+                    {
+                        var currpos = ownBarDetection.GetPlayerPosition(playerName);
+                        maxPositions[playerName] = currpos;
+                    }
+                    else
+                    {
+                        var currpos = ownBarDetection.GetPlayerPosition(playerName);
+                        minPositions[playerName] = currpos;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //TODO: Logging or rethrow ?
             }
             finally
             {
                 // Tell detection that calibration is finished
                 ownBarDetection.CalibrationFinished();
+
             }
+            return true;
         }
 
-        /// <summary>
-        /// Called by the handler method for the DoWork event of the <c>calibrationThread</c>
-        /// after evaluating the calibration values.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.DoWorkEventArgs"/> instance containing the event data.</param>
-        protected override void AfterCalibration(object sender, DoWorkEventArgs e)
-        {
-            // Save the calculated values in the settings
-            this.Settings.KeeperBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Keeper) + this.Settings.PlayingFieldXOffset;
-            this.Settings.DefenseBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Defense) + this.Settings.PlayingFieldXOffset;
-            this.Settings.MidfieldBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Midfield) + this.Settings.PlayingFieldXOffset;
-            this.Settings.OpponentStrikerBarPosition = Coach.GetBarXPosition(Bar.Striker) - this.Settings.PlayingFieldXOffset;
-            this.SettingsUserControl.Refresh();
-        }
+
     }
+
+
+    /// <summary>
+    /// Called by the handler method for the DoWork event of the <c>calibrationThread</c>
+    /// after evaluating the calibration values.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.ComponentModel.DoWorkEventArgs"/> instance containing the event data.</param>
+    protected override void AfterCalibration(object sender, DoWorkEventArgs e)
+    {
+        // Save the calculated values in the settings
+        this.Settings.KeeperBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Keeper) + this.Settings.PlayingFieldXOffset;
+        this.Settings.DefenseBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Defense) + this.Settings.PlayingFieldXOffset;
+        this.Settings.MidfieldBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Midfield) + this.Settings.PlayingFieldXOffset;
+        this.Settings.OpponentStrikerBarPosition = Coach.GetBarXPosition(Bar.Striker) - this.Settings.PlayingFieldXOffset;
+        this.SettingsUserControl.Refresh();
+    }
+}
 }

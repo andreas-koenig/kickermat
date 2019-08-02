@@ -18,13 +18,13 @@ namespace Communication.PlayerControl.UdpGateway
         /// <summary>
         /// The netwokr layer instance which is used for sending/receiving packages.
         /// </summary>
-        private readonly NetworkLayer networkLayer;               
+        private readonly NetworkLayer networkLayer;
 
         /// <summary>
         /// Lock object for <see cref="networkObject"/>
         /// </summary>
         private readonly object lockerNetworkObject;
-        
+
         /// <summary>
         /// Backing storage for <see cref="NetworkObject"/>
         /// </summary>
@@ -95,20 +95,10 @@ namespace Communication.PlayerControl.UdpGateway
         /// </summary>
         /// <param name="playerBar">The player bar.</param>
         /// <param name="newPlayerPosition">The new player position.</param>
-        public void MovePlayer(Bar playerBar, ushort newPlayerPosition)
-        {
-            this.MovePlayer(playerBar, newPlayerPosition, false);
-        }       
-
-        /// <summary>
-        /// Moves a player.
-        /// </summary>
-        /// <param name="playerBar">The player bar.</param>
-        /// <param name="newPlayerPosition">The new player position.</param>
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse)
         {
-            switch (playerBar) 
+            switch (playerBar)
             {
                 case Bar.All:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
@@ -124,7 +114,7 @@ namespace Communication.PlayerControl.UdpGateway
                     break;
                 case Bar.Keeper:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
-                    if (waitForResponse) 
+                    if (waitForResponse)
                     {
                         this.NetworkObject.ReplyRequested |= PositionBits.KeeperPosition;
                     }
@@ -161,7 +151,7 @@ namespace Communication.PlayerControl.UdpGateway
                     throw new ArgumentOutOfRangeException("playerBar");
             }
             this.networkLayer.Send(this.NetworkObject);
-            if (waitForResponse) 
+            if (waitForResponse)
             {
                 // TODO: Check return code in Packet
                 this.networkLayer.Read();
@@ -186,7 +176,7 @@ namespace Communication.PlayerControl.UdpGateway
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void SetAngle(Bar bar, short angle, bool waitForResponse)
         {
-            switch (bar) 
+            switch (bar)
             {
                 case Bar.All:
                     this.NetworkObject.KeeperAngle = angle;
@@ -240,12 +230,12 @@ namespace Communication.PlayerControl.UdpGateway
                     throw new ArgumentOutOfRangeException("bar");
             }
             this.networkLayer.Send(this.NetworkObject);
-            if (waitForResponse) 
+            if (waitForResponse)
             {
                 // TODO: Check return code in Packet
                 this.networkLayer.Read();
             }
-        }                
+        }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -254,7 +244,7 @@ namespace Communication.PlayerControl.UdpGateway
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
-        }        
+        }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources

@@ -12,13 +12,6 @@
         /// </summary>
         /// <param name="playerBar">The player bar.</param>
         /// <param name="newPlayerPosition">The new player position.</param>
-        void MovePlayer(Bar playerBar, ushort newPlayerPosition);
-
-        /// <summary>
-        /// Moves a player.
-        /// </summary>
-        /// <param name="playerBar">The player bar.</param>
-        /// <param name="newPlayerPosition">The new player position.</param>
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse);
 

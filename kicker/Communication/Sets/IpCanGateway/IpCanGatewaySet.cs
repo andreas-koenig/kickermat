@@ -90,7 +90,7 @@
             }
 
             this.PlayerControl = new UdpPlayerControl();
-            this.CalibrationControl = new MotorCalibration();
+            this.CalibrationControl = new UdpCalibration();
 
             ((UdpPlayerControl)this.PlayerControl).MessageIntervall = this.Settings.PositionMessageInterval;
         }

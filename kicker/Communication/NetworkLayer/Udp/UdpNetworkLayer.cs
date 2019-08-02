@@ -13,7 +13,7 @@ namespace Communication.NetworkLayer.Udp
     using Utilities;
 
     /// <summary>
-    /// The netwoklayer service.
+    /// The netwoklayer service
     /// </summary>
     public sealed class NetworkLayer : IDisposable
     {

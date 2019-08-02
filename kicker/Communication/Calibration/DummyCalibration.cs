@@ -24,9 +24,9 @@
         /// <returns>
         /// true if the operation has been successfully, else false
         /// </returns>
-        public ReturnType MoveAllBarsToMaximumPosition()
+        public void MoveAllBarsToMaximumPosition()
         {
-            return ReturnType.Ok;
+            
         }
 
         /// <summary>
@@ -35,9 +35,9 @@
         /// <returns>
         /// true if the operation has been successfully, else false
         /// </returns>
-        public ReturnType MoveAllBarsToMinimumPosition()
+        public void MoveAllBarsToMinimumPosition()
         {
-            return ReturnType.Ok;
+  
         }
 
         /// <summary>
@@ -60,9 +60,9 @@
             // Do nothing
         }
 
-        public ReturnType SetAllAnglesAndPositionsToZero()
+        public void SetAllAnglesAndPositionsToZero()
         {
-            return ReturnType.Ok;
+
         }
     }
 }

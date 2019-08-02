@@ -9,7 +9,7 @@
     using Sets;
 
     /// <summary>
-    /// Verwaltet die vorhandenen Kommunikationsschnittstellen
+    /// Manages the existing Communication-Interfaces
     /// </summary>
     public sealed class CommunicationManager : IXmlConfigurableKickerPlugin, IDisposable
     {
@@ -22,12 +22,6 @@
         /// Gets the currently used communication set.
         /// </summary>
         public ICommunicationSet CommunicationSet { get; private set; }
-
-        /// <summary>
-        /// Gets the user control.
-        /// </summary>
-        /// <value>The user control.</value>
-        public UserControl SettingsUserControl { get; private set; }
 
         /// <summary>
         /// Gets the player control.
@@ -82,11 +76,7 @@
         /// </summary>
         public void InitUserControl()
         {
-            this.SettingsUserControl = Plugger.CreatePluginUserControl<ICommunicationSet>(
-                this,
-                this.Settings.CommunicationSet,
-                null,
-                this.InitCommunicationSet);
+
         }
 
         /// <summary>
@@ -94,10 +84,7 @@
         /// </summary>
         public void Dispose()
         {
-            if (this.SettingsUserControl != null)
-            {
-                this.SettingsUserControl.Dispose();
-            }
+
         }
 
         /// <summary>

@@ -12,15 +12,12 @@ namespace Communication.Calibration.UdpGateway
     /// <summary>
     /// Implementation of calibration call for the motors via controller with UDP.
     /// </summary>
-    public class MotorCalibration : ICalibrationControl
+    public class UdpCalibration : ICalibrationControl
     {
-        /// <summary>
-        /// Ask Stefan Seifert.
-        /// </summary>
         private readonly NetworkLayer networkLayer;
 
         /// <summary>
-        /// Ask Stefan Seifert.
+        /// UDP-Datagram
         /// </summary>
         private readonly byte[] datagram;
 
@@ -30,9 +27,9 @@ namespace Communication.Calibration.UdpGateway
         public const int datagramLength = 24;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MotorCalibration"/> class.
+        /// Initializes a new instance of the <see cref="UdpCalibration"/> class.
         /// </summary>
-        public MotorCalibration()
+        public UdpCalibration()
         {
             this.datagram = new byte[datagramLength];
 
@@ -89,6 +86,7 @@ namespace Communication.Calibration.UdpGateway
 
         public void MoveAllBarsToPosition(UdpPacketType position)
         {
+            //TODO: Only SetMinPosition and SetMaxPosition valid for calibration
             foreach (Bar barName in Enum.GetValues(typeof(Bar)))
             {
                 if (barName != Bar.All)

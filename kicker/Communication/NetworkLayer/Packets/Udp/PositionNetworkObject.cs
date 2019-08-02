@@ -6,7 +6,7 @@ namespace Communication.NetworkLayer.Packets.Udp
     /// <summary>
     /// The networkobject containing the new player positions.
     /// </summary>
-    public class PositionNetworkObject : NetworkObject, ICloneable
+    public class PositionNetworkObject : NetworkObject
     {
         /// <summary>
         /// The current keeper position.
@@ -222,33 +222,22 @@ namespace Communication.NetworkLayer.Packets.Udp
         /// <returns>Returns the current instance represented as a byte[].</returns>
         public byte[] Serialize()
         {
-            byte[] data = new byte[24];
+            byte[] datagram = new byte[24];
 
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetPositionsAndAngles), 0, data, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.keeperPosition), 0, data, 2, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.keeperAngle), 0, data, 4, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.defensePosition), 0, data, 6, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.defenseAngel), 0, data, 8, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.midfieldPosition), 0, data, 10, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.midfieldAngel), 0, data, 12, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.strikerPosition), 0, data, 14, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.strikerAngel), 0, data, 16, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.sequenceNumber), 0, data, 18, 4);
-            data[22] = (byte)this.OptionsValidFor;
-            data[23] = (byte)this.ReplyRequested;
+            Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetPositionsAndAngles), 0, datagram, 0, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.keeperPosition), 0, datagram, 2, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.keeperAngle), 0, datagram, 4, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.defensePosition), 0, datagram, 6, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.defenseAngel), 0, datagram, 8, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.midfieldPosition), 0, datagram, 10, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.midfieldAngel), 0, datagram, 12, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.strikerPosition), 0, datagram, 14, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.strikerAngel), 0, datagram, 16, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.sequenceNumber), 0, datagram, 18, 4);
+            datagram[22] = (byte)this.OptionsValidFor;
+            datagram[23] = (byte)this.ReplyRequested;
 
-            return data;
+            return datagram;
         }        
-
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 }
