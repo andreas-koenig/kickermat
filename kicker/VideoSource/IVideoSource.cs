@@ -4,9 +4,18 @@ using System.Text;
 
 namespace VideoSource
 {
-    interface IVideoSource
+    public interface IVideoSource
     {
-        void StartAcquisition();
-        void StopAcquisition();
+        event EventHandler<FrameArrivedArgs> FrameArrived;
+    }
+
+    public class FrameArrivedArgs
+    {
+        public IFrame Frame { get; }
+
+        public FrameArrivedArgs(IFrame frame)
+        {
+            Frame = frame;
+        }
     }
 }

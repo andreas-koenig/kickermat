@@ -8,7 +8,6 @@ class CameraController {
 public:
 	SapAcqDevice* acquisitionDevice;
 	SapBufferWithTrash* buffer;
-	SapView* view;
 	SapTransfer* transfer;
 	
 	void (*callback)(int, void*);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VideoSource
 {
-    interface IFrame
+    public interface IFrame
     {
         Mat Mat { get; set; }
 

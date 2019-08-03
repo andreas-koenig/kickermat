@@ -21,7 +21,7 @@
     "paths": {
       "@app/*": [ "./src/app/*" ],
       "@api/*": [ "./src/api/*" ],
-      "@flux/*": [ "./src/app/flux/*" ],
+      "@state/*": [ "./src/app/state/*" ],
       "@environments/*": [ "./src/environments/*" ]
     },
     "downlevelIteration": true,

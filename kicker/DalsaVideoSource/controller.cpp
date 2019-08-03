@@ -33,13 +33,11 @@ CameraController::CameraController() {
 	callback = nullptr;
 	acquisitionDevice = new SapAcqDevice("Nano-C1280_1", FALSE);
 	buffer = new SapBufferWithTrash(5, acquisitionDevice);
-	view = new SapView(buffer, (HWND)-1);
-	transfer = new SapAcqDeviceToBuf(acquisitionDevice, buffer, XferCallback, view);
+	transfer = new SapAcqDeviceToBuf(acquisitionDevice, buffer, XferCallback);
 	transfer->SetAutoEmpty(false);
 
 	acquisitionDevice->Create();
 	buffer->Create();
-	view->Create();
 	transfer->Create();
 	transfer->Grab();
 }
@@ -55,20 +53,15 @@ CameraController::~CameraController() {
 	}
 
 	transfer->Destroy();
-	view->Destroy();
 	buffer->Destroy();
 	acquisitionDevice->Destroy();
 
 	delete acquisitionDevice;
 	delete buffer;
-	delete view;
 	delete transfer;
 }
 
 void XferCallback(SapXferCallbackInfo* info) {
-	SapView* pView = (SapView*)info->GetContext();
-	pView->Show();
-
 	if (info->IsTrash()) {
 		return;
 	}

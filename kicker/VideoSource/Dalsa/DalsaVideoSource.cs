@@ -1,4 +1,5 @@
-﻿using OpenCvSharp;
+﻿using Microsoft.Extensions.Logging;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -6,16 +7,55 @@ using System.Text;
 
 namespace VideoSource.Dalsa
 {
-    class DalsaVideoSource : IVideoSource
+    public class DalsaVideoSource : IVideoSource
     {
-        public void StartAcquisition()
+        private static DalsaVideoSource _dalsaVideoSource;
+        private ILogger _logger;
+
+        private object objectLock = new object();
+        private EventHandler<FrameArrivedArgs> frameArrived;
+        public event EventHandler<FrameArrivedArgs> FrameArrived
         {
-            DalsaApi.start_acquisition(CreateMat);
+            add
+            {
+                lock(objectLock)
+                {
+                    frameArrived += value;
+                    if (frameArrived.GetInvocationList().Length == 1)
+                    {
+                        StartAcquisition();
+                    }
+                }
+            }
+            remove
+            {
+                lock(objectLock)
+                {
+                    if (frameArrived.GetInvocationList().Length == 1)
+                    {
+                        StopAcquisition();
+                    }
+                    frameArrived -= value;
+                }
+            }
         }
 
-        public void StopAcquisition()
+        public DalsaVideoSource(ILogger<DalsaVideoSource> logger)
+        {
+            _dalsaVideoSource = this;
+            _logger = logger;
+        }
+
+        internal void StartAcquisition()
+        {
+            DalsaApi.start_acquisition(CreateMat);
+            _logger.LogInformation("Acquisition started");
+        }
+
+        internal void StopAcquisition()
         {
             DalsaApi.stop_acquisition();
+            _logger.LogInformation("Acquisition stopped");
         }
 
         private static void CreateMat(int index, IntPtr address)
@@ -28,7 +68,12 @@ namespace VideoSource.Dalsa
             var frame = new DalsaFrame(colorMat);
             DalsaApi.release_buffer(index);
 
-            // TODO: Pass frame to ImagePreprocessor
+            _dalsaVideoSource?.OnFrameArrived(frame);
+        }
+
+        protected virtual void OnFrameArrived(IFrame frame)
+        {
+            frameArrived?.Invoke(this, new FrameArrivedArgs(frame));
         }
     }
 }

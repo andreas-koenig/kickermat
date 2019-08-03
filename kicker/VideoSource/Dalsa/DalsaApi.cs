@@ -18,9 +18,15 @@ namespace VideoSource.Dalsa
         /// </summary>
         /// <param name="callback">A function that gets called with the address
         /// and index of the buffer whenever a new frame is available.</param>
-        [DllImport(DALSA_DLL)]
-        internal static extern void start_acquisition(CallbackDelegate callback);
+        [DllImport(DALSA_DLL, EntryPoint = "start_acquisition")]
+        internal static extern void start_acquisition_internal(CallbackDelegate callback);
         
+        internal static void start_acquisition(CallbackDelegate callback)
+        {
+            callbackDelegate = callback;
+            start_acquisition_internal(callbackDelegate);
+        }
+
         /// <summary>
         /// Stop the acquisition.
         /// </summary>
@@ -35,5 +41,6 @@ namespace VideoSource.Dalsa
         internal static extern void release_buffer(int index);
 
         internal delegate void CallbackDelegate(int index, IntPtr address);
+        internal static CallbackDelegate callbackDelegate;
     }
 }

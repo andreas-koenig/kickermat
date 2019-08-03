@@ -16,7 +16,7 @@ namespace VideoSource.Dalsa
 
         public void Release()
         {
-            // Not needed as image buffer is released right away.
+            // Not necessary
         }
     }
 }
