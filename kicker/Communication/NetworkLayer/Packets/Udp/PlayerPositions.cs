@@ -6,7 +6,7 @@ namespace Communication.NetworkLayer.Packets.Udp
     /// <summary>
     /// The networkobject containing the new player positions.
     /// </summary>
-    public class PositionNetworkObject : NetworkObject
+    public class PlayerPositions : NetworkObject
     {
         /// <summary>
         /// The current keeper position.

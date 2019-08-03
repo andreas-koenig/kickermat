@@ -20,13 +20,6 @@
         /// </summary>
         /// <param name="bar">The bar which will be rotated.</param>
         /// <param name="angle">The angle to which the bar is moved (relative to 0).</param>
-        void SetAngle(Bar bar, short angle);
-
-        /// <summary>
-        /// Sets the angle of a bar.
-        /// </summary>
-        /// <param name="bar">The bar which will be rotated.</param>
-        /// <param name="angle">The angle to which the bar is moved (relative to 0).</param>
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         void SetAngle(Bar bar, short angle, bool waitForResponse);
     }

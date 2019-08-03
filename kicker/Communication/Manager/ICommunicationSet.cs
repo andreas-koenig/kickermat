@@ -7,7 +7,7 @@
     /// <summary>
     /// Interface for a communication set which consists of a calibration interface and a player control interface.
     /// </summary>
-    public interface ICommunicationSet : IKickerPlugin
+    public interface ICommunicationSet
     {
         /// <summary>
         /// Gets the player control.

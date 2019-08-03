@@ -13,7 +13,7 @@ namespace Communication.PlayerControl.UdpGateway
     /// <summary>
     /// Class for controlling the players via an IP-CAN-Gateway.
     /// </summary>
-    public class UdpPlayerControl : IPlayerControl, IDisposable
+    public class PlayerControl : IPlayerControl, IDisposable
     {
         /// <summary>
         /// The netwokr layer instance which is used for sending/receiving packages.
@@ -28,7 +28,7 @@ namespace Communication.PlayerControl.UdpGateway
         /// <summary>
         /// Backing storage for <see cref="NetworkObject"/>
         /// </summary>
-        private PositionNetworkObject networkObject;
+        private PlayerPositions networkObject;
 
         /// <summary>
         /// Reset event for starting/stopping cyclic transmission.
@@ -36,9 +36,9 @@ namespace Communication.PlayerControl.UdpGateway
         private ManualResetEvent resetEvent;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpPlayerControl"/> class.
+        /// Initializes a new instance of the <see cref="PlayerControl"/> class.
         /// </summary>
-        public UdpPlayerControl()
+        public PlayerControl()
         {
             Game.GameStarted += this.Game_GameStarted;
             Game.GameStopped += this.Game_GameStopped;
@@ -50,7 +50,7 @@ namespace Communication.PlayerControl.UdpGateway
             }
 
             this.lockerNetworkObject = new object();
-            this.NetworkObject = new PositionNetworkObject();
+            this.NetworkObject = new PlayerPositions();
 
             this.resetEvent = new ManualResetEvent(false);
 
@@ -71,7 +71,7 @@ namespace Communication.PlayerControl.UdpGateway
         /// Gets or sets the network object.
         /// </summary>
         /// <value>The network object.</value>
-        private PositionNetworkObject NetworkObject
+        private PlayerPositions NetworkObject
         {
             get
             {

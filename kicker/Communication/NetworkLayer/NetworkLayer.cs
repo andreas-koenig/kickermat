@@ -98,10 +98,10 @@ namespace Communication.NetworkLayer.Udp
         }
 
         /// <summary>
-        /// Sends a <see cref="PositionNetworkObject"/> to the server.
+        /// Sends a <see cref="PlayerPositions"/> to the server.
         /// </summary>
-        /// <param name="networkObject">The <see cref="PositionNetworkObject "/> to send.</param>
-        public int Send(PositionNetworkObject networkObject)
+        /// <param name="networkObject">The <see cref="PlayerPositions "/> to send.</param>
+        public int Send(PlayerPositions networkObject)
         {
             networkObject.SequenceNumber = this.sequenceNumber;
             byte[] datagram = networkObject.Serialize();

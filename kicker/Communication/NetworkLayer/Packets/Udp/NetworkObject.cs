@@ -5,7 +5,7 @@ namespace Communication.NetworkLayer.Packets.Udp
     /// <summary>
     /// The networkobject containg the data sent or received from the network.
     /// </summary>
-    public class NetworkObject
+    public abstract class NetworkObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkObject"/> class.

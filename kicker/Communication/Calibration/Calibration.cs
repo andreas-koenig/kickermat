@@ -10,9 +10,9 @@ namespace Communication.Calibration.UdpGateway
     using Utilities;
 
     /// <summary>
-    /// Implementation of calibration call for the motors via controller with UDP.
+    /// Implementation of calibration call for the motors via controller with UDP. The calibration is needed for the ImageProcessing
     /// </summary>
-    public class UdpCalibration : ICalibrationControl
+    public class Calibration : ICalibrationControl
     {
         private readonly NetworkLayer networkLayer;
 
@@ -27,9 +27,9 @@ namespace Communication.Calibration.UdpGateway
         public const int datagramLength = 24;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpCalibration"/> class.
+        /// Initializes a new instance of the <see cref="Calibration"/> class.
         /// </summary>
-        public UdpCalibration()
+        public Calibration()
         {
             this.datagram = new byte[datagramLength];
 
@@ -84,11 +84,13 @@ namespace Communication.Calibration.UdpGateway
             MoveAllBarsToPosition(UdpPacketType.SetMinPosition);
         }
 
+        //TODO: Use PlayerControl for Calibration ?
         public void MoveAllBarsToPosition(UdpPacketType position)
         {
             //TODO: Only SetMinPosition and SetMaxPosition valid for calibration
             foreach (Bar barName in Enum.GetValues(typeof(Bar)))
             {
+                //TODO: Move all bars ?!
                 if (barName != Bar.All)
                 {
                     //TODO: Try-Catch
@@ -147,7 +149,7 @@ namespace Communication.Calibration.UdpGateway
         /// </returns>
         public void SetAllAnglesAndPositionsToZero()
         {
-            PositionNetworkObject positionNetworkObject = new PositionNetworkObject();
+            PlayerPositions positionNetworkObject = new PlayerPositions();
             positionNetworkObject.OptionsValidFor = PositionBits.All;
             positionNetworkObject.ReplyRequested = PositionBits.None;
             //Send the networkObject several times because for whatever Reasons sometimes The Angles are not being set on the first try!

@@ -37,6 +37,7 @@ namespace Communication.NetworkLayer.Packets.Udp.Enums
         /// </summary>
         SetBarLengthInPixel = 0x05,
 
+        // TODO: Unused
         /// <summary>
         /// Udp packet contains informations about the null angle.
         /// </summary>
