@@ -66,7 +66,8 @@
                 // initStep 2: an minimale Position fahren
                 // in jedem Schritt jeweils die eigenen Spieler suchen
                 //TODO: Exception Handling
-                for (uint initStep = 1; initStep <= 2; initStep++)
+                uint initStep;
+                for (initStep = 1; initStep <= 2; initStep++)
                 {
                     if (initStep == 1)
                     {
@@ -136,7 +137,7 @@
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
                 //TODO: Logging or rethrow ?
             }
@@ -149,24 +150,24 @@
             return true;
         }
 
+        /// <summary>
+        /// Called by the handler method for the DoWork event of the <c>calibrationThread</c>
+        /// after evaluating the calibration values.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.DoWorkEventArgs"/> instance containing the event data.</param>
+        protected override void AfterCalibration(object sender, DoWorkEventArgs e)
+        {
+            // Save the calculated values in the settings
+            this.Settings.KeeperBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Keeper) + this.Settings.PlayingFieldXOffset;
+            this.Settings.DefenseBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Defense) + this.Settings.PlayingFieldXOffset;
+            this.Settings.MidfieldBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Midfield) + this.Settings.PlayingFieldXOffset;
+            this.Settings.OpponentStrikerBarPosition = Coach.GetBarXPosition(Bar.Striker) - this.Settings.PlayingFieldXOffset;
+            this.SettingsUserControl.Refresh();
+        }
 
     }
 
 
-    /// <summary>
-    /// Called by the handler method for the DoWork event of the <c>calibrationThread</c>
-    /// after evaluating the calibration values.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="System.ComponentModel.DoWorkEventArgs"/> instance containing the event data.</param>
-    protected override void AfterCalibration(object sender, DoWorkEventArgs e)
-    {
-        // Save the calculated values in the settings
-        this.Settings.KeeperBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Keeper) + this.Settings.PlayingFieldXOffset;
-        this.Settings.DefenseBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Defense) + this.Settings.PlayingFieldXOffset;
-        this.Settings.MidfieldBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Midfield) + this.Settings.PlayingFieldXOffset;
-        this.Settings.OpponentStrikerBarPosition = Coach.GetBarXPosition(Bar.Striker) - this.Settings.PlayingFieldXOffset;
-        this.SettingsUserControl.Refresh();
-    }
-}
+
 }
