@@ -11,21 +11,51 @@ namespace VideoSource.Dalsa
     /// </summary>
     internal abstract class DalsaApi
     {
-        const string DALSA_DLL = @"..\DalsaVideoSource.dll";
+        private const string DALSA_DLL = @"..\DalsaVideoSource.dll";
+
+        internal delegate void FrameArrivedDelegate(int index, IntPtr address);
+        private static FrameArrivedDelegate _frameArrivedDelegate;
+
+        internal delegate void ServerEventDelegate(string serverName);
+        private static ServerEventDelegate _connectedDelegate;
+        private static ServerEventDelegate _disconnectedDelegate;
+
+        [DllImport(DALSA_DLL, EntryPoint = "startup")]
+        private static extern void startup_dll(
+            FrameArrivedDelegate frameArrived,
+            ServerEventDelegate serverConnected,
+            ServerEventDelegate serverDisconnected);
+
+        /// <summary>
+        /// Initialize the API. Has to be called before any acquisition is done or
+        /// the list of cameras is queried.
+        /// </summary>
+        /// <param name="frameArrived">A function called when a new frame arrived</param>
+        /// <param name="connectedCallback">Called when a camera is reconnected</param>
+        /// <param name="disconnectedCallback">Called when a camera is disconnected</param>
+        internal static void startup(
+            FrameArrivedDelegate frameArrived,
+            ServerEventDelegate connectedCallback,
+            ServerEventDelegate disconnectedCallback)
+        {
+            _frameArrivedDelegate = frameArrived;
+            _connectedDelegate = connectedCallback;
+            _disconnectedDelegate = disconnectedCallback;
+            startup_dll(_frameArrivedDelegate, _connectedDelegate, _disconnectedDelegate);
+        }
+
+        /// <summary>
+        /// Get the available cameras
+        /// </summary>
+        /// <returns>An array containing the camera names</returns>
+        [DllImport(DALSA_DLL)]
+        internal static extern void get_available_cameras();
 
         /// <summary>
         /// Start the acquisition.
         /// </summary>
-        /// <param name="callback">A function that gets called with the address
-        /// and index of the buffer whenever a new frame is available.</param>
-        [DllImport(DALSA_DLL, EntryPoint = "start_acquisition")]
-        internal static extern void start_acquisition_internal(CallbackDelegate callback);
-        
-        internal static void start_acquisition(CallbackDelegate callback)
-        {
-            callbackDelegate = callback;
-            start_acquisition_internal(callbackDelegate);
-        }
+        [DllImport(DALSA_DLL)]
+        internal static extern void start_acquisition(string camera_name);
 
         /// <summary>
         /// Stop the acquisition.
@@ -39,8 +69,5 @@ namespace VideoSource.Dalsa
         /// <param name="index">The index of the buffer</param>
         [DllImport(DALSA_DLL)]
         internal static extern void release_buffer(int index);
-
-        internal delegate void CallbackDelegate(int index, IntPtr address);
-        internal static CallbackDelegate callbackDelegate;
     }
 }

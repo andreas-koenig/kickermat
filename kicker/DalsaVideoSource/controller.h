@@ -3,27 +3,40 @@
 #include "SapClassBasic.h"
 
 const int TRANSFER_WAIT_TIMEOUT = 5000;
+const int BUFFER_SIZE = 5;
 
 class CameraController {
 public:
-	SapAcqDevice* acquisitionDevice;
-	SapBufferWithTrash* buffer;
-	SapTransfer* transfer;
-	
-	void (*callback)(int, void*);
+    // Acquisition objects
+    SapAcqDevice* acquisitionDevice;
+    SapBufferWithTrash* buffer;
+    SapTransfer* transfer;
+    bool acquisition_running = false;
 
-	static CameraController* getInstance();
-	static CameraController* getInstance(void __stdcall callback(int index, void* address));
-	static void releaseInstance();
+    // API Callbacks
+    void (*frame_arrived)(int, void*);
+    void (*cam_connected)(char*);
+    void (*cam_disconnected)(char*);
 
-	~CameraController();
+    // Singleton methods
+    static CameraController* getInstance();
+    static void releaseInstance();
+
+
+    // Acquisition functions
+    void start_acquisition(char* camera_name);
+    void stop_acquisition();
+
+    // Callbacks
+    static void ErrorCallback(SapManCallbackInfo* info);
+    static void XferCallback(SapXferCallbackInfo* info);
+    static void ServerCallback(SapManCallbackInfo* info);
+    
+    ~CameraController();
 	CameraController(CameraController const&) = delete;
 	void operator=(CameraController const&) = delete;
 
 private:
-	static CameraController* INSTANCE;
-	CameraController();
+    static CameraController* INSTANCE;
+    CameraController();
 };
-
-void XferCallback(SapXferCallbackInfo* info);
-void ErrorCallback(SapManCallbackInfo* info);

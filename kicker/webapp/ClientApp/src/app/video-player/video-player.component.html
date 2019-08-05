@@ -1,3 +1,8 @@
-<div id="video">
-  <img id="image" src="{{imageBase64}}"/>
+<div id="video" fxLayout="row" fxLayoutAlign="center center">
+  <div id="img-container">
+    <img id="image" src="{{imageBase64}}" [ngClass]="{'disconnected': isDisconnected}">
+    <div id="overlay" *ngIf="isDisconnected">
+      <div>Camera ({{cameraName}}) disconnected</div>
+    </div>
+  </div>
 </div>

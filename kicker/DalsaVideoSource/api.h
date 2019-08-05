@@ -7,7 +7,14 @@
 #endif
 
 extern "C" {
-	DALSA_API void start_acquisition(void __stdcall callback(int index, void* address));
+    DALSA_API void startup(
+        void __stdcall frame_callback(int index, void* address),
+        void __stdcall connected_callback(char* server_name),
+        void __stdcall disconnected_callback(char* server_name)
+    );
+    DALSA_API void shutdown();
+    DALSA_API void get_available_cameras();
+	DALSA_API void start_acquisition(char* camera_name);
 	DALSA_API void stop_acquisition();
 	DALSA_API void release_buffer(int index);
 }

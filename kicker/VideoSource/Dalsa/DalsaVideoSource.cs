@@ -13,15 +13,15 @@ namespace VideoSource.Dalsa
         private ILogger _logger;
 
         private object objectLock = new object();
-        private EventHandler<FrameArrivedArgs> frameArrived;
+        private EventHandler<FrameArrivedArgs> _frameArrived;
         public event EventHandler<FrameArrivedArgs> FrameArrived
         {
             add
             {
-                lock(objectLock)
+                lock (objectLock)
                 {
-                    frameArrived += value;
-                    if (frameArrived.GetInvocationList().Length == 1)
+                    _frameArrived += value;
+                    if (_frameArrived.GetInvocationList().Length == 1)
                     {
                         StartAcquisition();
                     }
@@ -29,13 +29,50 @@ namespace VideoSource.Dalsa
             }
             remove
             {
-                lock(objectLock)
+                lock (objectLock)
                 {
-                    if (frameArrived.GetInvocationList().Length == 1)
+                    if (_frameArrived.GetInvocationList().Length == 1)
                     {
                         StopAcquisition();
                     }
-                    frameArrived -= value;
+                    _frameArrived -= value;
+                }
+            }
+        }
+
+        private EventHandler<CameraEventArgs> _cameraDisconnected;
+        public event EventHandler<CameraEventArgs> CameraDisconnected {
+            add
+            {
+                lock (objectLock)
+                {
+                    _cameraDisconnected += value;
+                }
+            }
+            remove
+            {
+                lock (objectLock)
+                {
+                    _cameraDisconnected -= value;
+                }
+            }
+        }
+
+        private EventHandler<CameraEventArgs> _cameraConnected;
+        public event EventHandler<CameraEventArgs> CameraConnected
+        {
+            add
+            {
+                lock (objectLock)
+                {
+                    _cameraConnected += value;
+                }
+            }
+            remove
+            {
+                lock (objectLock)
+                {
+                    _cameraConnected -= value;
                 }
             }
         }
@@ -44,21 +81,37 @@ namespace VideoSource.Dalsa
         {
             _dalsaVideoSource = this;
             _logger = logger;
+            DalsaApi.startup(OnFrameArrived, ServerConnected, ServerDisconnected);
         }
 
-        internal void StartAcquisition()
+        private static void ServerConnected(string serverName)
         {
-            DalsaApi.start_acquisition(CreateMat);
+            _dalsaVideoSource._logger.LogInformation(serverName + " connected");
+            _dalsaVideoSource?._cameraConnected
+                ?.Invoke(_dalsaVideoSource, new CameraEventArgs(serverName));
+        }
+
+        private static void ServerDisconnected(string serverName)
+        {
+            _dalsaVideoSource._logger.LogInformation(serverName + " disconnected");
+            _dalsaVideoSource?._cameraDisconnected
+                ?.Invoke(_dalsaVideoSource, new CameraEventArgs(serverName));
+        }
+
+        private void StartAcquisition()
+        {
+            DalsaApi.start_acquisition("test");
             _logger.LogInformation("Acquisition started");
         }
 
-        internal void StopAcquisition()
+
+        private void StopAcquisition()
         {
             DalsaApi.stop_acquisition();
             _logger.LogInformation("Acquisition stopped");
         }
 
-        private static void CreateMat(int index, IntPtr address)
+        private static void OnFrameArrived(int index, IntPtr address)
         {
             // Debayering of monochrome image
             Mat colorMat = new Mat();
@@ -68,12 +121,8 @@ namespace VideoSource.Dalsa
             var frame = new DalsaFrame(colorMat);
             DalsaApi.release_buffer(index);
 
-            _dalsaVideoSource?.OnFrameArrived(frame);
-        }
-
-        protected virtual void OnFrameArrived(IFrame frame)
-        {
-            frameArrived?.Invoke(this, new FrameArrivedArgs(frame));
+            _dalsaVideoSource?._frameArrived
+                ?.Invoke(_dalsaVideoSource, new FrameArrivedArgs(frame));
         }
     }
 }
