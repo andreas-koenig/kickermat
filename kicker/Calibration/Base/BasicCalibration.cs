@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Threading;
-    using System.Windows.Forms;
+    //using System.Windows.Forms;
     using Coach;
     using Communication.Calibration;
     using Communication.Manager;
@@ -54,11 +54,6 @@
         /// <value>The state.</value>
         public CalibrationState State { get; protected set; }
 
-        /// <summary>
-        /// Gets the calibration user control.
-        /// </summary>
-        /// <value>The calibration user control.</value>
-        public UserControl SettingsUserControl { get; private set; }
 
         /// <summary>
         /// Gets the reference to the created correction parameters.
@@ -100,7 +95,8 @@
                 this.calibrationThread.CancelAsync();
                 while (this.calibrationThread.IsBusy)
                 {
-                    Application.DoEvents();
+                    //TODO: Substitue, as this is specific to windows forms
+                    //Application.DoEvents();
                 }
             }
 
@@ -119,7 +115,8 @@
                     this.calibrationThread.CancelAsync();
                     while (this.calibrationThread.IsBusy)
                     {
-                        Application.DoEvents();
+                        //TODO: Substitue, as this is specific to windows forms
+                        //Application.DoEvents();
                     }
                 }
 
@@ -136,7 +133,8 @@
         /// <param name="xmlFileName">Name of the XML file.</param>
         public void LoadConfiguration(string xmlFileName)
         {
-            this.Settings = SettingsSerializer.LoadSettingsFromXml<TSettings>(xmlFileName);
+            //TODO: Store Settings
+            //this.Settings = SettingsSerializer.LoadSettingsFromXml<TSettings>(xmlFileName);
             this.Settings.Validate();
         }
 
@@ -145,16 +143,8 @@
         /// </summary>
         /// <param name="xmlFileName">Name of the XML file.</param>
         public void SaveConfiguration(string xmlFileName)
-        {
-            SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
-        }
-
-        /// <summary>
-        /// Inits the user control.
-        /// </summary>
-        public void InitUserControl()
-        {
-            this.SettingsUserControl = new PlayingFieldUserControl(this.Settings);
+        {   //TODO: Store Settings
+            //SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
         }
 
         /// <summary>
@@ -269,7 +259,8 @@
         {
             try
             {
-                this.Controller = ServiceLocator.LocateService<CommunicationManager>().CalibrationControl;
+                //TODO: Register at ASP NET Core Controller here
+                //this.Controller = ServiceLocator.LocateService<CommunicationManager>().CalibrationControl;
 
                 // This is the only place a coach gets created, because without
                 // calibration a coach doesn't make any sense
@@ -287,18 +278,18 @@
 
                 //Set the PLayingFieldArea for all ObjectDetectors
                 Rectangle playingFieldArea = new Rectangle(Settings.PlayingFieldXOffset, Settings.PlayingFieldYOffset, Settings.PlayingFieldWidth, Settings.PlayingFieldHeight);
+
+                // TODO: Remove dependency from plugin system
                 var ownBarDetection = ServiceLocator.LocateService<IOwnBarDetection>();
                 var opponentBarDetection = ServiceLocator.LocateService<IOpponentBarDetection>();
                 var ballDetection = ServiceLocator.LocateService<IBallDetection>();
+
                 if (ownBarDetection != null)
                     ownBarDetection.PlayingFieldArea = playingFieldArea;
                 if (opponentBarDetection != null)
                     opponentBarDetection.PlayingFieldArea = playingFieldArea;
                 if (ballDetection != null)
                     ballDetection.PlayingFieldArea = playingFieldArea;
-
-                // Show the Display Window
-                this.BringDisplayToFront();
 
                 // Call the actual implementation of the calibration
                 bool result = this.DoCalibration(sender, e, minPositions, maxPositions);
@@ -377,9 +368,10 @@
                 this.Controller.SetBarLengthInPixel(Bar.Keeper, barLengths[(int)Bar.Keeper]);
                 Thread.Sleep(500);
 
+                // TODO: Registration necessary ?
                 // Register coach and correction parameters
-                ServiceLocator.RegisterService<ICoach>(this.Coach);
-                ServiceLocator.RegisterService<ICorrectionParams>(this.Params);
+                // ServiceLocator.RegisterService<ICoach>(this.Coach);
+                // ServiceLocator.RegisterService<ICorrectionParams>(this.Params);
 
                 this.State = CalibrationState.Finished;
             }
@@ -389,13 +381,6 @@
                 this.State = CalibrationState.Error;
             }
 
-        }
-
-        /// <summary>
-        /// Brings the user control to front.
-        /// </summary>
-        private void BringDisplayToFront()
-        {
         }
     }
 }
