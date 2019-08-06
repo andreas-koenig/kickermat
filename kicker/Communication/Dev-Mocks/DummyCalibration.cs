@@ -1,12 +1,13 @@
-﻿namespace Communication.Calibration.DirectCan
+﻿namespace Communication.Calibration
 {
+    using System;
+    using Communication.NetworkLayer.Packets.Udp.Enums;
     using GlobalDataTypes;
-    using NetworkLayer.Packets.Udp.Enums;
 
     /// <summary>
-    /// Ermöglicht eine Kalibrierung über ein direkt an die Motoren angeschlossenes USB-CAN Interface
+    /// Implementation of a dummy calibration call.
     /// </summary>
-    public class DirectCanCalibration : ICalibrationControl
+    public sealed class DummyCalibration : ICalibrationControl
     {
         /// <summary>
         /// Gets the init status.
@@ -14,10 +15,7 @@
         /// <value>The init status.</value>
         public ControllerStatus InitStatus
         {
-            get
-            {
-                return ControllerStatus.Error;
-            }
+            get { return ControllerStatus.Ok; }
         }
 
         /// <summary>
@@ -26,9 +24,9 @@
         /// <returns>
         /// true if the operation has been successfully, else false
         /// </returns>
-        public ReturnType MoveAllBarsToMaximumPosition()
+        public void MoveAllBarsToMaximumPosition()
         {
-            return ReturnType.NotOk;
+            
         }
 
         /// <summary>
@@ -37,10 +35,10 @@
         /// <returns>
         /// true if the operation has been successfully, else false
         /// </returns>
-        public ReturnType MoveAllBarsToMinimumPosition()
+        public void MoveAllBarsToMinimumPosition()
         {
-            return ReturnType.NotOk;
-        }       
+  
+        }
 
         /// <summary>
         /// Sets the bar length in pixel.
@@ -49,7 +47,7 @@
         /// <param name="barLengthInPixel">The bar length in pixel.</param>
         public void SetBarLengthInPixel(Bar selectedBar, ushort barLengthInPixel)
         {
-            throw new System.NotImplementedException();
+            // Do nothing
         }
 
         /// <summary>
@@ -59,12 +57,12 @@
         /// <param name="angle">The angle.</param>
         public void SetBarAngleForZero(Bar selectedBar, int angle)
         {
-            throw new System.NotImplementedException();
+            // Do nothing
         }
 
-        public ReturnType SetAllAnglesAndPositionsToZero()
+        public void SetAllAnglesAndPositionsToZero()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

@@ -92,13 +92,13 @@
         /// </summary>
         public void InitUserControl()
         {
-            PluginSystemUserControl<IObjectSearchPreparation> imageBinarizationUserControl = new PluginSystemUserControl<IObjectSearchPreparation>(
-                this,
-                this.Settings.ImageBinarizationAlgorithm,
-                this.UpdateObjectSearchPreparation);
-            BasicObjectSearchUserControl userControl = new BasicObjectSearchUserControl(imageBinarizationUserControl, this.ChildUserControl);
+            //PluginSystemUserControl<IObjectSearchPreparation> imageBinarizationUserControl = new PluginSystemUserControl<IObjectSearchPreparation>(
+            //    this,
+            //    this.Settings.ImageBinarizationAlgorithm,
+            //    this.UpdateObjectSearchPreparation);
+            //BasicObjectSearchUserControl userControl = new BasicObjectSearchUserControl(imageBinarizationUserControl, this.ChildUserControl);
 
-            this.SettingsUserControl = userControl;
+            //this.SettingsUserControl = userControl;
         }
 
         /// <summary>

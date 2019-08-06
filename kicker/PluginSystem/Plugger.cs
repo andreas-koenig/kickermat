@@ -60,7 +60,7 @@
                 
                 // Load configuration always before initializing the user control
                 xmlConfigurablePlugin.LoadConfiguration(xmlFile);
-                xmlConfigurablePlugin.InitUserControl();
+                //xmlConfigurablePlugin.InitUserControl();
             }
             
             return instance;

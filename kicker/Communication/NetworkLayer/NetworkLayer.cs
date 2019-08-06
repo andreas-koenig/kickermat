@@ -7,15 +7,15 @@ namespace Communication.NetworkLayer.Udp
     using System.Net.Sockets;
     using System.Text;
     using System.Threading;
-    using System.Windows.Forms;
+    //using System.Windows.Forms;
     using Packets.Tcp.Enum;
     using Packets.Udp;
-    using Utilities;
+    //using Utilities;
 
     /// <summary>
-    /// The netwoklayer service.
+    /// The netwoklayer service
     /// </summary>
-    public sealed class UdpNetworkLayer : IDisposable
+    public sealed class NetworkLayer : IDisposable
     {
         /// <summary>
         /// UDP client for communication with the gateway.
@@ -44,9 +44,9 @@ namespace Communication.NetworkLayer.Udp
         private Thread tcpReader;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpNetworkLayer"/> class.
+        /// Initializes a new instance of the <see cref="NetworkLayer"/> class.
         /// </summary>
-        public UdpNetworkLayer()
+        public NetworkLayer()
         {
             this.sequenceNumber = 0;
             this.udpClient = new UdpClient();
@@ -98,10 +98,10 @@ namespace Communication.NetworkLayer.Udp
         }
 
         /// <summary>
-        /// Sends a <see cref="PositionNetworkObject"/> to the server.
+        /// Sends a <see cref="PlayerPositions"/> to the server.
         /// </summary>
-        /// <param name="networkObject">The <see cref="PositionNetworkObject "/> to send.</param>
-        public int Send(PositionNetworkObject networkObject)
+        /// <param name="networkObject">The <see cref="PlayerPositions "/> to send.</param>
+        public int Send(PlayerPositions networkObject)
         {
             networkObject.SequenceNumber = this.sequenceNumber;
             byte[] datagram = networkObject.Serialize();
@@ -207,7 +207,7 @@ namespace Communication.NetworkLayer.Udp
                 }
                 catch (IOException e)
                 {
-                    SwissKnife.ShowException(this, e);
+                    //SwissKnife.ShowException(this, e);
                 }
             }
         }

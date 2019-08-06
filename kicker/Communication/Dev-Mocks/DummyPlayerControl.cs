@@ -2,7 +2,7 @@
 {
   using System;
   using GlobalDataTypes;
-  using PluginSystem;
+  //using PluginSystem;
 
   /// <summary>
   /// Dummy class to simulate the controlling of players.

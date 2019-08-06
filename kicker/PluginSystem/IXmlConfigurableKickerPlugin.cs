@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for modules which implement a xml configurable plugin.
     /// </summary>
-    public interface IXmlConfigurableKickerPlugin : IKickerPlugin
+    public interface IXmlConfigurableKickerPlugin
     {
         /// <summary>
         /// Loads the configuration from a XML file.
@@ -17,9 +17,5 @@
         /// <param name="xmlFileName">Name of the XML file.</param>
         void SaveConfiguration(string xmlFileName);
 
-        /// <summary>
-        /// Inits the user control.
-        /// </summary>
-        void InitUserControl();
     }
 }
