@@ -2,9 +2,15 @@
   position: relative;
 
   ul {
-    height: 100vh;
-    overflow-y: scroll;
-    scrollbar-width: none;
+    &.ant-menu-root {
+      height: 100vh;
+      overflow-y: scroll;
+      scrollbar-width: none;
+    }
+
+    &.ant-menu-inline {
+      width: 240px;
+    }
 
     &::-webkit-scrollbar {
       width: 0;

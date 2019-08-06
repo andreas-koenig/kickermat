@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 
 import { HUB_CAMERA, HUB_CAMERA_VIDEO, HUB_CAMERA_DISCONNECTED, HUB_CAMERA_CONNECTED } from '@api/api';
+import { VideoInput } from '../../api/api.model';
 
 @Component({
   selector: 'app-video-player',
@@ -11,6 +12,7 @@ import { HUB_CAMERA, HUB_CAMERA_VIDEO, HUB_CAMERA_DISCONNECTED, HUB_CAMERA_CONNE
 export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   private connection: HubConnection;
+
   public imageBase64 = "";
   public isDisconnected = false;
   public cameraName: string | undefined;
@@ -27,6 +29,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       console.log('Error while starting connection!');
       console.log(err);
     }).then(() => {
+      console.log('[VideoPlayer] Started connection')
       this.startCameraStream();
     });
 
@@ -48,7 +51,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   }
 
   private startCameraStream() {
-    this.connection.stream(HUB_CAMERA_VIDEO).subscribe({
+    this.connection.stream(HUB_CAMERA_VIDEO, VideoInput.CAMERA).subscribe({
       next: (img: string) => {
         this.imageBase64 = "data:image/png;base64," + img;
         if (this.isDisconnected) {
@@ -56,11 +59,15 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         }
       },
       complete: () => {
+        console.log('[VideoPlayer] Stream completed');
         // no action
       },
       error: (err: any) => {
+        console.log('[VideoPlayer] Stopped video stream!');
         console.log(err);
       }
     });
+
+    console.log('[VideoPlayer] Started stream');
   }
 }

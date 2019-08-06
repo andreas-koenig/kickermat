@@ -46,8 +46,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4A2BDAA-3738-4C19-8B3F-D6967095F6AA}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
-
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageProcessingNew", "ImageProcessingNew\ImageProcessingNew.csproj", "{2F78B187-6424-4E4D-8878-10669B327784}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -295,6 +296,18 @@ Global
 		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x64.Build.0 = Release|x64
 		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x86.ActiveCfg = Release|Win32
 		{A2047211-A53A-4942-AC4C-19898F647B60}.Release|x86.Build.0 = Release|Win32
+		{2F78B187-6424-4E4D-8878-10669B327784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Debug|x64.Build.0 = Debug|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Debug|x86.Build.0 = Debug|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Release|x64.ActiveCfg = Release|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Release|x64.Build.0 = Release|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F78B187-6424-4E4D-8878-10669B327784}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

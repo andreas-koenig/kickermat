@@ -1,15 +1,16 @@
 <ul nz-menu [nzMode]="'inline'" nzTheme="dark" [nzInlineCollapsed]="isCollapsed">
-  <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menus }"></ng-container>
-  <ng-template #menuTpl let-menus>
+  <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menus, parentPath: '' }"></ng-container>
+  <ng-template #menuTpl let-menus let-parentPath="parentPath">
     <ng-container *ngFor="let menu of menus">
       <li nz-menu-item
           [nzPaddingLeft]="menu.level * 24"
           *ngIf="!menu.children"
           [nzDisabled]="menu.disabled"
-          [nzSelected]="menu.selected">
+          [nzSelected]="menu.selected"
+          nzMatchRouter>
         <span title>
           <i nz-icon [type]="menu.icon" *ngIf="menu.icon"></i>
-          <span>{{ menu.title }}</span>
+          <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
         </span>
       </li>
       <li nz-submenu
@@ -19,10 +20,10 @@
           [nzDisabled]="menu.disabled">
         <span title>
           <i nz-icon [type]="menu.icon" *ngIf="menu.icon"></i>
-          <span>{{ menu.title }}</span>
+          <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
         </span>
         <ul>
-          <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menu.children }"></ng-container>
+          <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menu.children, parentPath: parentPath + '/' + menu.path }"></ng-container>
         </ul>
       </li>
     </ng-container>

@@ -4,36 +4,58 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using ImageProcessingNew;
 using Microsoft.AspNetCore.SignalR;
 using OpenCvSharp;
 using VideoSource;
 
 namespace Webapp.Hubs
 {
-    public class CameraHub : Hub
+    public enum VideoInput
     {
-        private IVideoSource _videoSource;
+        CAMERA = 0,
+        CAMERA_CALIBRATION = 1
+    }
 
+    public class CameraHub : Hub, IVideoConsumer
+    {
+        // Inputs
+        private IVideoSource _camera;
+        private ICameraCalibration _calibration;
+
+        private IVideoSource _selectedSource;
+
+        // SignalR
         private CancellationToken _cancellationToken;
         private Channel<string> _channel;
 
-        public CameraHub(IVideoSource videoSource)
+        public CameraHub(IVideoSource videoSource, ICameraCalibration calibration)
         {
-            _videoSource = videoSource;
+            _camera = videoSource;
+            _calibration = calibration;
         }
 
-        public ChannelReader<String> Video(CancellationToken cancellationToken)
+        public ChannelReader<String> Video(VideoInput input, CancellationToken cancellationToken)
         {
-            _videoSource.FrameArrived += FrameArrivedEventHandler;
-            _videoSource.CameraDisconnected += CameraDisconnectedEventHandler;
-            _videoSource.CameraConnected += CameraConnectedEventHandler;
+            switch (input)
+            {
+                case VideoInput.CAMERA:
+                    _selectedSource = _camera;
+                    break;
+                case VideoInput.CAMERA_CALIBRATION:
+                    _selectedSource = _calibration;
+                    break;
+            }
+
             _channel = Channel.CreateUnbounded<String>();
             _cancellationToken = cancellationToken;
+
+            _selectedSource.StartAcquisition(this);
 
             return _channel.Reader;
         }
 
-        private async void FrameArrivedEventHandler(object sender, FrameArrivedArgs args)
+        public async void OnFrameArrived(object sender, FrameArrivedArgs args)
         {
             try
             {
@@ -47,22 +69,18 @@ namespace Webapp.Hubs
             catch (Exception ex)
             {
                 _channel.Writer.TryComplete(ex);
-
-                _videoSource.FrameArrived -= FrameArrivedEventHandler;
-                _videoSource.CameraDisconnected -= CameraDisconnectedEventHandler;
-                _videoSource.CameraConnected -= CameraConnectedEventHandler;
+                _selectedSource.StopAcquisition(this);
             }
         }
 
-        private async void CameraDisconnectedEventHandler(object sender, CameraEventArgs args)
+        public async void OnCameraDisconnected(object sender, CameraEventArgs args)
         {
             await Clients.Caller.SendAsync("CameraDisconnected", args.CameraName);
         }
 
-        private async void CameraConnectedEventHandler(object sender, CameraEventArgs args)
+        public async void OnCameraConnected(object sender, CameraEventArgs args)
         {
             await Clients.Caller.SendAsync("CameraConnected", args.CameraName);
         }
-
     }
 }

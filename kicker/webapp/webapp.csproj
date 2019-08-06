@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\api\api.model.ts" />
     <None Remove="ClientApp\src\api\api.ts" />
   </ItemGroup>
 
@@ -25,10 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ImageProcessingNew\ImageProcessingNew.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\api\api.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\api\api.ts" />
   </ItemGroup>
 

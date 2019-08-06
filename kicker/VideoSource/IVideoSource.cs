@@ -1,33 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using OpenCvSharp;
 
 namespace VideoSource
 {
     public interface IVideoSource
     {
-        event EventHandler<FrameArrivedArgs> FrameArrived;
-        event EventHandler<CameraEventArgs> CameraDisconnected;
-        event EventHandler<CameraEventArgs> CameraConnected;
-    }
+        /// <summary>
+        /// Start the acquisition of frames from the VideoSource. If
+        /// </summary>
+        /// <param name="consumer">A consumer implementing the callbacks defined in the
+        /// IVideoConsumer interface</param>
+        void StartAcquisition(IVideoConsumer consumer);
 
-    public class FrameArrivedArgs
-    {
-        public IFrame Frame { get; }
-
-        public FrameArrivedArgs(IFrame frame)
-        {
-            Frame = frame;
-        }
-    }
-
-    public class CameraEventArgs
-    {
-        public string CameraName { get; }
-
-        public CameraEventArgs(string cameraName)
-        {
-            CameraName = cameraName;
-        }
+        /// <summary>
+        /// Stop the acquisition of frames.
+        /// </summary>
+        /// <param name="consumer">The consumer using the frames</param>
+        void StopAcquisition(IVideoConsumer consumer);
     }
 }

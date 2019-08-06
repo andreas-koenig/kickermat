@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { KickerNavigation, NavItem } from './navigation';
+import { KICKER_NAV_ITEMS, NavItem } from './navigation';
 
 @Component({
   selector: 'app-navigation',
@@ -7,48 +7,15 @@ import { KickerNavigation, NavItem } from './navigation';
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
-  public navItems: NavItem[] = [];
-
-  public menus = [
-    {
-      level: 1,
-      title: 'Game',
-      icon: 'caret-right',
-      open: false,
-      selected: false,
-      disabled: false
-    },
-    {
-      level: 1,
-      title: 'Camera',
-      icon: 'camera',
-      open: false,
-      selected: false,
-      disabled: false
-    },
-    {
-      level: 1,
-      title: 'Image Processing',
-      icon: 'picture',
-      open: false,
-      selected: false,
-      disabled: false
-    },
-    {
-      level: 1,
-      title: 'Settings',
-      icon: 'setting',
-      open: false,
-      selected: false,
-      disabled: false
-    }
-  ];
+  public menus: NavItem[] = [];
 
   public isCollapsed = false;
-
-  ngOnInit() {
-    this.navItems = KickerNavigation.navItems;
+  
+  public constructor() {
+    this.menus = KICKER_NAV_ITEMS;
   }
+
+  ngOnInit() { }
 
   public toggleCollapsed() {
     this.isCollapsed = !this.isCollapsed;
