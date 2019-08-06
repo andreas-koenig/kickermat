@@ -2,12 +2,12 @@
 {
     using Calibration;
     using PlayerControl;
-    using PluginSystem;
+    //using PluginSystem;
 
     /// <summary>
-    /// Interface for a communication set which consits of a calibration interface and a player control interface.
+    /// Interface for a communication set which consists of a calibration interface and a player control interface.
     /// </summary>
-    public interface ICommunicationSet : IKickerPlugin
+    public interface ICommunicationSet
     {
         /// <summary>
         /// Gets the player control.

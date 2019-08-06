@@ -40,12 +40,8 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Game\Game.csproj" />
     <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
     <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 </Project>

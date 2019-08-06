@@ -191,12 +191,12 @@
         /// </summary>
         public virtual void InitUserControl()
         {
-            UserControl test = Plugger.CreatePluginUserControl<IObjectSearch>(
-                this,
-                this.Settings.ObjectSearchAlgorithm,
-                null,
-                this.InitImageProcessingAlgorithm);
-            this.Control = new BasicObjectDetectionUserControl(this, test);
+            //UserControl test = Plugger.CreatePluginUserControl<IObjectSearch>(
+            //    this,
+            //    this.Settings.ObjectSearchAlgorithm,
+            //    null,
+            //    this.InitImageProcessingAlgorithm);
+            //this.Control = new BasicObjectDetectionUserControl(this, test);
         }
 
         /// <summary>

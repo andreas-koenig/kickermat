@@ -7,28 +7,28 @@ namespace Communication.PlayerControl.UdpGateway
     using NetworkLayer.Packets.Udp;
     using NetworkLayer.Packets.Udp.Enums;
     using NetworkLayer.Udp;
-    using PluginSystem;
-    using Utilities;
+    //using PluginSystem;
+   // using Utilities;
 
     /// <summary>
     /// Class for controlling the players via an IP-CAN-Gateway.
     /// </summary>
-    public class UdpPlayerControl : IPlayerControl, IDisposable
+    public class PlayerControl : IPlayerControl, IDisposable
     {
         /// <summary>
         /// The netwokr layer instance which is used for sending/receiving packages.
         /// </summary>
-        private readonly UdpNetworkLayer networkLayer;               
+        private readonly NetworkLayer networkLayer;
 
         /// <summary>
         /// Lock object for <see cref="networkObject"/>
         /// </summary>
         private readonly object lockerNetworkObject;
-        
+
         /// <summary>
         /// Backing storage for <see cref="NetworkObject"/>
         /// </summary>
-        private PositionNetworkObject networkObject;
+        private PlayerPositions networkObject;
 
         /// <summary>
         /// Reset event for starting/stopping cyclic transmission.
@@ -36,21 +36,22 @@ namespace Communication.PlayerControl.UdpGateway
         private ManualResetEvent resetEvent;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UdpPlayerControl"/> class.
+        /// Initializes a new instance of the <see cref="PlayerControl"/> class.
         /// </summary>
-        public UdpPlayerControl()
+        public PlayerControl()
         {
             Game.GameStarted += this.Game_GameStarted;
             Game.GameStopped += this.Game_GameStopped;
 
-            this.networkLayer = ServiceLocator.LocateService<UdpNetworkLayer>();
+            //TODO: Register at ASP Net Core Controller here
+            //this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
             if (this.networkLayer == null)
             {
-                SwissKnife.ShowError(this, "No network service available.");
+                //SwissKnife.ShowError(this, "No network service available.");
             }
 
             this.lockerNetworkObject = new object();
-            this.NetworkObject = new PositionNetworkObject();
+            this.NetworkObject = new PlayerPositions();
 
             this.resetEvent = new ManualResetEvent(false);
 
@@ -71,7 +72,7 @@ namespace Communication.PlayerControl.UdpGateway
         /// Gets or sets the network object.
         /// </summary>
         /// <value>The network object.</value>
-        private PositionNetworkObject NetworkObject
+        private PlayerPositions NetworkObject
         {
             get
             {
@@ -95,20 +96,10 @@ namespace Communication.PlayerControl.UdpGateway
         /// </summary>
         /// <param name="playerBar">The player bar.</param>
         /// <param name="newPlayerPosition">The new player position.</param>
-        public void MovePlayer(Bar playerBar, ushort newPlayerPosition)
-        {
-            this.MovePlayer(playerBar, newPlayerPosition, false);
-        }       
-
-        /// <summary>
-        /// Moves a player.
-        /// </summary>
-        /// <param name="playerBar">The player bar.</param>
-        /// <param name="newPlayerPosition">The new player position.</param>
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse)
         {
-            switch (playerBar) 
+            switch (playerBar)
             {
                 case Bar.All:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
@@ -124,7 +115,7 @@ namespace Communication.PlayerControl.UdpGateway
                     break;
                 case Bar.Keeper:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
-                    if (waitForResponse) 
+                    if (waitForResponse)
                     {
                         this.NetworkObject.ReplyRequested |= PositionBits.KeeperPosition;
                     }
@@ -161,7 +152,7 @@ namespace Communication.PlayerControl.UdpGateway
                     throw new ArgumentOutOfRangeException("playerBar");
             }
             this.networkLayer.Send(this.NetworkObject);
-            if (waitForResponse) 
+            if (waitForResponse)
             {
                 // TODO: Check return code in Packet
                 this.networkLayer.Read();
@@ -186,7 +177,7 @@ namespace Communication.PlayerControl.UdpGateway
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void SetAngle(Bar bar, short angle, bool waitForResponse)
         {
-            switch (bar) 
+            switch (bar)
             {
                 case Bar.All:
                     this.NetworkObject.KeeperAngle = angle;
@@ -240,12 +231,12 @@ namespace Communication.PlayerControl.UdpGateway
                     throw new ArgumentOutOfRangeException("bar");
             }
             this.networkLayer.Send(this.NetworkObject);
-            if (waitForResponse) 
+            if (waitForResponse)
             {
                 // TODO: Check return code in Packet
                 this.networkLayer.Read();
             }
-        }                
+        }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -254,7 +245,7 @@ namespace Communication.PlayerControl.UdpGateway
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
-        }        
+        }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources

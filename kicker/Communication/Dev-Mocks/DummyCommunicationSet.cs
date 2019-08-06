@@ -1,6 +1,6 @@
 ﻿namespace Communication.Sets
 {
-  using System.Windows.Forms;
+  //using System.Windows.Forms;
   using Communication.Calibration;
   using Communication.PlayerControl;
 
@@ -34,10 +34,10 @@
     /// Gets the user control of the plugin.
     /// </summary>
     /// <value>The user control of the plugin.</value>
-    public UserControl SettingsUserControl
-    {
-      get { return null; }
-    }
+    //public UserControl SettingsUserControl
+    //{
+    //  get { return null; }
+    //}
 
     /// <summary>
     /// Connects to the communication interface.

@@ -1,17 +1,17 @@
 ﻿namespace Communication.Manager
 {
     using System;
-    using System.Windows.Forms;
+    //using System.Windows.Forms;
     using Calibration;
     using PlayerControl;
-    using PluginSystem;
-    using PluginSystem.Configuration;
+    //using PluginSystem;
+    //using PluginSystem.Configuration;
     using Sets;
 
     /// <summary>
-    /// Verwaltet die vorhandenen Kommunikationsschnittstellen
+    /// Manages the existing Communication-Interfaces
     /// </summary>
-    public sealed class CommunicationManager : IXmlConfigurableKickerPlugin, IDisposable
+    public sealed class CommunicationManager : IDisposable
     {
         /// <summary>
         /// Occurs when [communication set changed].
@@ -22,12 +22,6 @@
         /// Gets the currently used communication set.
         /// </summary>
         public ICommunicationSet CommunicationSet { get; private set; }
-
-        /// <summary>
-        /// Gets the user control.
-        /// </summary>
-        /// <value>The user control.</value>
-        public UserControl SettingsUserControl { get; private set; }
 
         /// <summary>
         /// Gets the player control.
@@ -65,7 +59,8 @@
         /// <param name="xmlFileName">Name of the XML file.</param>
         public void LoadConfiguration(string xmlFileName)
         {
-            this.Settings = SettingsSerializer.LoadSettingsFromXml<CommunicationManagerSettings>(xmlFileName);
+            //TODO: Concept for loading/saving settings
+            //this.Settings = SettingsSerializer.LoadSettingsFromXml<CommunicationManagerSettings>(xmlFileName);
         }
 
         /// <summary>
@@ -74,7 +69,8 @@
         /// <param name="xmlFileName">Name of the XML file.</param>
         public void SaveConfiguration(string xmlFileName)
         {
-            SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
+            //TODO: Concept for loading/saving settings
+            //SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
         }
 
         /// <summary>
@@ -82,11 +78,7 @@
         /// </summary>
         public void InitUserControl()
         {
-            this.SettingsUserControl = Plugger.CreatePluginUserControl<ICommunicationSet>(
-                this,
-                this.Settings.CommunicationSet,
-                null,
-                this.InitCommunicationSet);
+
         }
 
         /// <summary>
@@ -94,10 +86,7 @@
         /// </summary>
         public void Dispose()
         {
-            if (this.SettingsUserControl != null)
-            {
-                this.SettingsUserControl.Dispose();
-            }
+
         }
 
         /// <summary>

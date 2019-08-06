@@ -18,30 +18,36 @@
         /// Moves all bars to their maximum positions.
         /// </summary>
         /// <returns>
-        ///     <c>Ok</c> if the operation was successful, else <c>NotOk.</c>
+        ///     True if the operation was successful, Exception otherwise
         /// </returns>
-        ReturnType MoveAllBarsToMaximumPosition();
+        void MoveAllBarsToMaximumPosition();
 
         /// <summary>
         /// Moves all bars to their minimum positions.
         /// </summary>
         /// <returns>
-        ///     <c>Ok</c> if the operation was successful, else <c>NotOk.</c>
+        ///     True if the operation was successful, Exception otherwise
         /// </returns>
-        ReturnType MoveAllBarsToMinimumPosition();      
- 
+        void MoveAllBarsToMinimumPosition();
+
         /// <summary>
         /// Sets the bar length in pixel.
         /// </summary>
         /// <param name="selectedBar">The selected bar.</param>
         /// <param name="barLengthInPixel">The bar length in pixel.</param>
+        /// <returns>
+        ///     True if the operation was successful, Exception otherwise
+        /// </returns>
         void SetBarLengthInPixel(Bar selectedBar, ushort barLengthInPixel);
 
         /// <summary>
         /// Sets the bar angle for zero.
         /// </summary>
         /// <param name="selectedBar">The selected bar.</param>
-        /// <param name="angle">The angle.</param>
+        /// <param name="angle">The angle.</param>        
+        /// <returns>
+        ///     True if the operation was successful, Exception otherwise
+        /// </returns>
         void SetBarAngleForZero(Bar selectedBar, int angle);
 
         /// <summary>
@@ -50,8 +56,8 @@
         /// <param name="selectedBar">The selected bar.</param>
         /// <param name="angle">The angle to set.</param>
         /// <returns>
-        ///     <c>Ok</c> if the operation was successful, else <c>NotOk.</c>
+        ///     True if the operation was successful, Exception otherwise
         /// </returns>
-        ReturnType SetAllAnglesAndPositionsToZero();
+        void SetAllAnglesAndPositionsToZero();
     }
 }
