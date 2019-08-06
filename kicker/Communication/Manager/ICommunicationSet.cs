@@ -2,7 +2,7 @@
 {
     using Calibration;
     using PlayerControl;
-    using PluginSystem;
+    //using PluginSystem;
 
     /// <summary>
     /// Interface for a communication set which consists of a calibration interface and a player control interface.

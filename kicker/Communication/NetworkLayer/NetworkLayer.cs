@@ -7,10 +7,10 @@ namespace Communication.NetworkLayer.Udp
     using System.Net.Sockets;
     using System.Text;
     using System.Threading;
-    using System.Windows.Forms;
+    //using System.Windows.Forms;
     using Packets.Tcp.Enum;
     using Packets.Udp;
-    using Utilities;
+    //using Utilities;
 
     /// <summary>
     /// The netwoklayer service
@@ -207,7 +207,7 @@ namespace Communication.NetworkLayer.Udp
                 }
                 catch (IOException e)
                 {
-                    SwissKnife.ShowException(this, e);
+                    //SwissKnife.ShowException(this, e);
                 }
             }
         }

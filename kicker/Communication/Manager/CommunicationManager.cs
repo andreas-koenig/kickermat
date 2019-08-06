@@ -1,17 +1,17 @@
 ﻿namespace Communication.Manager
 {
     using System;
-    using System.Windows.Forms;
+    //using System.Windows.Forms;
     using Calibration;
     using PlayerControl;
-    using PluginSystem;
-    using PluginSystem.Configuration;
+    //using PluginSystem;
+    //using PluginSystem.Configuration;
     using Sets;
 
     /// <summary>
     /// Manages the existing Communication-Interfaces
     /// </summary>
-    public sealed class CommunicationManager : IXmlConfigurableKickerPlugin, IDisposable
+    public sealed class CommunicationManager : IDisposable
     {
         /// <summary>
         /// Occurs when [communication set changed].
@@ -59,7 +59,8 @@
         /// <param name="xmlFileName">Name of the XML file.</param>
         public void LoadConfiguration(string xmlFileName)
         {
-            this.Settings = SettingsSerializer.LoadSettingsFromXml<CommunicationManagerSettings>(xmlFileName);
+            //TODO: Concept for loading/saving settings
+            //this.Settings = SettingsSerializer.LoadSettingsFromXml<CommunicationManagerSettings>(xmlFileName);
         }
 
         /// <summary>
@@ -68,7 +69,8 @@
         /// <param name="xmlFileName">Name of the XML file.</param>
         public void SaveConfiguration(string xmlFileName)
         {
-            SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
+            //TODO: Concept for loading/saving settings
+            //SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
         }
 
         /// <summary>

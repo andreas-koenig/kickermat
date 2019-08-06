@@ -6,8 +6,8 @@ namespace Communication.Calibration.UdpGateway
     using NetworkLayer;
     using NetworkLayer.Packets.Udp.Enums;
     using NetworkLayer.Udp;
-    using PluginSystem;
-    using Utilities;
+    //using PluginSystem;
+    //using Utilities;
 
     /// <summary>
     /// Implementation of calibration call for the motors via controller with UDP. The calibration is needed for the ImageProcessing
@@ -34,7 +34,7 @@ namespace Communication.Calibration.UdpGateway
             this.datagram = new byte[datagramLength];
 
             //TODO: Substitute Plugin System
-            this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
+            //this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
 
             //TODO: Try-Catch with proper Exception-Handling instead of Swissknife
             //if (this.networkLayer == null)
@@ -85,7 +85,7 @@ namespace Communication.Calibration.UdpGateway
         }
 
         //TODO: Use PlayerControl for Calibration ?
-        public void MoveAllBarsToPosition(UdpPacketType position)
+        private void MoveAllBarsToPosition(UdpPacketType position)
         {
             //TODO: Only SetMinPosition and SetMaxPosition valid for calibration
             foreach (Bar barName in Enum.GetValues(typeof(Bar)))
@@ -172,7 +172,7 @@ namespace Communication.Calibration.UdpGateway
 
             for (int i = offset; i < this.datagram.Length; i++)
             {
-                datagram[i] = 0x00;
+                this.datagram[i] = 0x00;
             }
         }
     }

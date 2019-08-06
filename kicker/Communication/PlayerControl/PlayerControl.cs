@@ -7,8 +7,8 @@ namespace Communication.PlayerControl.UdpGateway
     using NetworkLayer.Packets.Udp;
     using NetworkLayer.Packets.Udp.Enums;
     using NetworkLayer.Udp;
-    using PluginSystem;
-    using Utilities;
+    //using PluginSystem;
+   // using Utilities;
 
     /// <summary>
     /// Class for controlling the players via an IP-CAN-Gateway.
@@ -43,10 +43,11 @@ namespace Communication.PlayerControl.UdpGateway
             Game.GameStarted += this.Game_GameStarted;
             Game.GameStopped += this.Game_GameStopped;
 
-            this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
+            //TODO: Register at ASP Net Core Controller here
+            //this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
             if (this.networkLayer == null)
             {
-                SwissKnife.ShowError(this, "No network service available.");
+                //SwissKnife.ShowError(this, "No network service available.");
             }
 
             this.lockerNetworkObject = new object();
