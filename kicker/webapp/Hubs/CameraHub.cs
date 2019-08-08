@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using ImageProcessingNew;
+using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.SignalR;
 using OpenCvSharp;
 using VideoSource;
@@ -60,6 +60,7 @@ namespace Webapp.Hubs
             try
             {
                 _cancellationToken.ThrowIfCancellationRequested();
+                Context.ConnectionAborted.ThrowIfCancellationRequested();
 
                 byte[] imgBytes;
                 Cv2.ImEncode(".jpg", args.Frame.Mat, out imgBytes);

@@ -30,7 +30,7 @@ namespace VideoSource.Dalsa
 
         protected override void StopAcquisition()
         {
-            if (FrameArrived.GetInvocationList().Length == 0)
+            if (FrameArrived == null)
             {
                 DalsaApi.stop_acquisition();
                 _logger.LogInformation("Acquisition stopped");

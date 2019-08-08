@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using VideoSource;
 
-namespace ImageProcessingNew
+namespace ImageProcessing.Calibration
 {
+    public delegate void CalibrationDoneDelegate(CalibrationResult result);
+    public delegate void ChessboardRecognizedDelegate(int count);
+
     public interface ICameraCalibration : IVideoSource, IVideoConsumer
     {
         /// <summary>
@@ -14,8 +17,11 @@ namespace ImageProcessingNew
         /// </summary>
         /// <param name="calibrationDone">A delegate that gets called when the calibration
         /// terminates.</param>
-        void StartCalibration(EventHandler<CalibrationResult> calibrationDone);
-    }
+        void StartCalibration(
+            CalibrationDoneDelegate calibrationDone,
+            ChessboardRecognizedDelegate ChessboardRecognized
+        );
 
-    public class CalibrationResult { }
+        void AbortCalibration();
+    }
 }

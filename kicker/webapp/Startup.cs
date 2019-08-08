@@ -1,4 +1,4 @@
-﻿using ImageProcessingNew;
+﻿using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +73,7 @@ namespace webapp
                 app.UseSignalR(route =>
                 {
                     route.MapHub<CameraHub>(SIGNALR_BASE_PATH + "/camera");
+                    route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
                 });
 
                 // Configure proxy to Angular frontend if in development mode
