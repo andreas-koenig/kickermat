@@ -2,25 +2,16 @@ namespace PositionPrediction.Default
 {
     using System;
     using System.Drawing;
-    using System.Windows.Forms;
-    using GlobalDataTypes;
-    using PluginSystem;
-    using PluginSystem.Configuration;
 
     /// <summary>
     /// Implements the default distance prediction which doesn't predict any values.
     /// </summary>
-    public sealed class DefaultPositionPrediction : IPositionPrediction, IXmlConfigurableKickerPlugin, IDisposable
+    public sealed class DefaultPositionPrediction : IPositionPrediction, IDisposable
     {
         /// <summary>
         /// Indicates if the instance is already initialized or not.
         /// </summary>
         private bool isInitialized;
-
-        /// <summary>
-        /// The settings used by the instance.
-        /// </summary>
-        private DefaultPositionPredictionSettings settings;
 
         /// <summary>
         /// Internal predicted position.
@@ -83,6 +74,7 @@ namespace PositionPrediction.Default
                     return;
                 }
 
+                // Is a delta because of image-noise needed here ?
                 // Ball hat sich nicht bewegt
                 if ((ballPosition.XPosition == this.lastDetectedPosition.XPosition) &&
                     (ballPosition.YPosition == this.lastDetectedPosition.YPosition) && (ballPosition.Valid == true))
@@ -97,7 +89,7 @@ namespace PositionPrediction.Default
 
                 /* Mit welchen Wert wird gerechnet(Rechenposition)
                  * Falls der Zeitunterschied vom aktuellen Frame zum Frame der vorletzten(also nicht der aktuellen) erkannten Ballposition größer als die Maximum Difference ist wird mit dem letzen vorhergesagten Wert gerechnet  
-                 * sonst mit der vorletzten erkannten Ballpositio
+                 * sonst mit der vorletzten erkannten Ballposition
                  */
 
                 if (currentFrame - this.lastDetectedPosition.FrameNumber > this.settings.MaximumDifference)
@@ -112,7 +104,7 @@ namespace PositionPrediction.Default
                 // Ball wurde von Ballerkennung erkannt
                 if (ballPosition.Valid == true)
                 {
-                    // Framunterschied
+                    // Frameunterschied
                     operatingPosition.FrameDifference = currentFrame - operatingPosition.FrameNumber;
 
                     // Streckung / Stauchung
@@ -234,32 +226,6 @@ namespace PositionPrediction.Default
                 this.predictedPosition.XPosition = ballPosition.XPosition;
                 this.predictedPosition.YPosition = ballPosition.YPosition;
             }
-        }
-
-        /// <summary>
-        /// Loads the configuration from a XML file.
-        /// </summary>
-        /// <param name="xmlFileName">Name of the XML file.</param>
-        public void LoadConfiguration(string xmlFileName)
-        {
-            this.settings = SettingsSerializer.LoadSettingsFromXml<DefaultPositionPredictionSettings>(xmlFileName);
-        }
-
-        /// <summary>
-        /// Saves the configuration to a XML file.
-        /// </summary>
-        /// <param name="xmlFileName">Name of the XML file.</param>
-        public void SaveConfiguration(string xmlFileName)
-        {
-            SettingsSerializer.SaveSettingsToXml(this.settings, xmlFileName);
-        }
-
-        /// <summary>
-        /// Inits the user control.
-        /// </summary>
-        public void InitUserControl()
-        {
-            this.SettingsUserControl = new DefaultPositionPredictionUserControl(this.settings);
         }
 
         /// <summary>
