@@ -23,33 +23,12 @@ namespace ImageProcessing.Calibration
         {
             var builder = new StringBuilder();
             builder.Append("Camera Matrix:\n");
-            AddMatToString(CameraMatrix, builder);
+            builder.Append(Cv2.Format(CameraMatrix, FormatType.Python));
 
             builder.Append("\nDistortion Coefficients:\n");
-            AddMatToString(DistortionCoefficients, builder);
+            builder.Append(Cv2.Format(DistortionCoefficients, FormatType.Python));
 
             return builder.ToString();
-        }
-
-        private void AddMatToString(Mat mat, StringBuilder builder)
-        {
-            var numberFormat = NumberFormatInfo.InvariantInfo;
-
-            builder.Append("[");
-            for (int i = 0; i < mat.Width; i++)
-            {
-                builder.Append("[");
-                for (int j = 0; j < mat.Height; j++)
-                {
-                    builder.Append(mat.At<double>(i, j).ToString(numberFormat));
-                    if (j < (mat.Height - 1))
-                        builder.Append(", ");
-                }
-                builder.Append("]");
-                if (i < (mat.Width - 1))
-                    builder.Append("\n");
-            }
-            builder.Append("]\n");
         }
     }
 }
