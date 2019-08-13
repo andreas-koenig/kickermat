@@ -52,9 +52,16 @@ void get_available_cameras() {
     // TODO: return cameras to C# caller
 }
 
-void start_acquisition(char* camera_name) {
-    CameraController::getInstance()->start_acquisition(camera_name);
-	std::cout << "[Dalsa VideoSource] Acquisition started" << std::endl;
+bool start_acquisition(char* camera_name) {
+    bool success = CameraController::getInstance()->start_acquisition(camera_name);
+    if (success) {
+        std::cout << "[Dalsa VideoSource] Acquisition started" << std::endl;
+    }
+    else {
+        std::cout << "[Dalsa VideoSource] Acquisition start failed" << std::endl;
+    }
+
+    return success;
 }
 
 void stop_acquisition() {

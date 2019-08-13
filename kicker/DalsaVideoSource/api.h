@@ -14,7 +14,7 @@ extern "C" {
     );
     DALSA_API void shutdown();
     DALSA_API void get_available_cameras();
-	DALSA_API void start_acquisition(char* camera_name);
+	DALSA_API bool start_acquisition(char* camera_name);
 	DALSA_API void stop_acquisition();
 	DALSA_API void release_buffer(int index);
 }

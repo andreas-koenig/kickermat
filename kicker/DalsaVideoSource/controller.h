@@ -24,7 +24,7 @@ public:
 
 
     // Acquisition functions
-    void start_acquisition(char* camera_name);
+    bool start_acquisition(char* camera_name);
     void stop_acquisition();
 
     // Callbacks

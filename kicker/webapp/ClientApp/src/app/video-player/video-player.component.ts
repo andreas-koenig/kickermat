@@ -1,8 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 
-import { HUB_CAMERA, HUB_CAMERA_VIDEO, HUB_CAMERA_DISCONNECTED, HUB_CAMERA_CONNECTED } from '@api/api';
-import { VideoInput } from '../../api/api.model';
+import { VIDEOSOURCE_ENDPOINTS, VideoSourceEndpoint } from '@api/api';
+import { VideoSource } from '../../api/api.model';
+
+enum EndpointStatus {
+  Error,
+  Loading,
+  Streaming,
+  Disconnected
+}
 
 @Component({
   selector: 'app-video-player',
@@ -11,51 +18,78 @@ import { VideoInput } from '../../api/api.model';
 })
 export class VideoPlayerComponent implements OnInit, OnDestroy {
 
-  private connection: HubConnection;
+  private connection: HubConnection | undefined;
+  private endpoint: VideoSourceEndpoint | undefined;
 
+  @Input('videoSource') videoSource = VideoSource.CAMERA;
   public imageBase64 = "";
-  public isDisconnected = false;
+  public status: EndpointStatus = EndpointStatus.Loading;
+  public statusEnum = EndpointStatus;
   public cameraName: string | undefined;
 
   constructor() {
+    this.endpoint = VIDEOSOURCE_ENDPOINTS.get(this.videoSource);
+
+    if (!this.endpoint) {
+      // TODO: throw error
+      return;
+    }
+
     this.connection = new HubConnectionBuilder()
-      .withUrl(HUB_CAMERA)
-      .configureLogging(LogLevel.Debug)
+      .withUrl(this.endpoint.hub)
       .build();
   }
 
   ngOnInit() {
+    if (!this.connection || !this.endpoint) {
+      return;
+    }
+
     this.connection.start().catch(err => {
-      console.log('Error while starting connection!');
-      console.log(err);
+      console.log('[VideoPlayer]: Connection to %s failed: %O', this.videoSource, err);
+      // TODO: show image
     }).then(() => {
-      console.log('[VideoPlayer] Started connection')
+      console.log('[VideoPlayer] Started connection to %s', this.videoSource);
       this.startCameraStream();
     });
 
-    this.connection.on(HUB_CAMERA_DISCONNECTED, (cameraName: string) => {
-      console.log(cameraName + " disconnected");
-      this.isDisconnected = true;
+    this.connection.on(this.endpoint.disconnected, (cameraName: string) => {
+      console.log('[VideoPlayer] Camera %s disconnected', this.cameraName);
+      this.status = EndpointStatus.Disconnected;
       this.cameraName = cameraName;
     });
 
-    this.connection.on(HUB_CAMERA_CONNECTED, (cameraName: string) => {
-      console.log(cameraName + " connected");
-      this.isDisconnected = false;
+    this.connection.on(this.endpoint.connected, (cameraName: string) => {
+      console.log('[VideoPlayer] Camera %s connected', this.cameraName);
       this.cameraName = cameraName;
+
+      if (this.status = EndpointStatus.Error) {
+        this.status = EndpointStatus.Loading;
+        this.startCameraStream();
+      } else {
+        this.status = EndpointStatus.Streaming;
+      }
     });
   }
 
   ngOnDestroy() {
-    this.connection.stop();
+    if (this.connection) {
+      this.connection.stop();
+    }
   }
 
-  private startCameraStream() {
-    this.connection.stream(HUB_CAMERA_VIDEO, VideoInput.CAMERA).subscribe({
+  public startCameraStream() {
+    if (!this.connection || !this.endpoint) {
+      return;
+    }
+
+    this.status = EndpointStatus.Loading;
+
+    this.connection.stream(this.endpoint.video, VideoSource.CAMERA).subscribe({
       next: (img: string) => {
         this.imageBase64 = "data:image/png;base64," + img;
-        if (this.isDisconnected) {
-          this.isDisconnected = false;
+        if (this.status != EndpointStatus.Streaming) {
+          this.status = EndpointStatus.Streaming;
         }
       },
       complete: () => {
@@ -63,8 +97,8 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         // no action
       },
       error: (err: any) => {
-        console.log('[VideoPlayer] Stopped video stream!');
-        console.log(err);
+        console.log('[VideoPlayer] Video stream stopped: %O', err);
+        this.status = EndpointStatus.Error;
       }
     });
 

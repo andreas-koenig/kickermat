@@ -1,5 +1,9 @@
 :host {
   width: 100%;
+  font-weight: 600;
+  text-shadow: 1px 1px 5px black;
+  color: white;
+  text-align: center
 }
 
 #video {
@@ -7,29 +11,37 @@
   height: 100%;
 
   #img-container {
-    display: flex;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
 
     #image {
-      max-width: 90vw;
-      max-height: 90vh;
+      max-width: 90%;
+      max-height: 90%;
 
       &.disconnected {
         filter: grayscale(1);
       }
     }
 
-    #overlay {
+    #disconnected {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-image: url("/assets/img/noise.png");
+    }
+
+    #error {
+      position: absolute;
+    }
+
+    #video-bg {
+      max-height: 90%;
+      max-width: 90%;
+    }
+
+    nz-spin {
+      position: absolute;
     }
   }
 }

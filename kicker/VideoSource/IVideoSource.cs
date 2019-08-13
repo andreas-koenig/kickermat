@@ -8,10 +8,12 @@ namespace VideoSource
     public interface IVideoSource
     {
         /// <summary>
-        /// Start the acquisition of frames from the VideoSource. If
+        /// Start the acquisition of frames from the VideoSource.
         /// </summary>
         /// <param name="consumer">A consumer implementing the callbacks defined in the
         /// IVideoConsumer interface</param>
+        /// <exception cref="VideoSourceException">Thrown when the acquisition cannot be started
+        /// </exception>
         void StartAcquisition(IVideoConsumer consumer);
 
         /// <summary>

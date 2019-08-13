@@ -44,6 +44,9 @@ namespace VideoSource.Dalsa
             startup_dll(_frameArrivedDelegate, _connectedDelegate, _disconnectedDelegate);
         }
 
+        [DllImport(DALSA_DLL)]
+        internal static extern void shutdown();
+
         /// <summary>
         /// Get the available cameras
         /// </summary>
@@ -55,7 +58,7 @@ namespace VideoSource.Dalsa
         /// Start the acquisition.
         /// </summary>
         [DllImport(DALSA_DLL)]
-        internal static extern void start_acquisition(string camera_name);
+        internal static extern bool start_acquisition(string camera_name);
 
         /// <summary>
         /// Stop the acquisition.

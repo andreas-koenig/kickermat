@@ -32,12 +32,10 @@ namespace ImageProcessing.Calibration
         // Video
         private readonly IVideoSource _videoSource;
 
-        private readonly ILogger<ICameraCalibration> _logger;
-
         public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger)
+            : base(logger)
         {
             _videoSource = videoSource;
-            _logger = logger;
             _objectLock = new object();
             _chessboardCorners = new List<Point2f[]>();
             _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
@@ -50,7 +48,7 @@ namespace ImageProcessing.Calibration
             if (FrameArrived.GetInvocationList().Length == 1 && !_isCalibrationRunning)
             {
                 _videoSource.StartAcquisition(this);
-                _logger.LogInformation("Acquisition started");
+                Logger.LogInformation("Acquisition started");
             }
         }
 
@@ -61,7 +59,7 @@ namespace ImageProcessing.Calibration
             if (FrameArrived == null && !_isCalibrationRunning)
             {
                 _videoSource.StopAcquisition(this);
-                _logger.LogInformation("Acquisition stopped");
+                Logger.LogInformation("Acquisition stopped");
             }
         }
 
@@ -207,7 +205,7 @@ namespace ImageProcessing.Calibration
                 CalibrationFlags.FixK4 | CalibrationFlags.FixK5);
 
             var result = new CalibrationResult(cameraMatrix, distCoeffs, error);
-            _logger.LogInformation("Calibration done:\n{}", result);
+            Logger.LogInformation("Calibration done:\n{}", result);
 
             return result;
         }

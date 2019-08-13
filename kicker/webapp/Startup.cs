@@ -1,4 +1,5 @@
 ﻿using ImageProcessing.Calibration;
+using ImageProcessing.Preprocessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,8 @@ namespace webapp
             // Kicker services
             services.AddSingleton<IVideoSource, DalsaVideoSource>();
             services.AddSingleton<ICameraCalibration, CameraCalibration>();
+            services.AddSingleton<IPreprocessor, Preprocessor>();
+            services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
