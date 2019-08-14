@@ -45,10 +45,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DalsaVideoSource", "DalsaVi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4A2BDAA-3738-4C19-8B3F-D6967095F6AA}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageProcessingNew", "ImageProcessingNew\ImageProcessingNew.csproj", "{2F78B187-6424-4E4D-8878-10669B327784}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessingNew", "ImageProcessingNew\ImageProcessingNew.csproj", "{2F78B187-6424-4E4D-8878-10669B327784}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
