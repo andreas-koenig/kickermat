@@ -43,7 +43,7 @@ namespace Webapp.Hubs
                     videoSource = _camera;
                     break;
                 case VideoInput.CAMERA_CALIBRATION:
-                    videoSource = _cameraCalibration;
+                    videoSource = _camera;
                     break;
                 default:
                     videoSource = _camera;

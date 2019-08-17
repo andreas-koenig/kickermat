@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Route } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { KICKER_NAV_ITEMS } from './navigation/navigation';
 import { GameComponent } from './game/game.component';
 import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +15,17 @@ import en from '@angular/common/locales/en';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
+
+const routes: Route[] = [
+  {
+    path: 'camera',
+    component: CameraComponent,
+  },
+  {
+    path: 'camera/calibration',
+    component: CalibrationComponent
+  }
+]
 
 registerLocaleData(en);
 
@@ -30,7 +40,7 @@ registerLocaleData(en);
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(KICKER_NAV_ITEMS),
+    RouterModule.forRoot(routes),
     FlexLayoutModule,
     NgZorroAntdModule,
     FormsModule,

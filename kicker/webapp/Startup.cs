@@ -1,4 +1,6 @@
-﻿using ImageProcessing.Calibration;
+﻿using System.IO;
+using Configuration;
+using ImageProcessing.Calibration;
 using ImageProcessing.Preprocessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,9 +53,16 @@ namespace webapp
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            // Add configuration
+            var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+            var config = configBuilder.Build();
+            //services.AddOptions(config);
+
             // Kicker services
             services.AddSingleton<IVideoSource, DalsaVideoSource>();
-            services.AddSingleton<ICameraCalibration, CameraCalibration>();
+            services.AddTransient<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
         }

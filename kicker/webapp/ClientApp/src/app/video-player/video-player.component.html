@@ -1,5 +1,5 @@
-<div id="video" fxLayout="row" fxLayoutAlign="center center">
-  <div id="img-container">
+<div id="video" fxLayout="row" fxLayoutAlign="center center" [ngStyle]="{'height': videoHeight}">
+  <div id="img-container" [ngStyle]="{'height': videoHeight}">
     <img id="video-bg" *ngIf="status == statusEnum.Loading || status == statusEnum.Error" src="assets/img/video-bg.jpg">
 
     <img id="image" src="{{imageBase64}}" [ngClass]="{'disconnected': status == statusEnum.Disconnected}">

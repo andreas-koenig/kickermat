@@ -22,6 +22,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private endpoint: VideoSourceEndpoint | undefined;
 
   @Input('videoSource') videoSource = VideoSource.CAMERA;
+  @Input('videoHeight') videoHeight = "90vh";
   public imageBase64 = "";
   public status: EndpointStatus = EndpointStatus.Loading;
   public statusEnum = EndpointStatus;

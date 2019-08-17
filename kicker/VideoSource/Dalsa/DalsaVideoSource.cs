@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Configuration;
+using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;

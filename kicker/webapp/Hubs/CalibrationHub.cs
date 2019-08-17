@@ -30,13 +30,13 @@ namespace Webapp.Hubs
             return _channel.Reader;
         }
 
-        private async void ChessboardRecognized(int count)
+        private async void ChessboardRecognized(int progress)
         {
             try
             {
                 _cancellationToken.ThrowIfCancellationRequested();
                 Context.ConnectionAborted.ThrowIfCancellationRequested();
-                await _channel.Writer.WriteAsync(count);
+                await _channel.Writer.WriteAsync(progress);
             }
             catch (Exception)
             {

@@ -6,9 +6,9 @@ using VideoSource;
 namespace ImageProcessing.Calibration
 {
     public delegate void CalibrationDoneDelegate(CalibrationResult result);
-    public delegate void ChessboardRecognizedDelegate(int count);
+    public delegate void ChessboardRecognizedDelegate(int progress);
 
-    public interface ICameraCalibration : IVideoSource, IVideoConsumer
+    public interface ICameraCalibration : IVideoConsumer
     {
         /// <summary>
         /// Start the calibration to calculate the parameters for the correction of the radial and

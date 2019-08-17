@@ -38,7 +38,7 @@ namespace Webapp.Hubs
             }
             catch (VideoSourceException ex)
             {
-                _videoSource.StopAcquisition(this);
+                AbortConnection();
                 var hubException = new HubException(ex.Message);
                 _channel.Writer.TryComplete(hubException);
             }

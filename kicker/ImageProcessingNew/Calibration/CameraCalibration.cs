@@ -10,7 +10,7 @@ using VideoSource;
 
 namespace ImageProcessing.Calibration
 {
-    public class CameraCalibration : BaseVideoSource, ICameraCalibration
+    public class CameraCalibration : ICameraCalibration
     {
         // Constants
         private const int BOARD_WIDTH = 9;
@@ -32,35 +32,15 @@ namespace ImageProcessing.Calibration
         // Video
         private readonly IVideoSource _videoSource;
 
+        private readonly ILogger<ICameraCalibration> _logger;
+
         public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger)
-            : base(logger)
         {
             _videoSource = videoSource;
             _objectLock = new object();
             _chessboardCorners = new List<Point2f[]>();
             _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
-        }
-
-        protected override void StartAcquisition()
-        {
-            Console.WriteLine("calib: startacq");
-
-            if (FrameArrived.GetInvocationList().Length == 1 && !_isCalibrationRunning)
-            {
-                _videoSource.StartAcquisition(this);
-                Logger.LogInformation("Acquisition started");
-            }
-        }
-
-        protected override void StopAcquisition()
-        {
-            Console.WriteLine("calib: stopacq");
-
-            if (FrameArrived == null && !_isCalibrationRunning)
-            {
-                _videoSource.StopAcquisition(this);
-                Logger.LogInformation("Acquisition stopped");
-            }
+            _logger = logger;
         }
 
         public void StartCalibration(
@@ -69,33 +49,29 @@ namespace ImageProcessing.Calibration
         {
             lock (_objectLock)
             {
+                if (_isCalibrationRunning)
+                {
+                    AbortCalibration();
+                }
+
                 _calibrationDone += calibrationDone;
                 _chessboardRecognized += chessboardRecognized;
-
-                if (!_isCalibrationRunning)
-                {
-                    _isCalibrationRunning = true;
-                    if (FrameArrived == null)
-                    {
-                        _videoSource.StartAcquisition(this);
-                    }
-                }
+                _isCalibrationRunning = true;
+                _videoSource.StartAcquisition(this);
             }
+
+            _logger.LogInformation("Calibration started");
         }
 
         public void AbortCalibration()
         {
             lock (_objectLock)
             {
-                if (!_isCalibrationRunning)
-                {
-                    return;
-                }
-
                 _videoSource.StopAcquisition(this);
                 _isCalibrationRunning = false;
                 _calibrationDone = null;
                 _chessboardRecognized = null;
+                _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
             }
         }
 
@@ -109,13 +85,10 @@ namespace ImageProcessing.Calibration
 
             if (_isCalibrationRunning && _chessboardCorners.Count == AMOUNT_FRAMES)
             {
-                if (FrameArrived == null)
-                {
-                    _videoSource.StopAcquisition(this);
-                }
-
                 lock (_objectLock)
                 {
+                    _videoSource.StopAcquisition(this);
+
                     var result = CalculateDistortionParameters(args.Frame.Mat);
                     _isCalibrationRunning = false;
                     _calibrationDone(result);
@@ -123,23 +96,11 @@ namespace ImageProcessing.Calibration
                     _chessboardRecognized = null;
                 }
             }
-
-            FrameArrived?.Invoke(this, args);
         }
 
-        public void OnCameraDisconnected(object sender, CameraEventArgs args)
+        private Task FindChessboardCornersAsync(Mat frame)
         {
-            CameraDisconnected?.Invoke(this, args);
-        }
-
-        public void OnCameraConnected(object sender, CameraEventArgs args)
-        {
-            CameraConnected?.Invoke(this, args);
-        }
-
-        private Task<Mat> FindChessboardCornersAsync(Mat frame)
-        {
-            return Task<Mat>.Run(() =>
+            return Task.Run(() =>
             {
                 _isFindingCorners = true;
 
@@ -149,9 +110,14 @@ namespace ImageProcessing.Calibration
                     ChessboardFlags.FastCheck |
                     ChessboardFlags.NormalizeImage);
 
-                if (found)
+                if (!found)
                 {
-                    var grayFrame = new Mat();
+                    _isFindingCorners = false;
+                    return;
+                }
+
+                using (var grayFrame = new Mat())
+                {
                     Cv2.CvtColor(frame, grayFrame, ColorConversionCodes.BGR2GRAY);
 
                     var correctedCorners = Cv2.CornerSubPix(
@@ -160,17 +126,17 @@ namespace ImageProcessing.Calibration
 
                     Cv2.DrawChessboardCorners(frame, _boardSize,
                         (IEnumerable<Point2f>)correctedCorners, found);
+                    frame.Dispose();
 
                     lock (_objectLock)
                     {
                         _chessboardCorners.Add(correctedCorners);
                     }
-                    _chessboardRecognized(_chessboardCorners.Count);
                 }
 
+                int progress = (int)((double)_chessboardCorners.Count / AMOUNT_FRAMES * 100);
                 _isFindingCorners = false;
-
-                return frame;
+                _chessboardRecognized?.Invoke(progress);
             });
         }
 
@@ -205,9 +171,19 @@ namespace ImageProcessing.Calibration
                 CalibrationFlags.FixK4 | CalibrationFlags.FixK5);
 
             var result = new CalibrationResult(cameraMatrix, distCoeffs, error);
-            Logger.LogInformation("Calibration done:\n{}", result);
+            _logger.LogInformation("Calibration done:\n{}", result);
 
             return result;
+        }
+
+        public void OnCameraDisconnected(object sender, CameraEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCameraConnected(object sender, CameraEventArgs args)
+        {
+            throw new NotImplementedException();
         }
     }
 }
