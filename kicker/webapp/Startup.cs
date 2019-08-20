@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ImageProcessing.Calibration;
+using ImageProcessing.Preprocessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using VideoSource;
 using VideoSource.Dalsa;
 using Webapp.Hubs;
@@ -23,6 +18,7 @@ namespace webapp
         internal const string URL = "http://localhost:5001";
         internal const string PROXY_URL = "http://localhost:4200";
         private static readonly string[] CORS_URLS = { URL, PROXY_URL };
+        private const string SIGNALR_BASE_PATH = "/signalr";
 
         public Startup(IConfiguration configuration)
         {
@@ -57,6 +53,9 @@ namespace webapp
 
             // Kicker services
             services.AddSingleton<IVideoSource, DalsaVideoSource>();
+            services.AddSingleton<ICameraCalibration, CameraCalibration>();
+            services.AddSingleton<IPreprocessor, Preprocessor>();
+            services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,7 +75,8 @@ namespace webapp
                 // Configure SignalR hubs
                 app.UseSignalR(route =>
                 {
-                    route.MapHub<CameraHub>("/camera");
+                    route.MapHub<CameraHub>(SIGNALR_BASE_PATH + "/camera");
+                    route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
                 });
 
                 // Configure proxy to Angular frontend if in development mode

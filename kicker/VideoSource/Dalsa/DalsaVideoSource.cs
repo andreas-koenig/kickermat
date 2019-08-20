@@ -7,108 +7,41 @@ using System.Text;
 
 namespace VideoSource.Dalsa
 {
-    public class DalsaVideoSource : IVideoSource
+    public class DalsaVideoSource : BaseVideoSource
     {
+        private const string CAMERA_NAME = "Nano-C1280_1";
         private static DalsaVideoSource _dalsaVideoSource;
-        private ILogger _logger;
 
-        private object objectLock = new object();
-        private EventHandler<FrameArrivedArgs> _frameArrived;
-        public event EventHandler<FrameArrivedArgs> FrameArrived
-        {
-            add
-            {
-                lock (objectLock)
-                {
-                    _frameArrived += value;
-                    if (_frameArrived.GetInvocationList().Length == 1)
-                    {
-                        StartAcquisition();
-                    }
-                }
-            }
-            remove
-            {
-                lock (objectLock)
-                {
-                    if (_frameArrived.GetInvocationList().Length == 1)
-                    {
-                        StopAcquisition();
-                    }
-                    _frameArrived -= value;
-                }
-            }
-        }
-
-        private EventHandler<CameraEventArgs> _cameraDisconnected;
-        public event EventHandler<CameraEventArgs> CameraDisconnected {
-            add
-            {
-                lock (objectLock)
-                {
-                    _cameraDisconnected += value;
-                }
-            }
-            remove
-            {
-                lock (objectLock)
-                {
-                    _cameraDisconnected -= value;
-                }
-            }
-        }
-
-        private EventHandler<CameraEventArgs> _cameraConnected;
-        public event EventHandler<CameraEventArgs> CameraConnected
-        {
-            add
-            {
-                lock (objectLock)
-                {
-                    _cameraConnected += value;
-                }
-            }
-            remove
-            {
-                lock (objectLock)
-                {
-                    _cameraConnected -= value;
-                }
-            }
-        }
-
-        public DalsaVideoSource(ILogger<DalsaVideoSource> logger)
+        public DalsaVideoSource(ILogger<DalsaVideoSource> logger) : base(logger)
         {
             _dalsaVideoSource = this;
-            _logger = logger;
+        }
+
+        protected override void StartAcquisition()
+        {
             DalsaApi.startup(OnFrameArrived, ServerConnected, ServerDisconnected);
+            if (!DalsaApi.start_acquisition(CAMERA_NAME))
+            {
+                DalsaApi.shutdown();
+                // TODO: Enrich error with more information (SapManager::GetLastStatus())
+                throw new VideoSourceException("Failed to start the acquisition");
+            }
+        }
+
+        protected override void StopAcquisition()
+        {
+            DalsaApi.stop_acquisition();
+            DalsaApi.shutdown();
         }
 
         private static void ServerConnected(string serverName)
         {
-            _dalsaVideoSource._logger.LogInformation(serverName + " connected");
-            _dalsaVideoSource?._cameraConnected
-                ?.Invoke(_dalsaVideoSource, new CameraEventArgs(serverName));
+            _dalsaVideoSource?.HandleConnect(new CameraEventArgs(serverName));
         }
 
         private static void ServerDisconnected(string serverName)
         {
-            _dalsaVideoSource._logger.LogInformation(serverName + " disconnected");
-            _dalsaVideoSource?._cameraDisconnected
-                ?.Invoke(_dalsaVideoSource, new CameraEventArgs(serverName));
-        }
-
-        private void StartAcquisition()
-        {
-            DalsaApi.start_acquisition("test");
-            _logger.LogInformation("Acquisition started");
-        }
-
-
-        private void StopAcquisition()
-        {
-            DalsaApi.stop_acquisition();
-            _logger.LogInformation("Acquisition stopped");
+            _dalsaVideoSource?.HandleDisconnect(new CameraEventArgs(serverName));
         }
 
         private static void OnFrameArrived(int index, IntPtr address)
@@ -121,8 +54,7 @@ namespace VideoSource.Dalsa
             var frame = new DalsaFrame(colorMat);
             DalsaApi.release_buffer(index);
 
-            _dalsaVideoSource?._frameArrived
-                ?.Invoke(_dalsaVideoSource, new FrameArrivedArgs(frame));
+            _dalsaVideoSource.HandleFrameArrived(new FrameArrivedArgs(frame));
         }
     }
 }

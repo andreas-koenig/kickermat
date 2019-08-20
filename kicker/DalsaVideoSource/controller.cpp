@@ -24,18 +24,30 @@ void CameraController::releaseInstance() {
 CameraController::CameraController() {}
 CameraController::~CameraController() {}
 
-void CameraController::start_acquisition(char* camera_name) {
-    acquisitionDevice = new SapAcqDevice("Nano-C1280_1", FALSE); // TODO: Use camera_name
+bool CameraController::start_acquisition(char* camera_name) {
+    acquisitionDevice = new SapAcqDevice(camera_name, FALSE); // TODO: Use camera_name
     buffer = new SapBufferWithTrash(BUFFER_SIZE, acquisitionDevice);
     transfer = new SapAcqDeviceToBuf(acquisitionDevice, buffer, XferCallback);
     transfer->SetAutoEmpty(false);
 
-    acquisitionDevice->Create();
-    buffer->Create();
-    transfer->Create();
-    transfer->Grab();
+    bool success = acquisitionDevice->Create();
+    if (!success)
+        return false;
+
+    success = buffer->Create();
+    if (!success)
+        return false;
+
+    success = transfer->Create();
+    if (!success)
+        return false;
+
+    success = transfer->Grab();
+    if (!success)
+        return false;
 
     acquisition_running = true;
+    return true;
 }
 
 void CameraController::stop_acquisition() {
@@ -86,7 +98,12 @@ void CameraController::XferCallback(SapXferCallbackInfo* info) {
 	SapBufferWithTrash* buffer = CameraController::getInstance()->buffer;
 	int index = buffer->GetIndex();
 	void* address;
-	buffer->GetAddress(index, &address);
+	bool success = buffer->GetAddress(index, &address);
+    
+    if (!success) {
+        std::cout << "[Dalsa VideoSource] Failed to get buffer address" << std::endl;
+        return;
+    }
 	
     CameraController::getInstance()->frame_arrived(buffer->GetIndex(), address);
 }
