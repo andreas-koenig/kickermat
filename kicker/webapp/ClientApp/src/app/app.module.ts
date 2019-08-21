@@ -15,6 +15,8 @@ import en from '@angular/common/locales/en';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
+import { ParameterListComponent } from './parameter-list/parameter-list.component';
+import { KickerParameterComponent } from './parameter-list/kicker-parameter/kicker-parameter.component';
 
 const routes: Route[] = [
   {
@@ -36,7 +38,9 @@ registerLocaleData(en);
     GameComponent,
     VideoPlayerComponent,
     CameraComponent,
-    CalibrationComponent
+    CalibrationComponent,
+    ParameterListComponent,
+    KickerParameterComponent,
   ],
   imports: [
     BrowserModule,

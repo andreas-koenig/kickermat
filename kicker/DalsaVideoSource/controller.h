@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include "SapClassBasic.h"
 
 const int TRANSFER_WAIT_TIMEOUT = 5000;

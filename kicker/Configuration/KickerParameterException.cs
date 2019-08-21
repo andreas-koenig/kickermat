@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Configuration
 {
-    public interface IKickerParameter
+    public class KickerParameterException : Exception
     {
-        string Name { get; }
-        string Description { get; }
+
     }
 }

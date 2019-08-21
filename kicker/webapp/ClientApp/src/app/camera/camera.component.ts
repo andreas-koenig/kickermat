@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { KickerComponent } from '../../api/api.model';
 
 @Component({
   selector: 'app-camera',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./camera.component.scss']
 })
 export class CameraComponent implements OnInit {
+  public kickerComponentEnum = KickerComponent;
 
   constructor() { }
 

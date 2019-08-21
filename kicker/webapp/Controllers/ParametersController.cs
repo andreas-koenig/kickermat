@@ -2,26 +2,90 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using VideoSource;
 
 namespace webapp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/parameters")]
     [ApiController]
     public class ParametersController : ControllerBase
     {
-        // GET api/values
-        [HttpGet("{component}")]
-        public ActionResult<IEnumerable<string>> Get(string component)
+        private ILogger<ParametersController> _logger;
+        private IServiceProvider _services;
+
+        public ParametersController(ILogger<ParametersController> logger,
+            IServiceProvider services)
         {
-            return new string[] { "value1", "value2" };
+            _logger = logger;
+            _services = services;
         }
 
-        // PUT api/values/5
-        [HttpPut("{component}")]
-        public void Put(int component, [FromBody] string value)
+        [HttpGet("{component}")]
+        public ActionResult<IEnumerable<KickerParameterAttribute>> GetParameters(string component)
         {
+            var kickerComponent = GetComponent(component);
+            if (kickerComponent == null)
+            {
+                return NotFound(String.Format("The component {0} was not found", component));
+            }
 
+            List<KickerParameterAttribute> attrs = new List<KickerParameterAttribute>();
+            foreach (var prop in kickerComponent.GetType().GetProperties())
+            {
+                var propAttrs = (KickerParameterAttribute[])prop
+                    .GetCustomAttributes(typeof(KickerParameterAttribute), false);
+                if (propAttrs?.Length == 1)
+                {
+                    propAttrs[0].Value = prop.GetValue(kickerComponent);
+                    attrs.Add(propAttrs[0]);
+                }
+            }
+
+            return Ok(attrs);
+        }
+
+        [HttpPut("{component}/{parameter}/{value}")]
+        public IActionResult SetParameter(string component, string parameter, object value)
+        {
+            var kickerComponent = GetComponent(component);
+
+            foreach (var prop in kickerComponent.GetType().GetProperties())
+            {
+                var propAttrs = (KickerParameterAttribute[])prop
+                    .GetCustomAttributes(typeof(KickerParameterAttribute), false);
+                if (propAttrs?.Length == 1 && propAttrs[0].Name.Equals(parameter))
+                {
+                    try
+                    {
+                        prop.SetValue(kickerComponent, value);
+                        return Ok();
+                    }
+                    catch (KickerParameterException ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest("Could not set the parameter");
+                    }
+                }
+            }
+
+            return NotFound(String.Format("The parameter {0} was not found", parameter));
+        }
+
+        private object GetComponent(string componentName)
+        {
+            switch (componentName)
+            {
+                case "Camera":
+                    return _services.GetService(typeof(IVideoSource));
+                default:
+                    return null;
+            }
         }
     }
 }

@@ -31,20 +31,24 @@ bool CameraController::start_acquisition(char* camera_name) {
     transfer->SetAutoEmpty(false);
 
     bool success = acquisitionDevice->Create();
-    if (!success)
+    if (!success) {
         return false;
+    }
 
     success = buffer->Create();
-    if (!success)
+    if (!success) {
         return false;
+    }
 
     success = transfer->Create();
-    if (!success)
+    if (!success) {
         return false;
+    }
 
     success = transfer->Grab();
-    if (!success)
+    if (!success) {
         return false;
+    }
 
     acquisition_running = true;
     return true;

@@ -1,0 +1,21 @@
+<h3>{{parameter.name}}</h3>
+
+<p class="description">{{parameter.description}}</p>
+
+<ng-container *ngIf="parameter.dataType == kickerDataTypeEnum.Number">
+  <div fxLayout="row">
+    <nz-slider fxFlex="100%"
+      [nzMin]="parameter.min"
+      [nzMax]="parameter.max"
+      [(ngModel)]="parameter.value"
+      [nzStep]="parameter.step">
+    </nz-slider>
+
+    <nz-input-number
+      [nzMin]="parameter.min"
+      [nzMax]="parameter.max"
+      [(ngModel)]="parameter.value">
+    </nz-input-number>
+  </div>
+</ng-container>
+

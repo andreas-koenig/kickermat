@@ -1,67 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Configuration
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class KickerParameterAttribute : Attribute
     {
         public string Name { get; protected set; }
-        public Type ParameterType { get; protected set; }
         public string Description { get; protected set; }
-        public object Value { get; protected set; }
+        public KickerDataType DataType { get; protected set; }
+        public object Value { get; set; }
         public object DefaultValue { get; protected set; }
         public object Min { get; protected set; }
         public object Max { get; protected set; }
+        public object Step { get; protected set; }
 
-        public KickerParameterAttribute(string name, Type parameterType, string description,
-            object value, object defaultValue, object min, object max)
+        public KickerParameterAttribute(string name, string description, KickerDataType dataType,
+            object defaultValue, object min = null, object max = null, object step = null)
         {
-            if (!value.GetType().Equals(parameterType) ||
-                !defaultValue.GetType().Equals(parameterType) ||
-                !min.GetType().Equals(parameterType) ||
-                !max.GetType().Equals(parameterType))
-            {
-                string msg = String.Format("The parameter {0} has a datatype mismatch!", name);
-                throw new Exception(msg);
-            }
-
             Name = name;
-            ParameterType = parameterType;
             Description = description;
-            Value = value;
+            DataType = dataType;
             DefaultValue = defaultValue;
             Min = min;
             Max = max;
-        }
-
-        public static IEnumerable<IKickerParameter> GetKickerParameters(Type kickerComponentType)
-        {
-            var attrs = (KickerParameterAttribute[])Attribute
-                .GetCustomAttributes(kickerComponentType, typeof(KickerParameterAttribute));
-
-            if (attrs.Length == 0)
-            {
-                return null;
-            }
-
-            var parameters = new IKickerParameter[attrs.Length];
-
-            for (int i = 0; i < attrs.Length; i++)
-            {
-                var attr = attrs[i];
-
-                Type type = attr.ParameterType;
-                Type kickerParamType = typeof(KickerParameter<>).MakeGenericType(type);
-                var param = (IKickerParameter) Activator.CreateInstance(kickerParamType,
-                    new object[] { attr.Name, attr.Value, attr.DefaultValue, attr.Description,
-                        attr.Min, attr.Max});
-
-                parameters[i] = param;
-            }
-
-            return parameters;
+            Step = step;
         }
     }
 }

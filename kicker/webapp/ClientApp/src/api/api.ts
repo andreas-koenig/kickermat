@@ -1,8 +1,9 @@
 import { VideoSource } from './api.model';
 
-const API_BASE = "http://localhost:5001";
-const SIGNALR_BASE = API_BASE + "/signalr";
+export const API_BASE = "http://localhost:5001/api";
+export const SIGNALR_BASE = API_BASE + "/signalr";
 
+// SignalR Hubs
 export const HUB_CALIBRATION = SIGNALR_BASE + '/calibration';
 export const HUB_CALIBRATION_START = 'startCalibration';
 

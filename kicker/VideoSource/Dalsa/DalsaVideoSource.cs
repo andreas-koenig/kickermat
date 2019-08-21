@@ -10,8 +10,42 @@ namespace VideoSource.Dalsa
 {
     public class DalsaVideoSource : BaseVideoSource
     {
+        // Parameter constants
+        private const double GAIN_DEFAULT = 1.0;
+        private const double GAIN_MIN = 1.0;
+        private const double GAIN_MAX = 8.0;
+        private const double EXPOSURE_TIME_DEFAULT = 15000.0;
+        private const double EXPOSURE_TIME_MIN = 1.0;
+        private const double EXPOSURE_TIME_MAX = 160000.0;
+
         private const string CAMERA_NAME = "Nano-C1280_1";
         private static DalsaVideoSource _dalsaVideoSource;
+
+        private double _gain;
+        [KickerParameter("Gain", "The analog gain (brightness)", KickerDataType.Number,
+            GAIN_DEFAULT, GAIN_MIN, GAIN_MAX, 0.1)]
+        public double Gain {
+            get
+            {
+                return _gain;
+            }
+            set
+            {
+                if (value >= 1.0 && value <= 8.0)
+                {
+                    _gain = value;
+                }
+            }
+        }
+
+        private double _exposureTime;
+        [KickerParameter("Exposure Time", "The exposure time in microseconds",
+            KickerDataType.Number, EXPOSURE_TIME_DEFAULT, EXPOSURE_TIME_MIN, EXPOSURE_TIME_MAX, 10)]
+        public double ExposureTime
+        {
+            get => _exposureTime;
+            set => _exposureTime = value;
+        }
 
         public DalsaVideoSource(ILogger<DalsaVideoSource> logger) : base(logger)
         {

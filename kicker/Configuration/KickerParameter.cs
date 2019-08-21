@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Configuration
 {
-    public class KickerParameter<T> : IKickerParameter
+    public class KickerParameter<T>
     {
         public string Name { get; }
         public T Value { get; }
@@ -12,16 +12,18 @@ namespace Configuration
         public T Min { get; }
         public T Max { get; }
         public string Description { get; }
+        public Type DataType { get; }
 
-        public KickerParameter(string name, T value, T defaultValue, string help, T min = default,
-            T max = default)
+        public KickerParameter(string name, T value, T defaultValue, string description,
+            T min = default, T max = default)
         {
             Name = name;
             Value = value;
             Default = defaultValue;
             Min = min;
             Max = max;
-            Description = help;
+            Description = description;
+            DataType = typeof(T);
         }
 
         public override string ToString()
