@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VideoSource;
 using VideoSource.Dalsa;
 using Webapp.Hubs;
+using Webapp.Settings;
 
 namespace webapp
 {
@@ -19,6 +20,7 @@ namespace webapp
         internal const string PROXY_URL = "http://localhost:4200";
         private static readonly string[] CORS_URLS = { URL, PROXY_URL };
         private const string SIGNALR_BASE_PATH = "/signalr";
+        private readonly IWritableOptions<KickerSettings> _settings;
 
         public Startup(IConfiguration configuration)
         {
@@ -56,6 +58,9 @@ namespace webapp
             services.AddSingleton<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
+
+            // Persistent configuration
+            services.ConfigureWritable<KickerSettings>(Configuration.GetSection("MySection"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
