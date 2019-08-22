@@ -72,12 +72,12 @@ namespace webapp.Controllers
                         prop.SetValue(kickerComponent, value);
                         return Ok();
                     }
-                    catch (KickerParameterException ex)
+                    catch (Exception ex)
                     {
-                        return BadRequest(ex.Message);
-                    }
-                    catch (Exception)
-                    {
+                        if (ex.InnerException is KickerParameterException)
+                        {
+                            return BadRequest(ex.InnerException.Message);
+                        }
                         return BadRequest("Could not set the parameter");
                     }
                 }

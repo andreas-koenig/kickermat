@@ -6,7 +6,7 @@ namespace Configuration
 {
     public class NumberParameterAttribute : KickerParameterAttribute
     {
-        public new double Value { get; set; }
+        public new double Value { get => (double)base.Value; set => base.Value = value; }
         public double DefaultValue { get; protected set; }
         public double Min { get; protected set; }
         public double Max { get; protected set; }

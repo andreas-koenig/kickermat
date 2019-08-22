@@ -74,9 +74,11 @@ namespace VideoSource.Dalsa
         internal static extern void release_buffer(int index);
 
         [DllImport(DALSA_DLL)]
-        internal static extern bool set_feat_value(string feature_name, double value);
+        internal static extern bool set_feat_value(string camera_name, string feature_name,
+            double value);
 
         [DllImport(DALSA_DLL)]
-        internal static extern unsafe bool get_feat_value(string feature_name, double* value);
+        internal static extern unsafe bool get_feat_value(string camera_name, string feature_name,
+            double* value);
     }
 }

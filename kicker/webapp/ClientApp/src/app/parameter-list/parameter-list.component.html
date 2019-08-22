@@ -1,7 +1,11 @@
 <h2>Parameters</h2>
 
-<div fxLayout="row wrap" fxLayoutGap="3.5em" fxLayoutGap.lt-md="1em">
+<div fxLayout="row" fxLayoutGap="3.5em" fxLayoutGap.lt-md="1em">
   <ng-container *ngFor="let param of parameters">
-    <app-kicker-parameter [component]="component" [parameter]="param"></app-kicker-parameter>
+    <app-kicker-parameter
+      [component]="component"
+      [parameter]="param"
+      fxFlex="100%">
+    </app-kicker-parameter>
   </ng-container>
 </div>

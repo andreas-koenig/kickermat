@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { KickerParameter, KickerComponent } from '../../../api/api.model';
 import { ApiService } from '@api/api.service';
 import { NzMessageService } from 'ng-zorro-antd';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-kicker-parameter',
@@ -11,11 +12,16 @@ import { NzMessageService } from 'ng-zorro-antd';
 export class KickerParameterComponent implements OnInit {
   @Input('parameter') public parameter: KickerParameter | undefined;
   @Input('component') public component: KickerComponent | undefined;
+
   public isUpdating = false;
+  public value: any;
   
   constructor(private api: ApiService, private message: NzMessageService ) { }
 
   ngOnInit() {
+    if (this.parameter) {
+      this.value = this.parameter.value;
+    }
   }
 
   public isNumberParameter(parameter: KickerParameter): boolean {
@@ -26,19 +32,21 @@ export class KickerParameterComponent implements OnInit {
     if (this.component && this.parameter) {
       this.isUpdating = true;
 
-      this.api.setParameter(this.component, this.parameter).subscribe(
+      this.api.setParameter(this.component, this.parameter.name, this.value).subscribe(
         () => {
           this.isUpdating = false;
           if (this.parameter) {
+            this.parameter.value = this.value;
             let msg = this.parameter.name + ' was set to ' + this.parameter.value;
             this.message.success(msg);
           }
         },
-        error => {
+        (error: HttpErrorResponse) => {
           this.isUpdating = false;
           console.log(error);
           if (this.parameter) {
-            this.message.error(error.msg);
+            this.value = this.parameter.value;
+            this.message.error(error.error);
           }
         }
       );

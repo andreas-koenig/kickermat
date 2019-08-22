@@ -64,29 +64,35 @@ void release_buffer(int index) {
     CameraController::getInstance()->buffer->SetState(index, SapBuffer::StateEmpty);
 }
 
-bool get_feat_value(char* feature_name, double* value) {
+bool get_feat_value(char* camera_name, char* feature_name, double* value) {
     SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
-    bool success = false;
-
-    if (feature_name == "Gain") {
-        success = camera->GetFeatureValue(feature_name, value);
+    bool destroy = camera == nullptr;
+    if (destroy) {
+        camera = new SapAcqDevice(camera_name, FALSE);
+        camera->Create();
     }
-    else if (feature_name == "ExposureTime") {
-        success = camera->GetFeatureValue(feature_name, value);
+
+    bool success = camera->GetFeatureValue(feature_name, value);
+    if (destroy) {
+        camera->Destroy();
+        delete camera;
     }
     
     return success;
 }
 
-bool set_feat_value(char* feature_name, double value) {
+bool set_feat_value(char* camera_name, char* feature_name, double value) {
     SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
-    bool success = false;
-
-    if (feature_name == "Gain") {
-        success = camera->SetFeatureValue(feature_name, value);
+    bool destroy = camera == nullptr;
+    if (destroy) {
+        camera = new SapAcqDevice(camera_name, FALSE);
+        camera->Create();
     }
-    else if (feature_name == "ShutterSpeed") {
-        success = camera->SetFeatureValue(feature_name, value);
+
+    bool success = camera->SetFeatureValue(feature_name, value);
+    if (destroy) {
+        camera->Destroy();
+        delete camera;
     }
 
     return success;

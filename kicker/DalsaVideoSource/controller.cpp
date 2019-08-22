@@ -21,7 +21,10 @@ void CameraController::releaseInstance() {
     INSTANCE = nullptr;
 }
 
-CameraController::CameraController() {}
+CameraController::CameraController() {
+    acquisitionDevice = nullptr;
+    buffer = nullptr;
+}
 CameraController::~CameraController() {}
 
 bool CameraController::start_acquisition(char* camera_name) {

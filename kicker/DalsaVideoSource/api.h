@@ -17,6 +17,6 @@ extern "C" {
 	DALSA_API bool start_acquisition(char* camera_name);
 	DALSA_API void stop_acquisition();
 	DALSA_API void release_buffer(int index);
-    DALSA_API bool get_feat_value(char* feature_name, double* value);
-    DALSA_API bool set_feat_value(char* feature_name, double value);
+    DALSA_API bool get_feat_value(char* camera_name, char* feature_name, double* value);
+    DALSA_API bool set_feat_value(char* camera_name, char* feature_name, double value);
 }

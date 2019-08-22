@@ -18,10 +18,10 @@ export class ApiService {
     return this.http.get<KickerParameter[]>(url);
   }
 
-  public setParameter(component: KickerComponent, parameter: KickerParameter):
+  public setParameter(component: KickerComponent, parameter: string, value: any):
     Observable<any> {
-    const url = REST_BASE + '/parameters/' + component + '/' + parameter.name;
+    const url = REST_BASE + '/parameters/' + component + '/' + parameter;
 
-    return this.http.put(url, parameter.value);
+    return this.http.put(url, value);
   }
 }

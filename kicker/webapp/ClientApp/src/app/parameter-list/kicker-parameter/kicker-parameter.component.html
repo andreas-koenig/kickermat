@@ -7,7 +7,7 @@
     <nz-slider fxFlex="100%"
       [nzMin]="parameter.min"
       [nzMax]="parameter.max"
-      [(ngModel)]="parameter.value"
+      [(ngModel)]="value"
       [nzStep]="parameter.step"
       (nzOnAfterChange)="setParameter()"
       [nzDisabled]="isUpdating">
@@ -16,7 +16,7 @@
     <nz-input-number
       [nzMin]="parameter.min"
       [nzMax]="parameter.max"
-      [(ngModel)]="parameter.value"
+      [(ngModel)]="value"
       (ngModelChange)="setParameter()"
       [nzDisabled]="isUpdating">
     </nz-input-number>
