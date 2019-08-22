@@ -1,18 +1,9 @@
 #include "pch.h"
 #include <iostream>
+#include <mutex>
 
 #include "api.h"
 #include "controller.h"
-
-void server_connected(SapManCallbackInfo* info) {
-    std::cout << "CONNECTED [Server Index: " << info->GetServerIndex()
-        << ", Resource Index: " << info->GetResourceIndex() << "]" << std::endl;
-}
-
-void server_disconnected(SapManCallbackInfo* info) {
-    std::cout << "DISCONNECTED [Server Index: " << info->GetServerIndex()
-        << ", Resource Index: " << info->GetResourceIndex() << "]" << std::endl;
-}
 
 void startup(
     void __stdcall frame_callback(int index, void* address),
@@ -71,4 +62,38 @@ void stop_acquisition() {
 
 void release_buffer(int index) {
     CameraController::getInstance()->buffer->SetState(index, SapBuffer::StateEmpty);
+}
+
+bool get_feat_value(char* camera_name, char* feature_name, double* value) {
+    SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
+    bool destroy = camera == nullptr;
+    if (destroy) {
+        camera = new SapAcqDevice(camera_name, FALSE);
+        camera->Create();
+    }
+
+    bool success = camera->GetFeatureValue(feature_name, value);
+    if (destroy) {
+        camera->Destroy();
+        delete camera;
+    }
+    
+    return success;
+}
+
+bool set_feat_value(char* camera_name, char* feature_name, double value) {
+    SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
+    bool destroy = camera == nullptr;
+    if (destroy) {
+        camera = new SapAcqDevice(camera_name, FALSE);
+        camera->Create();
+    }
+
+    bool success = camera->SetFeatureValue(feature_name, value);
+    if (destroy) {
+        camera->Destroy();
+        delete camera;
+    }
+
+    return success;
 }

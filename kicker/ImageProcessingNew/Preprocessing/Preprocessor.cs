@@ -20,17 +20,17 @@ namespace ImageProcessing.Preprocessing
         public void OnFrameArrived(object sender, FrameArrivedArgs args)
         {
             args.Frame.Mat = UndistortFrame(args.Frame.Mat);
-            FrameArrived?.Invoke(this, args);
+            HandleFrameArrived(args);
         }
 
         public void OnCameraConnected(object sender, CameraEventArgs args)
         {
-            CameraConnected?.Invoke(this, args);
+            HandleConnect(args);
         }
 
         public void OnCameraDisconnected(object sender, CameraEventArgs args)
         {
-            CameraDisconnected?.Invoke(this, args);
+            HandleDisconnect(args);
         }
 
         private Mat UndistortFrame(Mat frame)

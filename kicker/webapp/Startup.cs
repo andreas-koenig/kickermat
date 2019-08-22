@@ -1,4 +1,6 @@
-﻿using ImageProcessing.Calibration;
+﻿using System.IO;
+using Configuration;
+using ImageProcessing.Calibration;
 using ImageProcessing.Preprocessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,9 +17,8 @@ namespace webapp
 {
     public class Startup
     {
-        private const string CORS_POLICY = "KickermatCorsPolicy";
-        internal const string URL = "http://localhost:5001";
-        internal const string PROXY_URL = "http://localhost:4200";
+        internal const string URL = "http://localhost:5001/";
+        internal const string PROXY_URL = "http://localhost:4200/";
         private static readonly string[] CORS_URLS = { URL, PROXY_URL };
         private const string SIGNALR_BASE_PATH = "/signalr";
         private readonly IWritableOptions<KickerSettings> _settings;
@@ -32,18 +33,7 @@ namespace webapp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Cors Policy to allow different origins
-            services.AddCors(options =>
-            {
-                options.AddPolicy(CORS_POLICY, policy =>
-                {
-                    policy.AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-                        .WithOrigins(CORS_URLS);
-                });
-            });
-
+            services.AddCors();
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -53,36 +43,40 @@ namespace webapp
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            // Add configuration
+            var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+            var config = configBuilder.Build();
+            //services.AddOptions(config);
+
             // Kicker services
             services.AddSingleton<IVideoSource, DalsaVideoSource>();
-            services.AddSingleton<ICameraCalibration, CameraCalibration>();
+            services.AddTransient<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
 
-            // Persistent configuration
+            // Persistent Configuration
             services.ConfigureWritable<KickerSettings>(Configuration.GetSection("MySection"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Configure SignalR hubs
+            app.UseSignalR(route =>
+            {
+                route.MapHub<CameraHub>(SIGNALR_BASE_PATH + "/camera");
+                route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
+            });
+
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseMvc();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                app.UseCors(CORS_POLICY);
-
-                var wsOptions = new WebSocketOptions();
-                wsOptions.AllowedOrigins.Add(URL);
-                wsOptions.AllowedOrigins.Add(PROXY_URL);
-                app.UseWebSockets(wsOptions);
-
-                // Configure SignalR hubs
-                app.UseSignalR(route =>
-                {
-                    route.MapHub<CameraHub>(SIGNALR_BASE_PATH + "/camera");
-                    route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
-                });
 
                 // Configure proxy to Angular frontend if in development mode
                 app.UseSpa(spa =>
@@ -104,9 +98,14 @@ namespace webapp
                 });
             }
 
-            app.UseMvc();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            // Configure Cors
+            app.UseCors(policy =>
+            {
+                policy.AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins(CORS_URLS);
+            });
         }
     }
 }

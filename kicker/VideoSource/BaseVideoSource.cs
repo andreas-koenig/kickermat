@@ -12,9 +12,9 @@ namespace VideoSource
         private int _consumerCount = 0;
         private bool _acquisitionRunning = false;
 
-        protected EventHandler<FrameArrivedArgs> FrameArrived { get; set; }
-        protected EventHandler<CameraEventArgs> CameraConnected { get; set; }
-        protected EventHandler<CameraEventArgs> CameraDisconnected { get; set; }
+        private EventHandler<FrameArrivedArgs> FrameArrived { get; set; }
+        private EventHandler<CameraEventArgs> CameraConnected { get; set; }
+        private EventHandler<CameraEventArgs> CameraDisconnected { get; set; }
 
         public BaseVideoSource(ILogger<IVideoSource> logger)
         {
@@ -81,12 +81,20 @@ namespace VideoSource
 
                 // Return if consumer was not registered
                 if (oldConsumerCount == null && newConsumerCount == null ||
+                    (oldConsumerCount != null &&
+                     newConsumerCount != null &&
+                     oldConsumerCount <= newConsumerCount))
+                {
+                    return;
+                }
+                /*
+                if (oldConsumerCount == null && newConsumerCount == null ||
                     !(oldConsumerCount != null && newConsumerCount == null) ||
                     oldConsumerCount <= newConsumerCount)
                 {
                     return;
                 }
-
+                */
                 _consumerCount -= 1;
 
                 if (_acquisitionRunning && _consumerCount == 0)
