@@ -64,15 +64,15 @@ void release_buffer(int index) {
     CameraController::getInstance()->buffer->SetState(index, SapBuffer::StateEmpty);
 }
 
-bool get_feat_value(char* feature_name, void* value) {
+bool get_feat_value(char* feature_name, double* value) {
     SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
     bool success = false;
 
     if (feature_name == "Gain") {
-        success = camera->GetFeatureValue(feature_name, (double*) value);
+        success = camera->GetFeatureValue(feature_name, value);
     }
-    else if (feature_name == "ShutterSpeed") {
-        success = camera->GetFeatureValue(feature_name, (int*) value);
+    else if (feature_name == "ExposureTime") {
+        success = camera->GetFeatureValue(feature_name, value);
     }
     
     return success;

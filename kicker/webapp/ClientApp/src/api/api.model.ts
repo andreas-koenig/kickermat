@@ -7,18 +7,15 @@ export enum KickerComponent {
   Camera = "Camera",
 }
 
-export enum KickerDataType {
-  Number = 0,
-  String = 1,
-  Color = 2
-}
-
 export interface KickerParameter {
   name: string;
   description: string;
-  dataType: KickerDataType;
-  value: object;
-  defaultValue: object;
-  min: object;
-  max: object;
+  value: object | number;
+}
+
+export interface NumberParameter extends KickerParameter {
+  defaultValue: number;
+  min: number;
+  max: number;
+  step: number;
 }

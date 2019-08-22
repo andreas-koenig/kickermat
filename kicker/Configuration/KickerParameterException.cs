@@ -6,6 +6,6 @@ namespace Configuration
 {
     public class KickerParameterException : Exception
     {
-
+        public KickerParameterException(string message) : base(message) { }
     }
 }

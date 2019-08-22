@@ -21,26 +21,37 @@ namespace VideoSource.Dalsa
         private const string CAMERA_NAME = "Nano-C1280_1";
         private static DalsaVideoSource _dalsaVideoSource;
 
-        private double _gain;
-        [KickerParameter("Gain", "The analog gain (brightness)", KickerDataType.Number,
+        [NumberParameter("Gain", "The analog gain (brightness)",
             GAIN_DEFAULT, GAIN_MIN, GAIN_MAX, 0.1)]
         public double Gain {
             get
             {
-                return _gain;
+                unsafe
+                {
+                    double gain = 0.0;
+                    if (DalsaApi.get_feat_value("Gain", &gain))
+                    {
+                        return gain;
+                    }
+                }
+
+                throw new KickerParameterException("Failed to retrieve Gain");
             }
             set
             {
-                if (value >= 1.0 && value <= 8.0)
+                if (value >= GAIN_MIN && value <= GAIN_MAX)
                 {
-                    _gain = value;
+                    if (!DalsaApi.set_feat_value("Gain", value))
+                    {
+                        throw new KickerParameterException("Failed to set Gain to " + value);
+                    }
                 }
             }
         }
 
         private double _exposureTime;
-        [KickerParameter("Exposure Time", "The exposure time in microseconds",
-            KickerDataType.Number, EXPOSURE_TIME_DEFAULT, EXPOSURE_TIME_MIN, EXPOSURE_TIME_MAX, 10)]
+        [NumberParameter("Exposure Time", "The exposure time in microseconds",
+            EXPOSURE_TIME_DEFAULT, EXPOSURE_TIME_MIN, EXPOSURE_TIME_MAX, 10)]
         public double ExposureTime
         {
             get => _exposureTime;

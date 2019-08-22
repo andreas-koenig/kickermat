@@ -16,8 +16,8 @@ namespace webapp
 {
     public class Startup
     {
-        internal const string URL = "http://localhost:5001";
-        internal const string PROXY_URL = "http://localhost:4200";
+        internal const string URL = "http://localhost:5001/";
+        internal const string PROXY_URL = "http://localhost:4200/";
         private static readonly string[] CORS_URLS = { URL, PROXY_URL };
         private const string SIGNALR_BASE_PATH = "/signalr";
 

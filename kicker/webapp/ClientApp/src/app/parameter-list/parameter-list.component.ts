@@ -16,7 +16,7 @@ export class ParameterListComponent implements OnInit {
   ngOnInit() {
     if (this.component) {
       this.api.getParameters(this.component).subscribe(
-        parameters => {
+        (parameters: KickerParameter[]) => {
           this.parameters = parameters;
         },
         error => {

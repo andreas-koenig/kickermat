@@ -2,19 +2,23 @@
 
 <p class="description">{{parameter.description}}</p>
 
-<ng-container *ngIf="parameter.dataType == kickerDataTypeEnum.Number">
+<ng-container *ngIf="isNumberParameter(parameter)">
   <div fxLayout="row">
     <nz-slider fxFlex="100%"
       [nzMin]="parameter.min"
       [nzMax]="parameter.max"
       [(ngModel)]="parameter.value"
-      [nzStep]="parameter.step">
+      [nzStep]="parameter.step"
+      (nzOnAfterChange)="setParameter()"
+      [nzDisabled]="isUpdating">
     </nz-slider>
 
     <nz-input-number
       [nzMin]="parameter.min"
       [nzMax]="parameter.max"
-      [(ngModel)]="parameter.value">
+      [(ngModel)]="parameter.value"
+      (ngModelChange)="setParameter()"
+      [nzDisabled]="isUpdating">
     </nz-input-number>
   </div>
 </ng-container>

@@ -39,7 +39,15 @@ namespace webapp.Controllers
                     .GetCustomAttributes(typeof(KickerParameterAttribute), false);
                 if (propAttrs?.Length == 1)
                 {
-                    propAttrs[0].Value = prop.GetValue(kickerComponent);
+                    try
+                    {
+                        propAttrs[0].Value = prop.GetValue(kickerComponent);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Failed to get parameter: {0}", ex);
+                        propAttrs[0].Value = default;
+                    }
                     attrs.Add(propAttrs[0]);
                 }
             }
@@ -47,8 +55,9 @@ namespace webapp.Controllers
             return Ok(attrs);
         }
 
-        [HttpPut("{component}/{parameter}/{value}")]
-        public IActionResult SetParameter(string component, string parameter, object value)
+        [HttpPut("{component}/{parameter}")]
+        public IActionResult SetParameter(string component, string parameter,
+            [FromBody] object value)
         {
             var kickerComponent = GetComponent(component);
 

@@ -11,7 +11,7 @@ namespace VideoSource.Dalsa
     /// </summary>
     internal abstract class DalsaApi
     {
-        private const string DALSA_DLL = @"..\DalsaVideoSource.dll";
+        internal const string DALSA_DLL = @"..\DalsaVideoSource.dll";
 
         internal delegate void FrameArrivedDelegate(int index, IntPtr address);
         private static FrameArrivedDelegate _frameArrivedDelegate;
@@ -72,5 +72,11 @@ namespace VideoSource.Dalsa
         /// <param name="index">The index of the buffer</param>
         [DllImport(DALSA_DLL)]
         internal static extern void release_buffer(int index);
+
+        [DllImport(DALSA_DLL)]
+        internal static extern bool set_feat_value(string feature_name, double value);
+
+        [DllImport(DALSA_DLL)]
+        internal static extern unsafe bool get_feat_value(string feature_name, double* value);
     }
 }
