@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using ImageProcessing.Calibration;
+using ImageProcessing.Preprocessing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using VideoSource;
@@ -19,10 +20,11 @@ namespace Webapp.Hubs
         private Dictionary<string, ClientVideoConsumer> _clients;
 
         private IVideoSource _camera;
-        private ICameraCalibration _cameraCalibration;
+        private IPreprocessor _preprocessor;
 
         public CameraConnectionHandler(IHubContext<CameraHub> context, IVideoSource camera,
-            ICameraCalibration cameraCalibration, ILogger<CameraConnectionHandler> logger)
+            ICameraCalibration cameraCalibration, ILogger<CameraConnectionHandler> logger,
+            IPreprocessor preprocessor)
         {
             _logger = logger;
 
@@ -30,7 +32,7 @@ namespace Webapp.Hubs
             _clients = new Dictionary<string, ClientVideoConsumer>();
 
             _camera = camera;
-            _cameraCalibration = cameraCalibration;
+            _preprocessor = preprocessor;
         }
 
         public void StartStream(VideoInput videoInput, string clientId, Channel<string> channel,
@@ -39,11 +41,11 @@ namespace Webapp.Hubs
             IVideoSource videoSource;
             switch (videoInput)
             {
-                case VideoInput.CAMERA:
+                case VideoInput.Camera:
                     videoSource = _camera;
                     break;
-                case VideoInput.CAMERA_CALIBRATION:
-                    videoSource = _camera;
+                case VideoInput.Preprocessing:
+                    videoSource = _preprocessor;
                     break;
                 default:
                     videoSource = _camera;

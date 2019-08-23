@@ -9,7 +9,7 @@ using VideoSource.Dalsa;
 
 namespace VideoSource.Dalsa
 {
-    public class DalsaVideoSource : BaseVideoSource
+    public class DalsaVideoSource : BaseVideoSource, IConfigurable<DalsaSettings>
     {
         // Parameter constants
         private const double GAIN_DEFAULT = 1.0;
@@ -22,6 +22,8 @@ namespace VideoSource.Dalsa
         private const string CAMERA_NAME = "Nano-C1280_1";
         private static DalsaVideoSource _dalsaVideoSource;
         private readonly object _mutex = new object();
+
+        public IWritableOptions<DalsaSettings> Options { get; set; }
 
         [NumberParameter("Gain", "The analog gain (brightness)",
             GAIN_DEFAULT, GAIN_MIN, GAIN_MAX, 0.1)]
@@ -50,9 +52,11 @@ namespace VideoSource.Dalsa
             }
         }
 
-        public DalsaVideoSource(ILogger<DalsaVideoSource> logger) : base(logger)
+        public DalsaVideoSource(ILogger<DalsaVideoSource> logger, IWritableOptions<DalsaSettings>
+            options) : base(logger)
         {
             _dalsaVideoSource = this;
+            Options = options;
         }
 
         protected override void StartAcquisition()

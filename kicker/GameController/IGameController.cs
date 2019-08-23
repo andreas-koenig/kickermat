@@ -6,7 +6,7 @@ namespace GameController
     /// <summary>
     /// Interface which describes the game controller
     /// </summary>
-    public interface IGameController : IKickerPlugin
+    public interface IGameController : IPlayerControl
     {
         /// <summary>
         /// Gets or sets the execution count.

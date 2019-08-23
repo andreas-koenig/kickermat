@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { KickerParameter, KickerComponent } from '../../../api/api.model';
 import { ApiService } from '@api/api.service';
 import { NzMessageService } from 'ng-zorro-antd';

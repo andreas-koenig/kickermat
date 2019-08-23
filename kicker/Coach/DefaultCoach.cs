@@ -195,6 +195,7 @@ namespace Coach
         /// </returns>
         public bool IsYPositionValid(Bar bar, int position)
         {
+            // TODO: Sense ?
             return position >= this.playerMinPositions[bar.FirstPlayer()] &&
                    position <= this.playerMaxPositions[bar.LastPlayer()];
         }
@@ -209,6 +210,7 @@ namespace Coach
         /// </returns>
         public bool IsYPositionValid(Player player, int position)
         {
+            // TODO: Sense ?
             return position >= this.playerMinPositions[player] &&
                    position <= this.playerMaxPositions[player];
         }
@@ -220,6 +222,7 @@ namespace Coach
         /// <returns>The bar x position.</returns>
         public int GetBarXPosition(Bar bar)
         {
+
             return this.barPositions[bar];
         }
 

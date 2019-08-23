@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using Configuration;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using VideoSource;
@@ -34,7 +35,8 @@ namespace ImageProcessing.Calibration
 
         private readonly ILogger<ICameraCalibration> _logger;
 
-        public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger)
+        public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger,
+            IWritableOptions<CalibrationSettings> options)
         {
             _videoSource = videoSource;
             _objectLock = new object();

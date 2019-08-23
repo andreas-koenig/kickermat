@@ -1,31 +1,44 @@
-import { Route } from '@angular/router';
-import { CameraComponent } from '../camera/camera.component';
-import { CalibrationComponent } from '../calibration/calibration.component';
-
-export interface NavItem extends Route {
+export interface NavItem {
   title: string;
   open: boolean;
   selected: boolean;
   disabled: boolean;
   level: number;
+  path: string;
   icon?: string;
   children?: NavItem[]
 }
 
 export const KICKER_NAV_ITEMS: NavItem[] = [
   {
+    path: 'kicker',
+    level: 1,
+    title: 'Kicker',
+    icon: 'play-square',
+    open: false,
+    selected: false,
+    disabled: false
+  },
+  {
     path: 'camera',
-    component: CameraComponent,
     level: 1,
     title: 'Camera',
-    icon: 'camera',
+    icon: 'video-camera',
     open: false,
     selected: false,
     disabled: false,
     children: [
       {
+        path: 'settings',
+        level: 2,
+        title: 'Settings',
+        icon: 'setting',
+        open: false,
+        selected: false,
+        disabled: false
+      },
+      {
         path: 'calibration',
-        component: CalibrationComponent,
         level: 2,
         title: 'Calibration',
         icon: 'sliders',
@@ -35,4 +48,24 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
       }
     ]
   },
+  {
+    path: 'image',
+    level: 1,
+    title: 'Image Processing',
+    icon: 'picture',
+    open: false,
+    selected: false,
+    disabled: false,
+    children: [
+      {
+        path: 'preprocessing',
+        level: 2,
+        title: 'Preprocessing',
+        icon: 'scan',
+        open: false,
+        selected: false,
+        disabled: false
+      }
+    ]
+  }
 ]

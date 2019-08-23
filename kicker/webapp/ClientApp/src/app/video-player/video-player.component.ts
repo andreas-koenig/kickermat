@@ -21,7 +21,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private connection: HubConnection | undefined;
   private endpoint: VideoSourceEndpoint | undefined;
 
-  @Input('videoSource') videoSource = VideoSource.CAMERA;
+  @Input('videoSource') videoSource = VideoSource.Camera;
   @Input('videoHeight') videoHeight = "90vh";
   public imageBase64 = "";
   public status: EndpointStatus = EndpointStatus.Loading;
@@ -86,7 +86,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
     this.status = EndpointStatus.Loading;
 
-    this.connection.stream(this.endpoint.video, VideoSource.CAMERA).subscribe({
+    this.connection.stream(this.endpoint.video, this.videoSource).subscribe({
       next: (img: string) => {
         this.imageBase64 = "data:image/png;base64," + img;
         if (this.status != EndpointStatus.Streaming) {

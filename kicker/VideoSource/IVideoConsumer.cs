@@ -35,7 +35,7 @@ namespace VideoSource
 
     public class FrameArrivedArgs
     {
-        public IFrame Frame { get; }
+        public IFrame Frame { get; set; }
 
         public FrameArrivedArgs(Mat mat)
         {

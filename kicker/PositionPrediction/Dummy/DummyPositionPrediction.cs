@@ -1,8 +1,6 @@
 ﻿namespace PositionPrediction.Dummy
 {
     using System.Drawing;
-    using System.Windows.Forms;
-    using GlobalDataTypes;
 
     /// <summary>
     /// Implements the default position prediction which doesn't predict any values.

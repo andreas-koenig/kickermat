@@ -15,7 +15,13 @@ export interface VideoSourceEndpoint {
   disconnected: string;
 }
 export const VIDEOSOURCE_ENDPOINTS = new Map<VideoSource, VideoSourceEndpoint>();
-VIDEOSOURCE_ENDPOINTS.set(VideoSource.CAMERA, {
+VIDEOSOURCE_ENDPOINTS.set(VideoSource.Camera, {
+  hub: SIGNALR_BASE + '/camera',
+  video: 'video',
+  connected: 'cameraConnected',
+  disconnected: 'cameraDisconnected'
+});
+VIDEOSOURCE_ENDPOINTS.set(VideoSource.Preprocessing, {
   hub: SIGNALR_BASE + '/camera',
   video: 'video',
   connected: 'cameraConnected',
