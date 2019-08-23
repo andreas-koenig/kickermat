@@ -21,7 +21,6 @@ namespace webapp
         internal const string PROXY_URL = "http://localhost:4200/";
         private static readonly string[] CORS_URLS = { URL, PROXY_URL };
         private const string SIGNALR_BASE_PATH = "/signalr";
-        private readonly IWritableOptions<KickerSettings> _settings;
 
         public Startup(IConfiguration configuration)
         {
@@ -43,21 +42,16 @@ namespace webapp
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            // Add configuration
-            var configBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-            var config = configBuilder.Build();
-            //services.AddOptions(config);
-
             // Kicker services
             services.AddSingleton<IVideoSource, DalsaVideoSource>();
             services.AddTransient<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
 
-            // Persistent Configuration
-            services.ConfigureWritable<KickerSettings>(Configuration.GetSection("MySection"));
+            // Configuration
+            var cameraSection = Configuration.GetSection("Camera");
+            services.ConfigureWritable<DalsaSettings>(cameraSection.GetSection("Dalsa"));
+            services.ConfigureWritable<CalibrationSettings>(cameraSection.GetSection("Calibration"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

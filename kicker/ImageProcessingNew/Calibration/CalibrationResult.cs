@@ -8,9 +8,11 @@ namespace ImageProcessing.Calibration
 {
     public class CalibrationResult
     {
-        public Mat CameraMatrix { get; }
-        public Mat DistortionCoefficients { get; }
-        public double ReprojectionError { get; }
+        public Mat CameraMatrix { get; set; }
+        public Mat DistortionCoefficients { get; set; }
+        public double ReprojectionError { get; set; }
+
+        public CalibrationResult() { }
 
         public CalibrationResult(Mat cameraMatrix, Mat distCoeffs, double rms)
         {

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
-namespace Webapp.Settings
+namespace Configuration
 {
     public interface IWritableOptions<out T> : IOptionsSnapshot<T> where T : class, new()
     {
+        new T Value { get; }
         void Update(Action<T> applyChanges);
     }
-
 }

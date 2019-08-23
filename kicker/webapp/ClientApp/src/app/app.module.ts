@@ -17,6 +17,7 @@ import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { ParameterListComponent } from './parameter-list/parameter-list.component';
 import { KickerParameterComponent } from './parameter-list/kicker-parameter/kicker-parameter.component';
+import { PreprocessingComponent } from './preprocessing/preprocessing.component';
 
 const routes: Route[] = [
   {
@@ -26,6 +27,10 @@ const routes: Route[] = [
   {
     path: 'camera/calibration',
     component: CalibrationComponent
+  },
+  {
+    path: 'image/preprocessing',
+    component: PreprocessingComponent
   }
 ]
 
@@ -41,6 +46,7 @@ registerLocaleData(en);
     CalibrationComponent,
     ParameterListComponent,
     KickerParameterComponent,
+    PreprocessingComponent,
   ],
   imports: [
     BrowserModule,

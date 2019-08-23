@@ -2,32 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Webapp.Settings
 {
-//    Usage:
+    //    Usage:
 
-//services.ConfigureWritable<MyOptions>(Configuration.GetSection("MySection"));
-//Then:
+    //services.ConfigureWritable<MyOptions>(Configuration.GetSection("MySection"));
+    //Then:
 
-//private readonly IWritableOptions<MyOptions> _options;
+    //private readonly IWritableOptions<MyOptions> _options;
 
-//    public MyClass(IWritableOptions<MyOptions> options)
-//    {
-//        _options = options;
-//    }
-//    To save the changes to the file:
+    //    public MyClass(IWritableOptions<MyOptions> options)
+    //    {
+    //        _options = options;
+    //    }
+    //    To save the changes to the file:
 
-//_options.Update(opt => {
-//    opt.Field1 = "value1";
-//    opt.Field2 = "value2";
-//});
-//And you can pass a custom json file as optional parameter(it will use appsettings.json by default):
-//services.ConfigureWritable<MyOptions>(Configuration.GetSection("MySection"), "appsettings.custom.json");
+    //_options.Update(opt => {
+    //    opt.Field1 = "value1";
+    //    opt.Field2 = "value2";
+    //});
+    //And you can pass a custom json file as optional parameter(it will use appsettings.json by default):
+    //services.ConfigureWritable<MyOptions>(Configuration.GetSection("MySection"), "appsettings.custom.json");
     public static class ServiceCollectionExtensions
     {
         public static void ConfigureWritable<T>(

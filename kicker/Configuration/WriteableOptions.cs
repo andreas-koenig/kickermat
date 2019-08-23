@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Webapp.Settings
+namespace Configuration
 {
-
     public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
     {
         private readonly IHostingEnvironment _environment;

@@ -7,7 +7,7 @@ import { KickerComponent } from '../../api/api.model';
   styleUrls: ['./camera.component.scss']
 })
 export class CameraComponent implements OnInit {
-  public kickerComponentEnum = KickerComponent;
+  public cameraComponent = KickerComponent.Camera;
 
   constructor() { }
 
