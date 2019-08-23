@@ -11,6 +11,15 @@ export interface NavItem {
 
 export const KICKER_NAV_ITEMS: NavItem[] = [
   {
+    path: 'kicker',
+    level: 1,
+    title: 'Kicker',
+    icon: 'play-square',
+    open: false,
+    selected: false,
+    disabled: false
+  },
+  {
     path: 'camera',
     level: 1,
     title: 'Camera',
@@ -19,6 +28,15 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
     selected: false,
     disabled: false,
     children: [
+      {
+        path: 'settings',
+        level: 2,
+        title: 'Settings',
+        icon: 'setting',
+        open: false,
+        selected: false,
+        disabled: false
+      },
       {
         path: 'calibration',
         level: 2,

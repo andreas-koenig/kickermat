@@ -7,17 +7,19 @@
           *ngIf="!menu.children"
           [nzDisabled]="menu.disabled"
           [nzSelected]="menu.selected"
-          nzMatchRouter>
+          nzMatchRouterExact
+          routerLink="{{parentPath + '/' + menu.path}}">
         <span title>
           <i nz-icon [type]="menu.icon" *ngIf="menu.icon"></i>
-          <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
+          <span>{{ menu.title }}</span>
         </span>
       </li>
       <li nz-submenu
           [nzPaddingLeft]="menu.level * 24"
           *ngIf="menu.children"
           [nzOpen]="menu.open"
-          [nzDisabled]="menu.disabled">
+          [nzDisabled]="menu.disabled"
+          nzMatchRouterExact>
         <span title>
           <i nz-icon [type]="menu.icon" *ngIf="menu.icon"></i>
           <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
