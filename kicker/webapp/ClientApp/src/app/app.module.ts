@@ -19,6 +19,7 @@ import { ParameterListComponent } from './parameter-list/parameter-list.componen
 import { KickerParameterComponent } from './parameter-list/kicker-parameter/kicker-parameter.component';
 import { PreprocessingComponent } from './preprocessing/preprocessing.component';
 import { KickerComponent } from './kicker/kicker.component';
+import { ImageProcessingComponent } from './image-processing/image-processing.component';
 
 const routes: Route[] = [
   {
@@ -41,6 +42,10 @@ const routes: Route[] = [
   {
     path: 'image/preprocessing',
     component: PreprocessingComponent
+  },
+  {
+    path: 'image/processing',
+    component: ImageProcessingComponent
   }
 ]
 
@@ -58,6 +63,7 @@ registerLocaleData(en);
     KickerParameterComponent,
     PreprocessingComponent,
     KickerComponent,
+    ImageProcessingComponent,
   ],
   imports: [
     BrowserModule,
