@@ -26,6 +26,7 @@ namespace Configuration
             _file = file;
         }
 
+        public object ValueObject => _options.CurrentValue;
         public T Value => _options.CurrentValue;
         public T Get(string name) => _options.Get(name);
 
@@ -43,6 +44,11 @@ namespace Configuration
 
             jObject[_section] = JObject.Parse(JsonConvert.SerializeObject(sectionObject));
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
+        }
+
+        public void Update(Action<object> applyChanges)
+        {
+            Update((Action<T>)applyChanges);
         }
     }
 }

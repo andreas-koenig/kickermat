@@ -32,8 +32,19 @@ namespace webapp.Controllers
                 return NotFound(String.Format("The component {0} was not found", component));
             }
 
+            Type settingsType;
+            try
+            {
+                settingsType = GetSettingsType(kickerComponent);
+            }
+            catch (Exception)
+            {
+                return Ok(); // component does not implement IConfigurable<SettingsType>
+            }
+
+            // Get configurable from all parameters
             List<KickerParameterAttribute> attrs = new List<KickerParameterAttribute>();
-            foreach (var prop in kickerComponent.GetType().GetProperties())
+            foreach (var prop in settingsType.GetProperties())
             {
                 var propAttrs = (KickerParameterAttribute[])prop
                     .GetCustomAttributes(typeof(KickerParameterAttribute), false);
@@ -41,7 +52,9 @@ namespace webapp.Controllers
                 {
                     try
                     {
-                        propAttrs[0].Value = prop.GetValue(kickerComponent);
+                        // TODO: Get Value for the property
+                        //propAttrs[0].Value = default;
+                        //propAttrs[0].Value = prop.GetValue(kickerComponent);
                     }
                     catch (Exception ex)
                     {
@@ -60,25 +73,32 @@ namespace webapp.Controllers
             [FromBody] object value)
         {
             var kickerComponent = GetComponent(component);
-
-            foreach (var prop in kickerComponent.GetType().GetProperties())
+            if (kickerComponent == null)
             {
-                var propAttrs = (KickerParameterAttribute[])prop
-                    .GetCustomAttributes(typeof(KickerParameterAttribute), false);
-                if (propAttrs?.Length == 1 && propAttrs[0].Name.Equals(parameter))
+                return NotFound(String.Format("The component {0} was not found", component));
+            }
+
+            var options = (IWritableOptions)kickerComponent
+                .GetType()
+                .GetProperty("Options")
+                .GetValue(kickerComponent);
+
+            var optionsProperties = options.ValueObject.GetType().GetProperties();
+
+            foreach (var prop in optionsProperties)
+            {
+                var kickerAttrs = prop.GetCustomAttributes(typeof(KickerParameterAttribute), true);
+                foreach (var attr in kickerAttrs)
                 {
-                    try
+                    if (((KickerParameterAttribute)attr).Name.Equals(parameter))
                     {
-                        prop.SetValue(kickerComponent, value);
-                        return Ok();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.InnerException is KickerParameterException)
+                        prop.SetValue(options.ValueObject, Convert.ChangeType(value, prop.PropertyType)); 
+                        options.Update(changes =>
                         {
-                            return BadRequest(ex.InnerException.Message);
-                        }
-                        return BadRequest("Could not set the parameter");
+                            changes = options;
+                        });
+
+                        return Ok();
                     }
                 }
             }
@@ -95,6 +115,19 @@ namespace webapp.Controllers
                 default:
                     return null;
             }
+        }
+
+        private Type GetSettingsType(object component)
+        {
+            foreach (var i in component.GetType().GetInterfaces())
+            {
+                if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IConfigurable<>))
+                {
+                    return i.GetGenericArguments()[0];
+                }
+            }
+
+            throw new Exception();
         }
     }
 }
