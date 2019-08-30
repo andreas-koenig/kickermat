@@ -73,11 +73,22 @@ namespace webapp.Controllers
                 {
                     if (((KickerParameterAttribute)attr).Name.Equals(parameter))
                     {
-                        prop.SetValue(options.ValueObject, Convert.ChangeType(value, prop.PropertyType)); 
                         options.Update(changes =>
                         {
-                            changes = options;
+                            prop.SetValue(changes, Convert.ChangeType(value, prop.PropertyType));
                         });
+
+                        try
+                        {
+                            ((IConfigurable)kickerComponent).ApplyOptions();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError("Failed to apply options: {0}", ex);
+                            var msg = string.Format("Failed to set parameter {0} to {1}",
+                                parameter, value);
+                            return BadRequest(msg);
+                        }
 
                         return Ok();
                     }
@@ -85,6 +96,24 @@ namespace webapp.Controllers
             }
 
             return NotFound(String.Format("The parameter {0} was not found", parameter));
+        }
+
+        [HttpPut("{component}/parameters/save")]
+        public IActionResult SaveParameters(string component)
+        {
+            var kickerComponent = GetComponent(component);
+            if (kickerComponent == null)
+            {
+                return NotFound(String.Format("The component {0} was not found", component));
+            }
+
+            if (!IsIConfigurable(kickerComponent))
+            {
+                var msg = String.Format("The component {0} has not parameters to save", component);
+                return BadRequest(msg);
+            }
+
+            return Ok();
         }
 
         private object GetComponent(string componentName)
