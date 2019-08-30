@@ -1,8 +1,5 @@
-namespace GameController
+﻿namespace GameController
 {
-    using GlobalDataTypes;
-    using PluginSystem;
-
     /// <summary>
     /// Interface which describes the game controller
     /// </summary>
@@ -11,7 +8,7 @@ namespace GameController
         /// <summary>
         /// Gets or sets the execution count.
         /// </summary>        
-        int ExecutionCount { get; set; }
+        // int ExecutionCount { get; set; }
 
         /// <summary>
         /// Executes the game controller

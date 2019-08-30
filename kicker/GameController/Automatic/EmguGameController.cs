@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GlobalDataTypes;
-using ObjectDetection;
-using PluginSystem;
-using PluginSystem.Configuration;
-using Utilities;
+using Game;
 
 namespace GameController
 {
@@ -48,7 +43,7 @@ namespace GameController
             _OwnbarDetection = ServiceLocator.LocateService<IOwnBarDetection>();
         }
 
-        protected override void Play(Position ballPos)
+        protected override void Play(Game.Position ballPos)
         {
             _CurrentBallPosition = ballPos.Clone();
             if (_CurrentBallPosition.Valid)

@@ -41,47 +41,21 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="EmguController\EmguControllerUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="EmguController\EmguControllerUserControl.Designer.cs">
-      <DependentUpon>EmguControllerUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Update="Manual\ManualGameControllerUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Manual\ManualGameControllerUserControl.Designer.cs">
       <DependentUpon>ManualGameControllerUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Update="SmoothingAdvanced\SmoothingAdvancedGameControllerUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="SmoothingAdvanced\SmoothingAdvancedGameControllerUserControl.Designer.cs">
-      <DependentUpon>SmoothingAdvancedGameControllerUserControl.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Calibration\Calibration.csproj" />
-    <ProjectReference Include="..\Coach\Coach.csproj" />
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
-    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
-    <ProjectReference Include="..\ObjectDetection\ObjectDetection.csproj" />
-    <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="EmguController\EmguControllerUserControl.resx">
-      <DependentUpon>EmguControllerUserControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Manual\ManualGameControllerUserControl.resx">
       <DependentUpon>ManualGameControllerUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="SmoothingAdvanced\SmoothingAdvancedGameControllerUserControl.resx">
-      <DependentUpon>SmoothingAdvancedGameControllerUserControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
