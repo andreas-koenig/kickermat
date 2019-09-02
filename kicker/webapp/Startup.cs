@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Configuration;
 using ImageProcessing.BallSearch;
+using ImageProcessing.BarSearch;
 using ImageProcessing.Calibration;
 using ImageProcessing.Preprocessing;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +49,7 @@ namespace webapp
             services.AddTransient<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<IBallSearch, BallSearch>();
+            services.AddSingleton<IBarSearch, BarSearch>();
             services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
 
             // Configuration

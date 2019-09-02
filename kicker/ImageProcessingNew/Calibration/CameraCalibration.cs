@@ -34,6 +34,7 @@ namespace ImageProcessing.Calibration
         private readonly IVideoSource _videoSource;
 
         private readonly ILogger<ICameraCalibration> _logger;
+        private IWritableOptions<CalibrationSettings> _calibrationOptions;
 
         public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger,
             IWritableOptions<CalibrationSettings> options)
@@ -42,6 +43,7 @@ namespace ImageProcessing.Calibration
             _objectLock = new object();
             _chessboardCorners = new List<Point2f[]>();
             _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
+            _calibrationOptions = options;
             _logger = logger;
         }
 
@@ -92,6 +94,7 @@ namespace ImageProcessing.Calibration
                     _videoSource.StopAcquisition(this);
 
                     var result = CalculateDistortionParameters(args.Frame.Mat);
+                    SaveCalibrationResult(result);
                     _isCalibrationRunning = false;
                     _calibrationDone(result);
                     _calibrationDone = null;
@@ -186,6 +189,31 @@ namespace ImageProcessing.Calibration
         public void OnCameraConnected(object sender, CameraEventArgs args)
         {
             throw new NotImplementedException();
+        }
+
+        private void SaveCalibrationResult(CalibrationResult result)
+        {
+            double[][] cameraMatrix = new double[3][];
+            for (int i = 0; i < 3; i++)
+            {
+                cameraMatrix[i] = new double[3];
+                for (int k = 0; k < 3; k++)
+                {
+                    cameraMatrix[i][k] = result.CameraMatrix.Get<double>(i, k);
+                }
+            }
+
+            double[] distCoeffs = new double[5];
+            for (int i = 0; i < 5; i++)
+            {
+                distCoeffs[i] = result.DistortionCoefficients.Get<double>(i);
+            }
+
+            _calibrationOptions.Update(changes =>
+            {
+                changes.CameraMatrix = cameraMatrix;
+                changes.DistortionCoefficients = distCoeffs;
+            });
         }
     }
 }

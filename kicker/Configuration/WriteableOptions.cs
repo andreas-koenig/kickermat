@@ -32,7 +32,6 @@ namespace Configuration
 
         public void Update(Action<T> applyChanges)
         {
-
             var fileProvider = _environment.ContentRootFileProvider;
             var fileInfo = fileProvider.GetFileInfo(_file);
             var physicalPath = fileInfo.PhysicalPath;
