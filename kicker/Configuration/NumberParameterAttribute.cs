@@ -19,6 +19,7 @@ namespace Configuration
             Min = min;
             Max = max;
             Step = step;
+            Value = default;
         }
     }
 }

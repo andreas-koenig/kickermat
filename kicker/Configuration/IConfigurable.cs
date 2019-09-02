@@ -4,7 +4,12 @@ using System.Text;
 
 namespace Configuration
 {
-    public interface IConfigurable<T> where T : class, new()
+    public interface IConfigurable
+    {
+        void ApplyOptions();
+    }
+
+    public interface IConfigurable<T> : IConfigurable where T : class, new()
     {
         IWritableOptions<T> Options { get; set; }
     }

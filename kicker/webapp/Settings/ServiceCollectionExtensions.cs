@@ -41,7 +41,7 @@ namespace Webapp.Settings
             {
                 var environment = provider.GetService<IHostingEnvironment>();
                 var options = provider.GetService<IOptionsMonitor<T>>();
-                return new WritableOptions<T>(environment, options, section.Key, file);
+                return new WritableOptions<T>(environment, options, section.Path, file);
             });
         }
     }

@@ -6,7 +6,14 @@ using Microsoft.Extensions.Options;
 
 namespace Configuration
 {
-    public interface IWritableOptions<out T> : IOptionsSnapshot<T> where T : class, new()
+    public interface IWritableOptions
+    {
+        object ValueObject { get; }
+        void Update(Action<object> applyChanges);
+    }
+
+    public interface IWritableOptions<out T>
+        : IWritableOptions, IOptionsSnapshot<T> where T : class, new()
     {
         new T Value { get; }
         void Update(Action<T> applyChanges);

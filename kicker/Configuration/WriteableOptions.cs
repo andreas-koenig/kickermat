@@ -17,32 +17,46 @@ namespace Configuration
         public WritableOptions(
             IHostingEnvironment environment,
             IOptionsMonitor<T> options,
-            string section,
+            string sectionPath,
             string file)
         {
             _environment = environment;
             _options = options;
-            _section = section;
+            _section = sectionPath;
             _file = file;
         }
 
+        public object ValueObject => _options.CurrentValue;
         public T Value => _options.CurrentValue;
         public T Get(string name) => _options.Get(name);
 
         public void Update(Action<T> applyChanges)
         {
+
             var fileProvider = _environment.ContentRootFileProvider;
             var fileInfo = fileProvider.GetFileInfo(_file);
             var physicalPath = fileInfo.PhysicalPath;
-
+            
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath));
-            var sectionObject = jObject.TryGetValue(_section, out JToken section) ?
-                JsonConvert.DeserializeObject<T>(section.ToString()) : (Value ?? new T());
+            
+            var sections = _section.Split(":");
+            var sectionName = sections[sections.Length - 1];
+            var sectionObject = jObject.TryGetValue(sectionName, out JToken section)
+                ? JsonConvert.DeserializeObject<T>(section.ToString())
+                : (Value ?? new T());
 
             applyChanges(sectionObject);
 
-            jObject[_section] = JObject.Parse(JsonConvert.SerializeObject(sectionObject));
+            var sectionPath = _section.Replace(":", ".");
+            var changes = JObject.Parse(JsonConvert.SerializeObject(sectionObject));
+            jObject.SelectToken(sectionPath).Replace(changes);
+
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
+        }
+
+        public void Update(Action<object> applyChanges)
+        {
+            Update((Action<T>)applyChanges);
         }
     }
 }
