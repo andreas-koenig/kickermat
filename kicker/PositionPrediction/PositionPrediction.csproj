@@ -41,17 +41,6 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Default\DefaultPositionPredictionUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Default\DefaultPositionPredictionUserControl.designer.cs">
-      <DependentUpon>DefaultPositionPredictionUserControl.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Calibration\Calibration.csproj" />
   </ItemGroup>
 </Project>

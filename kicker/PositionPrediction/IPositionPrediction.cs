@@ -1,6 +1,6 @@
-namespace PositionPrediction
+﻿namespace PositionPrediction
 {
-    using GlobalDataTypes;
+    using Game;
     using System.Drawing;
 
     /// <summary>

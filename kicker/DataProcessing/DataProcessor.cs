@@ -2,21 +2,18 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Windows.Forms;
+
     using Calibration;
     using Emgu.CV;
     using GameController;
     using ObjectDetection;
-    using PluginSystem;
-    using PluginSystem.Configuration;
     using PositionPrediction;
-    using Utilities;
     using Game;
 
     /// <summary>
     /// Klasse zur Verwaltung der Bildverarbeitungs-Module.
     /// </summary>
-    public sealed class DataProcessor : IXmlConfigurableKickerPlugin, IDisposable
+    public sealed class DataProcessor : IDisposable
     {
         /// <summary>
         /// Current instance for ball detection.
@@ -75,7 +72,6 @@
         /// Gets the user control of the plugin.
         /// </summary>
         /// <value>The user control of the plugin.</value>
-        public UserControl SettingsUserControl { get; private set; }
 
         /// <summary>
         /// Gets or sets the Settings.
