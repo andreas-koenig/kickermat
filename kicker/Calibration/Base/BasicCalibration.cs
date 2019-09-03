@@ -40,7 +40,7 @@
         /// </summary>
         protected BasicCalibration()
         {
-            this.State = CalibrationState.Running;
+            this.State = Calibration.CalibrationState.Running;
             this.calibrationThread = new BackgroundWorker();
             this.calibrationThread.WorkerSupportsCancellation = true;
             this.calibrationThread.DoWork += this.DoWork;
@@ -50,7 +50,7 @@
         /// Gets or sets the state.
         /// </summary>
         /// <value>The state.</value>
-        public CalibrationState State { get; protected set; }
+        public Calibration.CalibrationState State { get; protected set; }
 
         /// <summary>
         /// Gets the reference to the created correction parameters.
@@ -67,7 +67,7 @@
         /// </summary>
         public virtual void Cancel()
         {
-            this.State = CalibrationState.Error;
+            this.State = Calibration.CalibrationState.Error;
             this.calibrationThread.CancelAsync();
         }
 
@@ -341,12 +341,12 @@
                 // ServiceLocator.RegisterService<ICoach>(this.Coach);
                 // ServiceLocator.RegisterService<ICorrectionParams>(this.Params);
 
-                this.State = CalibrationState.Finished;
+                this.State = Calibration.CalibrationState.Finished;
             }
             catch (Exception ex)
             {
                 //TODO: Log Exception
-                this.State = CalibrationState.Error;
+                this.State = Calibration.CalibrationState.Error;
             }
 
         }

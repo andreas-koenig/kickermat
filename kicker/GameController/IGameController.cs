@@ -1,4 +1,7 @@
-﻿namespace GameController
+﻿using Game;
+using Communication.PlayerControl;
+
+namespace GameController
 {
     /// <summary>
     /// Interface which describes the game controller

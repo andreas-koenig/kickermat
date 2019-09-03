@@ -14,6 +14,7 @@
         private readonly List<Bar> ownBars;
         private readonly List<Bar> opponentBars;
 
+        public CalibrationState State { get; protected set; }
         public int playingFieldWidth { get; private set; }
         public int playingFieldLength { get; private set; }
 

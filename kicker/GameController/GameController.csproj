@@ -41,22 +41,9 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Manual\ManualGameControllerUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Manual\ManualGameControllerUserControl.Designer.cs">
-      <DependentUpon>ManualGameControllerUserControl.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Calibration\Calibration.csproj" />
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Manual\ManualGameControllerUserControl.resx">
-      <DependentUpon>ManualGameControllerUserControl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,7 @@
 ﻿namespace PositionPrediction.Dummy
 {
     using System.Drawing;
+    using Game;
 
     /// <summary>
     /// Implements the default position prediction which doesn't predict any values.
@@ -12,7 +13,6 @@
         /// </summary>
         public DummyPositionPrediction()
         {
-            this.SettingsUserControl = null;
             this.PredictedPosition = new Position();
         }
 
@@ -26,7 +26,6 @@
         /// Gets the user control of the plugin.
         /// </summary>
         /// <value>The user control of the plugin.</value>
-        public UserControl SettingsUserControl { get; private set; }
 
         /// <summary>
         /// Executes the position prediction
@@ -35,9 +34,9 @@
         /// <param name="numberOfFrames">The number of frames.</param>
         public void Run(Position ballPosition, int numberOfFrames, Rectangle playingArea = new Rectangle())
         {
-            this.PredictedPosition.Valid = ballPosition.Valid;
-            this.PredictedPosition.XPosition = ballPosition.XPosition;
-            this.PredictedPosition.YPosition = ballPosition.YPosition;
+            this.PredictedPosition.valid = ballPosition.valid;
+            this.PredictedPosition.xPosition = ballPosition.xPosition;
+            this.PredictedPosition.yPosition = ballPosition.yPosition;
         }
 
         /// <summary>

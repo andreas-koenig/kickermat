@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using Game;
 
 namespace GameController
 {
-    public class EmguGameController : BasicGameController, IXmlConfigurableKickerPlugin
+    public class EmguGameController : BasicGameController
     {
         #region Fields
         private Position _CurrentBallPosition = new Position(), _LastBallPosition = new Position();
@@ -26,14 +27,10 @@ namespace GameController
         private readonly Random _MidFieldRandom = new Random();
         private int _CurrentDefensePosition = 0;
         private EmguGameControllerSettings Settings = new EmguGameControllerSettings();
-        private readonly EmguControllerUserControl UserControl;
         #endregion
 
         public EmguGameController()
         {
-            UserControl = new EmguControllerUserControl();
-            UserControl.SetSettings(Settings);
-            this.SettingsUserControl = UserControl;
             _LastMidFieldShotStopwatch.Start();
             _LastStrikerShotStopwatch.Start();
             _LastKeeperShotStopwatch.Start();
