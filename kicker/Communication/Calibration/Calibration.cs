@@ -1,13 +1,12 @@
-namespace Communication.Calibration.UdpGateway
+﻿namespace Communication.Calibration.UdpGateway
 {
     using System;
     using Communication.NetworkLayer.Packets.Udp;
-    using GlobalDataTypes;
+    using Game;
     using NetworkLayer;
     using NetworkLayer.Packets.Udp.Enums;
     using NetworkLayer.Udp;
-    //using PluginSystem;
-    //using Utilities;
+
 
     /// <summary>
     /// Implementation of calibration call for the motors via controller with UDP. The calibration is needed for the ImageProcessing
@@ -88,14 +87,14 @@ namespace Communication.Calibration.UdpGateway
         private void MoveAllBarsToPosition(UdpPacketType position)
         {
             //TODO: Only SetMinPosition and SetMaxPosition valid for calibration
-            foreach (Bar barName in Enum.GetValues(typeof(Bar)))
+            foreach (Bar barName in Enum.GetValues(typeof(Bar.Type)))
             {
                 //TODO: Move all bars ?!
-                if (barName != Bar.All)
+                if (barName.Equals(Bar.Type.All))
                 {
                     //TODO: Try-Catch
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)position), 0, this.datagram, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)barName), 0, this.datagram, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)Bar.Type.All), 0, this.datagram, 2, 2);
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, this.datagram, 4, 2);
                     this.ZeroFillDatagramFromOffset(6);
 
@@ -119,7 +118,7 @@ namespace Communication.Calibration.UdpGateway
         /// <param name="barLengthInPixel">The bar length in pixel.</param>
         public void SetBarLengthInPixel(Bar selectedBar, ushort barLengthInPixel)
         {
-            ushort udpId = (ushort)selectedBar;
+            ushort udpId = (ushort)selectedBar.barSelection;
             Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetBarLengthInPixel), 0, this.datagram, 0, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(udpId), 0, this.datagram, 2, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(barLengthInPixel), 0, this.datagram, 4, 2);

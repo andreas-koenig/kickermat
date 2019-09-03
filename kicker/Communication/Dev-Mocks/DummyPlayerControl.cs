@@ -1,7 +1,7 @@
 ﻿namespace Communication.PlayerControl
 {
   using System;
-  using GlobalDataTypes;
+  using Game;
   //using PluginSystem;
 
   /// <summary>

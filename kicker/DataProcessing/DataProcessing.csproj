@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{39A1CD6B-56F8-4784-97A8-7B88F4BC20B1}</ProjectGuid>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -60,7 +60,6 @@
     <ProjectReference Include="..\Calibration\Calibration.csproj" />
     <ProjectReference Include="..\GameController\GameController.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
-    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
     <ProjectReference Include="..\ObjectDetection\ObjectDetection.csproj" />
     <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />

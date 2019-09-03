@@ -1,18 +1,15 @@
-namespace Communication.PlayerControl.UdpGateway
+﻿namespace Communication.PlayerControl.UdpGateway
 {
     using System;
     using System.Threading;
     using Game;
-    using GlobalDataTypes;
     using NetworkLayer.Packets.Udp;
     using NetworkLayer.Packets.Udp.Enums;
     using NetworkLayer.Udp;
-    //using PluginSystem;
-   // using Utilities;
-
     /// <summary>
     /// Class for controlling the players via an IP-CAN-Gateway.
     /// </summary>
+ 
     public class PlayerControl : IPlayerControl, IDisposable
     {
         /// <summary>
@@ -99,9 +96,9 @@ namespace Communication.PlayerControl.UdpGateway
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse)
         {
-            switch (playerBar)
+            switch (playerBar.barSelection)
             {
-                case Bar.All:
+                case Bar.Type.All:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
                     this.NetworkObject.DefensePosition = newPlayerPosition;
                     this.NetworkObject.MidfieldPosition = newPlayerPosition;
@@ -113,7 +110,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Keeper:
+                case Bar.Type.Keeper:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
                     if (waitForResponse)
                     {
@@ -121,7 +118,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Defense:
+                case Bar.Type.Defense:
                     this.NetworkObject.DefensePosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -130,7 +127,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Midfield:
+                case Bar.Type.Midfield:
                     this.NetworkObject.MidfieldPosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -139,7 +136,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Striker:
+                case Bar.Type.Striker:
                     this.NetworkObject.StrikerPosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -177,9 +174,9 @@ namespace Communication.PlayerControl.UdpGateway
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void SetAngle(Bar bar, short angle, bool waitForResponse)
         {
-            switch (bar)
+            switch (bar.barSelection)
             {
-                case Bar.All:
+                case Bar.Type.All:
                     this.NetworkObject.KeeperAngle = angle;
                     this.NetworkObject.DefenseAngel = angle;
                     this.NetworkObject.MidfieldAngel = angle;
@@ -191,7 +188,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Keeper:
+                case Bar.Type.Keeper:
                     this.NetworkObject.KeeperAngle = angle;
 
                     if (waitForResponse)
@@ -200,7 +197,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Defense:
+                case Bar.Type.Defense:
                     this.NetworkObject.DefenseAngel = angle;
 
                     if (waitForResponse)
@@ -209,7 +206,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Midfield:
+                case Bar.Type.Midfield:
                     this.NetworkObject.MidfieldAngel = angle;
 
                     if (waitForResponse)
@@ -218,7 +215,7 @@ namespace Communication.PlayerControl.UdpGateway
                     }
 
                     break;
-                case Bar.Striker:
+                case Bar.Type.Striker:
                     this.NetworkObject.StrikerAngel = angle;
 
                     if (waitForResponse)

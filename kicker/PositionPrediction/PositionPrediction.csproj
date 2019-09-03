@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{0DDAAE52-6A20-48AA-9D5D-67662D7A82FF}</ProjectGuid>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -52,14 +52,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Default\DefaultPositionPredictionUserControl.resx">
-      <DependentUpon>DefaultPositionPredictionUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Calibration\Calibration.csproj" />
-    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
-    <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 </Project>

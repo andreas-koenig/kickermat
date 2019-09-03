@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Game
 {  
-    class Bar
+   public class Bar
     {
         //TODO: Datatypes for length and angle
         //TODO: Set AccessModifiers etc ...
@@ -146,7 +146,7 @@ namespace Game
             }
         }
 
-        private Type barSelection;
+        public Type barSelection;
         int position { get; set; }
         private List<Player> players;
         int angle { get; set; }

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{5FDDFB58-BEFC-4A19-BBEC-39FAC06CAE20}</ProjectGuid>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -38,29 +38,7 @@
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Moq" Version="4.13.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Base\BasicObjectDetectionUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Base\BasicObjectDetectionUserControl.Designer.cs">
-      <DependentUpon>BasicObjectDetectionUserControl.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Coach\Coach.csproj" />
-    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
-    <ProjectReference Include="..\ObjectSearch\ObjectSearch.csproj" />
-    <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Base\BasicObjectDetectionUserControl.resx">
-      <DependentUpon>BasicObjectDetectionUserControl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>

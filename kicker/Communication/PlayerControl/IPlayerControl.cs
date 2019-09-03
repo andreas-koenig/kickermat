@@ -1,6 +1,6 @@
 ﻿namespace Communication.PlayerControl
 {
-    using GlobalDataTypes;
+    using Game;
 
     /// <summary>
     /// Interface für die Ansteuerungen der einzelnen Spieler

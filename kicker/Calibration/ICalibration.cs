@@ -1,12 +1,11 @@
 ﻿namespace Calibration
 {
     using ObjectDetection;
-    using PluginSystem;
 
     /// <summary>
     /// Interface which describes a calibration class.
     /// </summary>
-    public interface ICalibration : IXmlConfigurableKickerPlugin
+    public interface ICalibration
     {
         /// <summary>
         /// Gets the calibration state.

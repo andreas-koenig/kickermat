@@ -2,7 +2,7 @@
 {
     using System;
     using Communication.NetworkLayer.Packets.Udp.Enums;
-    using GlobalDataTypes;
+    using Game;
 
     /// <summary>
     /// Implementation of a dummy calibration call.
