@@ -1,17 +1,14 @@
 ﻿namespace Communication.Manager
 {
     using System;
-    //using System.Windows.Forms;
     using Calibration;
     using PlayerControl;
-    //using PluginSystem;
-    //using PluginSystem.Configuration;
     using Sets;
 
     /// <summary>
     /// Manages the existing Communication-Interfaces
     /// </summary>
-    public sealed class CommunicationManager : IDisposable
+    public sealed class CommunicationManager : IDisposable, ICommunicationSet
     {
         /// <summary>
         /// Occurs when [communication set changed].
@@ -27,59 +24,19 @@
         /// Gets the player control.
         /// </summary>
         /// <value>The player control.</value>
-        public IPlayerControl PlayerControl
-        {
-            get
-            {
-                return this.CommunicationSet.PlayerControl;
-            }
-        }
+        public IPlayerControl PlayerControl => CommunicationSet.PlayerControl;
 
         /// <summary>
         /// Gets the calibration control.
         /// </summary>
         /// <value>The calibration control.</value>
-        public ICalibrationControl CalibrationControl
-        {
-            get
-            {
-                return this.CommunicationSet.CalibrationControl;
-            }
-        }
+        public ICalibrationControl CalibrationControl => CommunicationSet.CalibrationControl;
 
         /// <summary>
         /// Gets or sets the Settings.
         /// </summary>
         /// <value>The Settings.</value>
-        internal CommunicationManagerSettings Settings { get; set; }       
-
-        /// <summary>
-        /// Loads the configuration from a XML file.
-        /// </summary>
-        /// <param name="xmlFileName">Name of the XML file.</param>
-        public void LoadConfiguration(string xmlFileName)
-        {
-            //TODO: Concept for loading/saving settings
-            //this.Settings = SettingsSerializer.LoadSettingsFromXml<CommunicationManagerSettings>(xmlFileName);
-        }
-
-        /// <summary>
-        /// Saves the configuration to a XML file.
-        /// </summary>
-        /// <param name="xmlFileName">Name of the XML file.</param>
-        public void SaveConfiguration(string xmlFileName)
-        {
-            //TODO: Concept for loading/saving settings
-            //SettingsSerializer.SaveSettingsToXml(this.Settings, xmlFileName);
-        }
-
-        /// <summary>
-        /// Inits the user control.
-        /// </summary>
-        public void InitUserControl()
-        {
-
-        }
+        internal CommunicationManagerSettings Settings { get; set; }
 
         /// <summary>
         /// Free allocated resources.
@@ -102,6 +59,16 @@
             {
                 this.CommunicationSetChanged(this, new NewCommunicationSetEventArgs(newCommunicationSet));
             }
+        }
+
+        public void Connect()
+        {
+            CommunicationSet.Connect();
+        }
+
+        public void Disconnect()
+        {
+            CommunicationSet.Disconnect();
         }
     }
 }
