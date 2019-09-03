@@ -11,7 +11,7 @@ namespace Game
         /// <summary>
         /// Lists all bars and their code for creating datagrams
         /// </summary>
-        public enum Type : ushort
+        public enum BarType : ushort
         {
             /// <summary>
             /// All bars are used.
@@ -43,7 +43,7 @@ namespace Game
             /// <summary>
             /// Lists all players and their code for creating datagrams
             /// </summary>
-            public enum Type
+            public enum PlayerType
             {
                 /// <summary>
                 /// The keeper.
@@ -101,7 +101,7 @@ namespace Game
                 StrikerThree = 0x0A,
             }
 
-            private Type playerType;
+            private PlayerType playerType;
 
             //TODO: Axis?
             int minPosition { get; set; }
@@ -111,7 +111,7 @@ namespace Game
             // Until now it seems to be necessary to access the related bar of an player to satisfy the communication-interface
             private Bar relatedBar;
 
-            public Player(Type playerType, Bar relatedBar)
+            public Player(PlayerType playerType, Bar relatedBar)
             {
                 this.playerType = playerType;
                 this.relatedBar = relatedBar;
@@ -128,17 +128,17 @@ namespace Game
             {
                 switch (playerType)
                 {
-                    case Type.Keeper: return "K";
-                    case Type.DefenseOne: return "D1";
-                    case Type.DefenseTwo: return "D2";
-                    case Type.MidfieldOne: return "M1";
-                    case Type.MidfieldTwo: return "M2";
-                    case Type.MidfieldThree: return "M3";
-                    case Type.MidfieldFour: return "M4";
-                    case Type.MidfieldFive: return "M5";
-                    case Type.StrikerOne: return "S1";
-                    case Type.StrikerTwo: return "S2";
-                    case Type.StrikerThree: return "S3";
+                    case PlayerType.Keeper: return "K";
+                    case PlayerType.DefenseOne: return "D1";
+                    case PlayerType.DefenseTwo: return "D2";
+                    case PlayerType.MidfieldOne: return "M1";
+                    case PlayerType.MidfieldTwo: return "M2";
+                    case PlayerType.MidfieldThree: return "M3";
+                    case PlayerType.MidfieldFour: return "M4";
+                    case PlayerType.MidfieldFive: return "M5";
+                    case PlayerType.StrikerOne: return "S1";
+                    case PlayerType.StrikerTwo: return "S2";
+                    case PlayerType.StrikerThree: return "S3";
                 }
 
                 return "LabelUnset";
@@ -146,26 +146,26 @@ namespace Game
             }
         }
 
-        public Type barSelection;
+        public BarType barSelection;
         int position { get; set; }
         private List<Player> players;
         int angle { get; set; }
         
-        public Bar(Type barSelection)
+        public Bar(BarType barSelection)
         {
             this.barSelection = barSelection;
 
             switch(this.barSelection)
             {
-                case Type.All: players = new List<Player>() { new Player(Player.Type.Keeper, this) , new Player(Player.Type.DefenseOne, this), new Player(Player.Type.DefenseTwo, this), new Player(Player.Type.MidfieldOne, this), new Player(Player.Type.MidfieldTwo, this), new Player(Player.Type.MidfieldThree, this), new Player(Player.Type.MidfieldFour, this), new Player(Player.Type.MidfieldFive, this), new Player(Player.Type.StrikerOne, this), new Player(Player.Type.StrikerTwo, this), new Player(Player.Type.StrikerThree, this) };
+                case BarType.All: players = new List<Player>() { new Player(Player.PlayerType.Keeper, this) , new Player(Player.PlayerType.DefenseOne, this), new Player(Player.PlayerType.DefenseTwo, this), new Player(Player.PlayerType.MidfieldOne, this), new Player(Player.PlayerType.MidfieldTwo, this), new Player(Player.PlayerType.MidfieldThree, this), new Player(Player.PlayerType.MidfieldFour, this), new Player(Player.PlayerType.MidfieldFive, this), new Player(Player.PlayerType.StrikerOne, this), new Player(Player.PlayerType.StrikerTwo, this), new Player(Player.PlayerType.StrikerThree, this) };
                     break;
-                case Type.Keeper: players = new List<Player>() { new Player(Player.Type.Keeper, this) };
+                case BarType.Keeper: players = new List<Player>() { new Player(Player.PlayerType.Keeper, this) };
                     break;
-                case Type.Defense: players = new List<Player>() { new Player(Player.Type.DefenseOne, this), new Player(Player.Type.DefenseTwo, this) };
+                case BarType.Defense: players = new List<Player>() { new Player(Player.PlayerType.DefenseOne, this), new Player(Player.PlayerType.DefenseTwo, this) };
                     break;
-                case Type.Midfield: players = new List<Player>() { new Player(Player.Type.MidfieldOne, this), new Player(Player.Type.MidfieldTwo, this), new Player(Player.Type.MidfieldThree, this), new Player(Player.Type.MidfieldFour, this), new Player(Player.Type.MidfieldFive, this) };
+                case BarType.Midfield: players = new List<Player>() { new Player(Player.PlayerType.MidfieldOne, this), new Player(Player.PlayerType.MidfieldTwo, this), new Player(Player.PlayerType.MidfieldThree, this), new Player(Player.PlayerType.MidfieldFour, this), new Player(Player.PlayerType.MidfieldFive, this) };
                     break;
-                case Type.Striker: players = new List<Player>() { new Player(Player.Type.StrikerOne, this), new Player(Player.Type.StrikerTwo, this), new Player(Player.Type.StrikerThree, this) };
+                case BarType.Striker: players = new List<Player>() { new Player(Player.PlayerType.StrikerOne, this), new Player(Player.PlayerType.StrikerTwo, this), new Player(Player.PlayerType.StrikerThree, this) };
                     break;
                 default: throw new ArgumentException("Invalid bar.");
             }
@@ -197,11 +197,11 @@ namespace Game
         {
             switch (barSelection)
             {
-                case Type.All: return "All";
-                case Type.Keeper: return "K-Bar";
-                case Type.Defense: return "D-Bar";
-                case Type.Midfield: return "M-Bar";
-                case Type.Striker: return "S-Bar";
+                case BarType.All: return "All";
+                case BarType.Keeper: return "K-Bar";
+                case BarType.Defense: return "D-Bar";
+                case BarType.Midfield: return "M-Bar";
+                case BarType.Striker: return "S-Bar";
             }
 
             throw new ArgumentException("Invalid bar.");

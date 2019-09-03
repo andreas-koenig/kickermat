@@ -87,14 +87,14 @@
         private void MoveAllBarsToPosition(UdpPacketType position)
         {
             //TODO: Only SetMinPosition and SetMaxPosition valid for calibration
-            foreach (Bar barName in Enum.GetValues(typeof(Bar.Type)))
+            foreach (Bar barName in Enum.GetValues(typeof(Bar.BarType)))
             {
                 //TODO: Move all bars ?!
-                if (barName.Equals(Bar.Type.All))
+                if (barName.Equals(Bar.BarType.All))
                 {
                     //TODO: Try-Catch
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)position), 0, this.datagram, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)Bar.Type.All), 0, this.datagram, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)Bar.BarType.All), 0, this.datagram, 2, 2);
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, this.datagram, 4, 2);
                     this.ZeroFillDatagramFromOffset(6);
 

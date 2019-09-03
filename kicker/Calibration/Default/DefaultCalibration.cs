@@ -4,16 +4,14 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Threading;
-    using System.Windows.Forms;
     using Calibration.Base;
     using Communication.NetworkLayer.Packets.Udp.Enums;
-    using GlobalDataTypes;
-    using ObjectDetection;
-    using PluginSystem;
-    using Utilities;
     using VideoSource;
     using Communication.PlayerControl;
     using Communication.Manager;
+    using static Game.Bar;
+    using Game;
+    using Moq;
 
     /// <summary>
     /// Default class for calibrating the image processing.
@@ -32,16 +30,17 @@
         protected override bool DoCalibration(object sender, DoWorkEventArgs e, Dictionary<Player, Position> minPositions, Dictionary<Player, Position> maxPositions)
         {
             Dictionary<Player, int> labelHandles = new Dictionary<Player, int>();
-            IVideoSource videoSource = ServiceLocator.LocateService<IVideoSource>();
-            IOwnBarDetection ownBarDetection = ServiceLocator.LocateService<IOwnBarDetection>();
+            //IVideoSource videoSource = new Mock<IVideoSource>();
+            //IOwnBarDetection mock = new Mock<IOwnBarDetection>();
+            //IOwnBarDetection ownBarDetection = ServiceLocator.LocateService<IOwnBarDetection>();
 
             // Tell detection that calibration is starting
-            ownBarDetection.CalibrationStart();
+            //ownBarDetection.CalibrationStart();
 
             // Wait for controller calibration to be finished
             while (Controller.InitStatus != ControllerStatus.Ok)
             {
-                videoSource.GetNewImage();
+                //videoSource.GetNewImage();
                 Thread.Sleep(100);
 
                 // Ab und zu mal schauen, ob der Thread überhaupt noch laufen darf...
@@ -57,7 +56,7 @@
             Thread.Sleep(500);
 
             // Prepare own bar detection for calibration
-            ownBarDetection.CalibrationDetection();
+            //ownBarDetection.CalibrationDetection();
 
             try
             {
@@ -88,21 +87,21 @@
                     bool allPlayersFound = true;
 
                     // get a new image, this triggers the image processing and object detection
-                    videoSource.GetNewImage();
+                    //videoSource.GetNewImage();
 
                     // wait until current detection is finished
-                    while (ownBarDetection.IsRunning)
-                    {
-                        Application.DoEvents();
-                    }
+                    //while (ownBarDetection.IsRunning)
+                    //{
+                    //    //Application.DoEvents();
+                    //}
 
                     foreach (Player player in Enum.GetValues(typeof(Player)))
                     {
-                        Position pos = ownBarDetection.GetPlayerPosition(player);
-                        if (pos == null || !pos.Valid)
-                        {
-                            allPlayersFound = false;
-                        }
+                    //    Position pos = ownBarDetection.GetPlayerPosition(player);
+                    //    if (pos == null || !pos.valid)
+                    //    {
+                    //        allPlayersFound = false;
+                    //    }
                     }
 
                     if (allPlayersFound)
@@ -113,27 +112,27 @@
 
                 foreach (Player player in Enum.GetValues(typeof(Player)))
                 {
-                    Position pos = ownBarDetection.GetPlayerPosition(player);
+                    //Position pos = ownBarDetection.GetPlayerPosition(player);
                     //FormImageDisplay.Instance.Labels.Update(labelHandles[player], pos);
 
-                    if (pos == null || !pos.Valid)
-                    {
-                        //SwissKnife.ShowError(this, "Position of " + player + " not found, please check configuration and try again.");
-                        //return false;
-                    }
+                    //if (pos == null || !pos.valid)
+                    //{
+                    //    //SwissKnife.ShowError(this, "Position of " + player + " not found, please check configuration and try again.");
+                    //    //return false;
+                    //}
                 }
 
                 foreach (Player playerName in Enum.GetValues(typeof(Player)))
                 {
                     if (initStep == 1)
                     {
-                        var currpos = ownBarDetection.GetPlayerPosition(playerName);
-                        maxPositions[playerName] = currpos;
+                        //var currpos = ownBarDetection.GetPlayerPosition(playerName);
+                        //maxPositions[playerName] = currpos;
                     }
                     else
                     {
-                        var currpos = ownBarDetection.GetPlayerPosition(playerName);
-                        minPositions[playerName] = currpos;
+                        //var currpos = ownBarDetection.GetPlayerPosition(playerName);
+                        //minPositions[playerName] = currpos;
                     }
                 }
             }
@@ -144,7 +143,7 @@
             finally
             {
                 // Tell detection that calibration is finished
-                ownBarDetection.CalibrationFinished();
+                //ownBarDetection.CalibrationFinished();
 
             }
             return true;
@@ -159,11 +158,11 @@
         protected override void AfterCalibration(object sender, DoWorkEventArgs e)
         {
             // Save the calculated values in the settings
-            this.Settings.KeeperBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Keeper) + this.Settings.PlayingFieldXOffset;
-            this.Settings.DefenseBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Defense) + this.Settings.PlayingFieldXOffset;
-            this.Settings.MidfieldBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Midfield) + this.Settings.PlayingFieldXOffset;
-            this.Settings.OpponentStrikerBarPosition = Coach.GetBarXPosition(Bar.Striker) - this.Settings.PlayingFieldXOffset;
-            this.SettingsUserControl.Refresh();
+            //this.Settings.KeeperBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Keeper) + this.Settings.PlayingFieldXOffset;
+            //this.Settings.DefenseBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Defense) + this.Settings.PlayingFieldXOffset;
+            //this.Settings.MidfieldBarPosition = this.Settings.PlayingFieldWidth - Coach.GetBarXPosition(Bar.Midfield) + this.Settings.PlayingFieldXOffset;
+            //this.Settings.OpponentStrikerBarPosition = Coach.GetBarXPosition(Bar.Striker) - this.Settings.PlayingFieldXOffset;
+            //this.SettingsUserControl.Refresh();
         }
 
     }

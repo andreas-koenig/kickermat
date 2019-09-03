@@ -98,7 +98,7 @@
         {
             switch (playerBar.barSelection)
             {
-                case Bar.Type.All:
+                case Bar.BarType.All:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
                     this.NetworkObject.DefensePosition = newPlayerPosition;
                     this.NetworkObject.MidfieldPosition = newPlayerPosition;
@@ -110,7 +110,7 @@
                     }
 
                     break;
-                case Bar.Type.Keeper:
+                case Bar.BarType.Keeper:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
                     if (waitForResponse)
                     {
@@ -118,7 +118,7 @@
                     }
 
                     break;
-                case Bar.Type.Defense:
+                case Bar.BarType.Defense:
                     this.NetworkObject.DefensePosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -127,7 +127,7 @@
                     }
 
                     break;
-                case Bar.Type.Midfield:
+                case Bar.BarType.Midfield:
                     this.NetworkObject.MidfieldPosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -136,7 +136,7 @@
                     }
 
                     break;
-                case Bar.Type.Striker:
+                case Bar.BarType.Striker:
                     this.NetworkObject.StrikerPosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -176,7 +176,7 @@
         {
             switch (bar.barSelection)
             {
-                case Bar.Type.All:
+                case Bar.BarType.All:
                     this.NetworkObject.KeeperAngle = angle;
                     this.NetworkObject.DefenseAngel = angle;
                     this.NetworkObject.MidfieldAngel = angle;
@@ -188,7 +188,7 @@
                     }
 
                     break;
-                case Bar.Type.Keeper:
+                case Bar.BarType.Keeper:
                     this.NetworkObject.KeeperAngle = angle;
 
                     if (waitForResponse)
@@ -197,7 +197,7 @@
                     }
 
                     break;
-                case Bar.Type.Defense:
+                case Bar.BarType.Defense:
                     this.NetworkObject.DefenseAngel = angle;
 
                     if (waitForResponse)
@@ -206,7 +206,7 @@
                     }
 
                     break;
-                case Bar.Type.Midfield:
+                case Bar.BarType.Midfield:
                     this.NetworkObject.MidfieldAngel = angle;
 
                     if (waitForResponse)
@@ -215,7 +215,7 @@
                     }
 
                     break;
-                case Bar.Type.Striker:
+                case Bar.BarType.Striker:
                     this.NetworkObject.StrikerAngel = angle;
 
                     if (waitForResponse)

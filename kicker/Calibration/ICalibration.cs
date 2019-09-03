@@ -1,6 +1,5 @@
 ﻿namespace Calibration
 {
-    using ObjectDetection;
 
     /// <summary>
     /// Interface which describes a calibration class.

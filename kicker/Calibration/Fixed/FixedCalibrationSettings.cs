@@ -1,10 +1,7 @@
 ﻿namespace Calibration.Fixed
 {
     using System.ComponentModel;
-    using System.Reflection;
-    using Calibration;
     using Calibration.Base;
-    using GlobalDataTypes;
 
     /// <summary>
     /// Extended settings of the <see cref="FixedCalibration"/> class.

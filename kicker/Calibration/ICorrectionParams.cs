@@ -1,7 +1,6 @@
 ﻿namespace Calibration
 {
-    using GlobalDataTypes;
-
+    using Game;
     /// <summary>
     /// Interface to an instance containing playing field parameters after correction.
     /// </summary>

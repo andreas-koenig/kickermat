@@ -11,6 +11,10 @@ namespace Game
         public bool inPlayingArea { get; set; }
         public Rectangle boundingBox { get; }
 
+        public Position()
+        {
+        }
+
         //TODO: Remove?
         public Position(Point point, bool valid, bool inPlayingArea, Rectangle boundingBox)
         {
