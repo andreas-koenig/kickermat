@@ -81,15 +81,36 @@ bool get_feat_value(char* camera_name, char* feature_name, double* value) {
     return success;
 }
 
-bool set_feat_value(char* camera_name, char* feature_name, double value) {
-    SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
+bool set_exposure_time(char* camera_name, double value) {
+    auto camera = CameraController::getInstance()->acquisitionDevice;
+    
     bool destroy = camera == nullptr;
     if (destroy) {
         camera = new SapAcqDevice(camera_name, FALSE);
         camera->Create();
     }
 
-    bool success = camera->SetFeatureValue(feature_name, value);
+    auto success = camera->SetFeatureValue("ExposureTime", value);
+
+    if (destroy) {
+        camera->Destroy();
+        delete camera;
+    }
+
+    return success;
+}
+
+bool set_brightness(char* camera_name, int value) {
+    auto camera = CameraController::getInstance()->acquisitionDevice;
+
+    bool destroy = camera == nullptr;
+    if (destroy) {
+        camera = new SapAcqDevice(camera_name, FALSE);
+        camera->Create();
+    }
+
+    auto success = camera->SetFeatureValue("autoBrightnessTarget", value);
+
     if (destroy) {
         camera->Destroy();
         delete camera;

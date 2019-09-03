@@ -11,7 +11,7 @@ namespace VideoSource.Dalsa
         private static DalsaVideoSource _dalsaVideoSource;
         private readonly object _mutex = new object();
 
-        public IWritableOptions<DalsaSettings> Options { get; set; }
+        public IWritableOptions<DalsaSettings> Options { get; }
 
         public DalsaVideoSource(ILogger<DalsaVideoSource> logger, IWritableOptions<DalsaSettings>
             options) : base(logger)
@@ -22,11 +22,8 @@ namespace VideoSource.Dalsa
 
         public void ApplyOptions()
         {
-            SetDoubleParameter("ExposureTime", Options.Value.ExposureTime,
-                DalsaSettings.EXPOSURE_TIME_MIN, DalsaSettings.EXPOSURE_TIME_MAX);
-
-            SetDoubleParameter("Gain", Options.Value.Gain, DalsaSettings.GAIN_MIN,
-                DalsaSettings.GAIN_MAX);
+            SetBrightness((int)Options.Value.Brightness);
+            //SetExposureTime(Options.Value.ExposureTime);
         }
 
         protected override void StartAcquisition()
@@ -34,7 +31,7 @@ namespace VideoSource.Dalsa
             lock (_mutex)
             {
                 DalsaApi.startup(OnFrameArrived, ServerConnected, ServerDisconnected);
-                if (!DalsaApi.start_acquisition(CAMERA_NAME))
+                if (!DalsaApi.start_acquisition(Options.Value.CameraName))
                 {
                     DalsaApi.shutdown();
                     // TODO: Enrich error with more information (SapManager::GetLastStatus())
@@ -43,7 +40,6 @@ namespace VideoSource.Dalsa
 
                 ApplyOptions();
             }
-
         }
 
         protected override void StopAcquisition()
@@ -67,52 +63,57 @@ namespace VideoSource.Dalsa
 
         private static void OnFrameArrived(int index, IntPtr address)
         {
-            // Debayering of monochrome image
-            Mat colorMat = new Mat();
-            var monoMat = new Mat(1024, 1280, MatType.CV_8U, address);
-            Cv2.CvtColor(monoMat, colorMat, ColorConversionCodes.BayerBG2BGR);
-
-            var frame = new DalsaFrame(colorMat);
+            var img = new Mat(1024, 1280, MatType.CV_8UC3, address);
+            var frame = new DalsaFrame(img);
             DalsaApi.release_buffer(index);
-
             _dalsaVideoSource.HandleFrameArrived(new FrameArrivedArgs(frame));
         }
 
-        private void SetDoubleParameter(string parameterName, double value, double min, double max)
+        private void SetExposureTime(double value)
         {
             lock (_mutex)
             {
-                if (value < min || value > max)
+                if (value < DalsaSettings.EXPOSURE_TIME_MIN ||
+                    value > DalsaSettings.EXPOSURE_TIME_MAX)
                 {
-                    var msg = string.Format("Cannot set parameter {0} to {1}: " +
-                        "Out of bounds (Min: {2}, Max: {3})", parameterName, value,
+                    var msg = string.Format("Cannot set parameter exposure time to {0}: " +
+                        "Out of bounds (Min: {1}, Max: {2})", value,
                         DalsaSettings.EXPOSURE_TIME_MIN, DalsaSettings.EXPOSURE_TIME_MAX);
                     throw new KickerParameterException(msg);
                 }
 
-                if (!DalsaApi.set_feat_value(CAMERA_NAME, parameterName, value))
+                unsafe
                 {
-                    var msg = string.Format("Failed to set {0} to {1}", parameterName, value);
-                    throw new KickerParameterException(msg);
+                    if (!DalsaApi.set_exposure_time(CAMERA_NAME, value))
+                    {
+                        var msg = string.Format("Failed to set exposure time to {0}", value);
+                        throw new KickerParameterException(msg);
+                    }
                 }
             }
         }
 
-        private double GetDoubleParameter(string parameterName)
+        private void SetBrightness(int value)
         {
             lock (_mutex)
             {
-                unsafe
+                if (value < DalsaSettings.BRIGHTNESS_MIN ||
+                    value > DalsaSettings.BRIGHTNESS_MAX)
                 {
-                    double param = 0.0;
-                    if (DalsaApi.get_feat_value(CAMERA_NAME, parameterName, &param))
-                    {
-                        return param;
-                    }
+                    var msg = string.Format("Cannot set parameter brightness to {0}: " +
+                        "Out of bounds (Min: {1}, Max: {2})", value,
+                        DalsaSettings.BRIGHTNESS_MIN, DalsaSettings.BRIGHTNESS_MAX);
+                    throw new KickerParameterException(msg);
                 }
 
-                var msg = string.Format("Failed to retrieve value of {0} parameter", parameterName);
-                throw new KickerParameterException(msg);
+                unsafe
+                {
+                    if (!DalsaApi.set_brightness(CAMERA_NAME, value))
+                    {
+                        var msg = string.Format("Failed to set brightness to {0}", value);
+                        throw new KickerParameterException(msg);
+                    }
+                }
             }
         }
     }

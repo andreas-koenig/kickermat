@@ -5,7 +5,7 @@ using VideoSource;
 
 namespace ImageProcessing.Calibration
 {
-    public delegate void CalibrationDoneDelegate(CalibrationResult result);
+    public delegate void CalibrationDoneDelegate();
     public delegate void ChessboardRecognizedDelegate(int progress);
 
     public interface ICameraCalibration : IVideoConsumer

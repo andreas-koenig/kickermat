@@ -35,28 +35,10 @@ namespace ImageProcessing.Preprocessing
 
         public Mat UndistortFrame(Mat frame)
         {
-            var distCoeffs = MatOfDouble.FromArray(
-                _calibrationOptions.Value.DistortionCoefficients);
-            var cameraMatrix = MatOfDouble.FromArray(
-                ToMultiDimArray(_calibrationOptions.Value.CameraMatrix));
-            
-            var undistortedFrame = new Mat();
-            Cv2.Undistort(frame, undistortedFrame, cameraMatrix, distCoeffs);
+            var distCoeffs = _calibrationOptions.Value.GetDistCoeffsAsMat();
+            var cameraMatrix = _calibrationOptions.Value.GetCameraMatrixAsMat();
 
-            return undistortedFrame;
-        }
-
-        private double[,] ToMultiDimArray(double[][] matrix)
-        {
-            double[,] multi = new double[matrix.Length, matrix[0].Length];
-            for (int i = 0; i < matrix.Length; i++)
-            {
-                for (var k = 0; k < matrix[0].Length; k++) {
-                    multi[i, k] = matrix[i][k];
-                }
-            }
-
-            return multi;
+            return frame.Undistort(cameraMatrix, distCoeffs);
         }
 
         protected override void StartAcquisition()

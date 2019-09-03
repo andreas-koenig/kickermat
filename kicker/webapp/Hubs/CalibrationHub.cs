@@ -45,7 +45,7 @@ namespace Webapp.Hubs
             }
         }
 
-        private void CalibrationDone(CalibrationResult result)
+        private void CalibrationDone()
         {
             // TODO: Save calibration
         }
