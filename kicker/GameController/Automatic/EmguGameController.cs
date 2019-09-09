@@ -605,25 +605,5 @@ namespace GameController
             }
         }
 
-        public void LoadConfiguration(string xmlFileName)
-        {
-            var settings = SettingsSerializer.LoadSettingsFromXml<EmguGameControllerSettings>(xmlFileName);
-            if (settings != null)
-            {
-                Settings = settings;
-            }
-            UserControl.SetSettings(Settings);
-        }
-
-        public void SaveConfiguration(string xmlFileName)
-        {
-            SettingsSerializer.SaveSettingsToXml<EmguGameControllerSettings>(Settings, xmlFileName);
-        }
-
-        public void InitUserControl()
-        {
-            if (UserControl != null)
-                UserControl.SetSettings(Settings);
-        }
     }
 }

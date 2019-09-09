@@ -27,6 +27,8 @@
         /// </summary>
         protected int ShootingRange { get; private set; }
 
+        public abstract void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse);
+
         /// <summary>
         /// Executes the game controller.
         /// </summary>
@@ -38,10 +40,12 @@
                 this.Play(ballpos);
         }
 
+        public abstract void SetAngle(Bar bar, short angle, bool waitForResponse);
+
         /// <summary>
         /// Must be overriden by sub classes to implement a playing algorithm.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        protected abstract void Play(Game.Position ballpos);
+        protected abstract void Play(Position ballpos);
     }
 }
