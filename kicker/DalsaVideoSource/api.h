@@ -6,17 +6,17 @@
 #define DALSA_API __declspec(dllimport)
 #endif
 
+#include "camera.h"
+
 extern "C" {
-    DALSA_API void startup(
+    DALSA_API void* CreateCamera(char* camera_name,
         void __stdcall frame_callback(int index, void* address),
         void __stdcall connected_callback(char* server_name),
         void __stdcall disconnected_callback(char* server_name)
     );
-    DALSA_API void shutdown();
-    DALSA_API void get_available_cameras();
-	DALSA_API bool start_acquisition(char* camera_name);
-	DALSA_API void stop_acquisition();
-	DALSA_API void release_buffer(int index);
-    DALSA_API bool set_exposure_time(char* camera_name, double value);
-    DALSA_API bool set_brightness(char* camera_name, int value);
+    DALSA_API void DestroyCamera(Camera* camera);
+    DALSA_API bool StartAcquisition(Camera* camera);
+    DALSA_API bool StopAcquisition(Camera* camera);
+    DALSA_API bool ReleaseBuffer(Camera* camera, int buffer_index);
+    DALSA_API bool SetFeatureValue(Camera* camera, char* feature_name, double feature_value);
 }

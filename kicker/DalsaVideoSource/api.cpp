@@ -3,34 +3,9 @@
 #include <mutex>
 
 #include "api.h"
-#include "controller.h"
+#include "camera.h"
 
-void startup(
-    void __stdcall frame_callback(int index, void* address),
-    void __stdcall connected_callback(char* server_name),
-    void __stdcall disconnected_callback(char* server_name)
-) {
-    SapManager::Open();
-
-    CameraController* ctrl = CameraController::getInstance();
-
-    ctrl->frame_arrived = frame_callback;
-    ctrl->cam_connected = connected_callback;
-    ctrl->cam_disconnected = disconnected_callback;
-
-    SapManager::SetDisplayStatusMode(SapManager::StatusCallback, CameraController::ErrorCallback);
-    SapManager::RegisterServerCallback(
-        SapManager::EventServerDisconnected | SapManager::EventServerConnected,
-        CameraController::ServerCallback);
-}
-
-void shutdown() {
-    CameraController::releaseInstance();
-    SapManager::UnregisterServerCallback();
-    SapManager::Close();
-}
-
-void get_available_cameras() {
+void GetAvailableCameras() {
     int server_count = SapManager::GetServerCount();
     char** cameras = new char* [server_count]();
 
@@ -43,78 +18,54 @@ void get_available_cameras() {
     // TODO: return cameras to C# caller
 }
 
-bool start_acquisition(char* camera_name) {
-    bool success = CameraController::getInstance()->start_acquisition(camera_name);
-    if (success) {
-        std::cout << "[Dalsa VideoSource] Acquisition started" << std::endl;
-    }
-    else {
-        std::cout << "[Dalsa VideoSource] Acquisition start failed" << std::endl;
-    }
+void* CreateCamera(char* camera_name,
+    void __stdcall frame_callback(int index, void* address),
+    void __stdcall connected_callback(char* server_name),
+    void __stdcall disconnected_callback(char* server_name)
+) {
+    auto camera = new Camera(camera_name,
+        frame_callback, connected_callback, disconnected_callback);
 
-    return success;
+    return camera;
 }
 
-void stop_acquisition() {
-	CameraController::getInstance()->stop_acquisition();
-	std::cout << "[Dalsa VideoSource] Acquisition stopped" << std::endl;
+void DestroyCamera(Camera* camera) {
+    delete camera;
 }
 
-void release_buffer(int index) {
-    CameraController::getInstance()->buffer->SetState(index, SapBuffer::StateEmpty);
-}
-
-bool get_feat_value(char* camera_name, char* feature_name, double* value) {
-    SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
-    bool destroy = camera == nullptr;
-    if (destroy) {
-        camera = new SapAcqDevice(camera_name, FALSE);
-        camera->Create();
-    }
-
-    bool success = camera->GetFeatureValue(feature_name, value);
-    if (destroy) {
-        camera->Destroy();
-        delete camera;
+bool StartAcquisition(Camera* camera) {
+    if (camera == nullptr) {
+        return false;
     }
     
-    return success;
+    return camera->StartAcquisition();
 }
 
-bool set_exposure_time(char* camera_name, double value) {
-    auto camera = CameraController::getInstance()->acquisitionDevice;
+bool StopAcquisition(Camera* camera) {
+    if (camera == nullptr) {
+        return false;
+    }
+
+    return camera->StopAcquisition();
+}
+
+bool ReleaseBuffer(Camera* camera, int buffer_index) {
+    if (camera == nullptr || camera->buffer == nullptr) {
+        std::cout << "camera or buffer null" << std::endl;
+        return false;
+    }
+
+    return camera->buffer->SetState(buffer_index, SapBuffer::StateEmpty);
+}
+
+bool SetFeatureValue(Camera* camera, char* feature_name, double feature_value) {
+    if (camera == nullptr) {
+        return false;
+    }
     
-    bool destroy = camera == nullptr;
-    if (destroy) {
-        camera = new SapAcqDevice(camera_name, FALSE);
-        camera->Create();
+    if (camera->device == nullptr) {
+        camera->CreateObjects();
     }
 
-    auto success = camera->SetFeatureValue("ExposureTime", value);
-
-    if (destroy) {
-        camera->Destroy();
-        delete camera;
-    }
-
-    return success;
-}
-
-bool set_brightness(char* camera_name, int value) {
-    auto camera = CameraController::getInstance()->acquisitionDevice;
-
-    bool destroy = camera == nullptr;
-    if (destroy) {
-        camera = new SapAcqDevice(camera_name, FALSE);
-        camera->Create();
-    }
-
-    auto success = camera->SetFeatureValue("autoBrightnessTarget", value);
-
-    if (destroy) {
-        camera->Destroy();
-        delete camera;
-    }
-
-    return success;
+    return camera->device->SetFeatureValue(feature_name, feature_value);
 }
