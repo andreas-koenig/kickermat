@@ -7,9 +7,9 @@
 
     public class Game
     {
-        private Bars ownBars;
-        private Bars opponentBars;
-        private Position ballPosition;
+        public Bars ownBars;
+        public Bars opponentBars;
+        public PlayingField playingField;
 
         public CalibrationState State { get; protected set; }
 
@@ -18,7 +18,7 @@
         {
             get
             {
-                return IsRunning;
+                return isRunning;
             }
             internal set
             {
@@ -26,37 +26,45 @@
             }
         }
 
-        public void Init()
+        public Game()
         {
             ownBars = new Bars();
             opponentBars = new Bars();
+            ballPosition = new Position();
+        }
+
+        public Position ballPosition;
+
+        public void Init(PlayingField playingField)
+        {
+            this.playingField = playingField;
         }
     }
 
     public class PlayingField
     {
-        public int playingFieldWidth { get; private set; }
-        public int playingFieldLength { get; private set; }
-
         /// <summary>
         /// Sets the dimensions of the playing field.
         /// </summary>
         /// <param name="width">The width of the playing field.</param>
         /// <param name="height">The height of the playing field.</param>
-        public void SetFieldDimensions(int width, int length)
-        {
-            this.playingFieldWidth = width;
-            this.playingFieldLength = length;
-        }
+        public double Width { get; private set; }
+        public double Length { get; private set; }
+
+        /// <summary>
+        /// Gets the position of the origin of the playing field.
+        /// </summary>
+        public Point Origin { get; private set; }
 
         /// <summary>
         /// Gets the position of the top left corner of the playing field.
         /// </summary>
         //public Position PlayingFieldOffset { get; private set; }
-
-        /// <summary>
-        /// Gets the position of the center of the playing field.
-        /// </summary>
-        public Point PlayingFieldCenter { get; private set; }
+        public PlayingField(double width, double length, Point origin)
+        {
+            this.Width = width;
+            this.Length = length;
+            this.Origin = origin;
+        }
     }
 }

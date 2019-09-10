@@ -12,6 +12,10 @@ namespace Game
 
         public Position()
         {
+            this.xPosition = 0;
+            this.yPosition = 0;
+            this.valid = true;
+            this.inPlayingArea = true;
         }
         public Position(int xpos, int ypos, bool valid, bool inPlayingArea)
         {
