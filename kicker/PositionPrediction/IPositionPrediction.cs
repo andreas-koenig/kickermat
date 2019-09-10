@@ -1,6 +1,6 @@
 ﻿namespace PositionPrediction
 {
-    using Game;
+    using GameProperties;
     using System.Drawing;
 
     /// <summary>

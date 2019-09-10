@@ -2,7 +2,7 @@
 {
     using System;
     using Communication.NetworkLayer.Packets.Udp;
-    using Game;
+    using GameProperties;
     using NetworkLayer;
     using NetworkLayer.Packets.Udp.Enums;
     using NetworkLayer.Udp;

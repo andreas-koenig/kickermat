@@ -1,4 +1,4 @@
-﻿using Game;
+﻿using GameProperties;
 using Communication.PlayerControl;
 
 namespace GameController
@@ -6,7 +6,7 @@ namespace GameController
     /// <summary>
     /// Interface which describes the game controller
     /// </summary>
-    public interface IGameController : IPlayerControl
+    public interface IGameController
     {
         /// <summary>
         /// Gets or sets the execution count.
@@ -17,6 +17,6 @@ namespace GameController
         /// Executes the game controller
         /// </summary>
         /// <param name="ballPosition">The ball position.</param>
-        void Run(Position ballPosition);
+        void Run(ref Game game);
     }
 }

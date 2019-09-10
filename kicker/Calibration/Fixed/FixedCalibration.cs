@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using Game;
+    using GameProperties;
     using Calibration.Base;
-    using static Game.Bar;
+    using static GameProperties.Bar;
 
 
     /// <summary>

@@ -4,15 +4,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Game;
+using Communication.PlayerControl;
+using Communication.Sets;
+using GameProperties;
+using GameProperties;
 
 namespace GameController
 {
+
+    //TODO: Do FirstPlayer and LastPlayer retunr correct results ?
     public class EmguGameController : BasicGameController
     {
         #region Fields
         private Position _CurrentBallPosition = new Position(), _LastBallPosition = new Position();
-        private IOwnBarDetection _OwnbarDetection;
         private bool _AttemptToFreeBallToTheLeft = true;
         private readonly Stopwatch _LastAttemptToFreeBallStopwatch = new Stopwatch();
         private readonly Stopwatch _LastMidFieldShotStopwatch = new Stopwatch();
@@ -27,9 +31,11 @@ namespace GameController
         private readonly Random _MidFieldRandom = new Random();
         private int _CurrentDefensePosition = 0;
         private EmguGameControllerSettings Settings = new EmguGameControllerSettings();
+
+        IPlayerControl _CommunicationMgr;
         #endregion
 
-        public EmguGameController()
+        public EmguGameController(IPlayerControl communcationMgr)
         {
             _LastMidFieldShotStopwatch.Start();
             _LastStrikerShotStopwatch.Start();
@@ -37,43 +43,51 @@ namespace GameController
             _LastDefenseShotStopwatch.Start();
             _LastMidfieldDefenseDecisionStopwatch.Start();
             _LastAttemptToFreeBallStopwatch.Start();
-            _OwnbarDetection = ServiceLocator.LocateService<IOwnBarDetection>();
+            _CommunicationMgr = communcationMgr;
         }
 
-        protected override void Play(Position ballPos)
+        protected override void Play(Game game)
         {
-            _CurrentBallPosition = ballPos.Clone();
+            _CurrentBallPosition = game.ballPosition.Clone();
             if (_CurrentBallPosition.Valid)
                 _LastBallPositionValidStopwatch.Restart();
             //Ballposition bestätigt und innerhalb des Spielbereichs: Normal spielen.
             if (_CurrentBallPosition.Valid && _CurrentBallPosition.InPlayingArea || !_CurrentBallPosition.Valid && _LastBallPositionValidStopwatch.ElapsedMilliseconds < 1000)
             {
-                this.SetKeeperPosition(_CurrentBallPosition);
-                this.SetDefensePosition(_CurrentBallPosition);
-                this.SetMidFieldposition(_CurrentBallPosition);
-                this.SetStrikerPosition(_CurrentBallPosition);
+                this.SetKeeperPosition(game);
+                this.SetDefensePosition(game);
+                this.SetMidFieldposition(game);
+                this.SetStrikerPosition(game);
             }
             //Ballposition nicht bestätigt, liegt aber noch innerhalb des Spielbereichs. Vermutlich unterhalb einer Stange. Versuchen den Ball von der Stange wegzubekommen.
             else if (!_CurrentBallPosition.Valid && _CurrentBallPosition.InPlayingArea && _LastAttemptToFreeBallStopwatch.ElapsedMilliseconds > 300 && _LastBallPositionValidStopwatch.ElapsedMilliseconds < 5000)
             {
                 int area = 40;
                 //Get the correct X Positions for all Bars.
-                int strikerBarXPosition = Coach.GetBarXPosition(Bar.Striker);
-                int midfieldBarXPosition = Coach.GetBarXPosition(Bar.Midfield);
-                int defenseBarXPosition = Coach.GetBarXPosition(Bar.Defense);
-                int keeperBarXPosition = Coach.GetBarXPosition(Bar.Keeper);
+                //int strikerBarXPosition = Coach.GetBarXPosition(Bar.Striker);
+                //int midfieldBarXPosition = Coach.GetBarXPosition(Bar.Midfield);
+                //int defenseBarXPosition = Coach.GetBarXPosition(Bar.Defense);
+                //int keeperBarXPosition = Coach.GetBarXPosition(Bar.Keeper);
+
+                //TODO: GameController should work with double in future
+                int strikerBarXPosition = (int)game.ownBars.striker.XPosition;
+                int midfieldBarXPosition = (int)game.ownBars.midfield.XPosition;
+                int defenseBarXPosition = (int)game.ownBars.defense.XPosition;
+                int keeperBarXPosition = (int)game.ownBars.keeper.XPosition;
+
                 //Ball ist vermutlich unter der Stürmerstange
                 if (_CurrentBallPosition.XPosition < strikerBarXPosition + area && _CurrentBallPosition.XPosition > strikerBarXPosition - area)
                 {
                     if (_AttemptToFreeBallToTheLeft)
                     {
-                        Coach.SetPlayerAngle(Bar.Striker, -20);
-                        Coach.MovePlayerToYPosition(Player.StrikerOne, Coach.GetPlayerMinYPosition(Player.StrikerOne), false);
+                        _CommunicationMgr.SetAngle(game.ownBars.striker, -20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.striker, Convert.ToUInt16(game.ownBars.striker.GetPlayerByIndex(0).MinPosition));
+
                     }
                     else
                     {
-                        Coach.SetPlayerAngle(Bar.Striker, 20);
-                        Coach.MovePlayerToYPosition(Player.StrikerOne, Coach.GetPlayerMaxYPosition(Player.StrikerOne), false);
+                        _CommunicationMgr.SetAngle(game.ownBars.striker, 20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.striker, Convert.ToUInt16(game.ownBars.striker.GetPlayerByIndex(0).MaxPosition));
                     }
                     _LastAttemptToFreeBallStopwatch.Restart();
                     _AttemptToFreeBallToTheLeft = !_AttemptToFreeBallToTheLeft;
@@ -83,13 +97,13 @@ namespace GameController
                 {
                     if (_AttemptToFreeBallToTheLeft)
                     {
-                        Coach.SetPlayerAngle(Bar.Midfield, -20);
-                        Coach.MovePlayerToYPosition(Player.MidfieldOne, Coach.GetPlayerMinYPosition(Player.MidfieldOne));
+                        _CommunicationMgr.SetAngle(game.ownBars.midfield, -20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.midfield, Convert.ToUInt16(game.ownBars.midfield.GetPlayerByIndex(0).MinPosition));
                     }
                     else
                     {
-                        Coach.SetPlayerAngle(Bar.Midfield, 20);
-                        Coach.MovePlayerToYPosition(Player.MidfieldOne, Coach.GetPlayerMaxYPosition(Player.MidfieldOne));
+                        _CommunicationMgr.SetAngle(game.ownBars.midfield, 20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.midfield, Convert.ToUInt16(game.ownBars.midfield.GetPlayerByIndex(0).MaxPosition));
                     }
                     _LastAttemptToFreeBallStopwatch.Restart();
                     _AttemptToFreeBallToTheLeft = !_AttemptToFreeBallToTheLeft;
@@ -99,29 +113,30 @@ namespace GameController
                 {
                     if (_AttemptToFreeBallToTheLeft)
                     {
-                        Coach.SetPlayerAngle(Bar.Defense, -20);
-                        Coach.MovePlayerToYPosition(Player.DefenseOne, Coach.GetPlayerMinYPosition(Player.DefenseOne));
+                        _CommunicationMgr.SetAngle(game.ownBars.defense, -20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.defense, Convert.ToUInt16(game.ownBars.defense.GetPlayerByIndex(0).MinPosition));
                     }
                     else
                     {
-                        Coach.SetPlayerAngle(Bar.Defense, 20);
-                        Coach.MovePlayerToYPosition(Player.DefenseOne, Coach.GetPlayerMaxYPosition(Player.DefenseOne));
+                        _CommunicationMgr.SetAngle(game.ownBars.defense, 20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.defense, Convert.ToUInt16(game.ownBars.defense.GetPlayerByIndex(0).MaxPosition));
                     }
                     _LastAttemptToFreeBallStopwatch.Restart();
                     _AttemptToFreeBallToTheLeft = !_AttemptToFreeBallToTheLeft;
                 }
+
                 //Ball ist vermutlich unter der Torhüterstange
                 else if (_CurrentBallPosition.XPosition < keeperBarXPosition + area && _CurrentBallPosition.XPosition > keeperBarXPosition - area)
                 {
                     if (_AttemptToFreeBallToTheLeft)
                     {
-                        Coach.SetPlayerAngle(Bar.Keeper, -20);
-                        Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMinYPosition(Player.Keeper));
+                        _CommunicationMgr.SetAngle(game.ownBars.keeper, -20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.keeper, Convert.ToUInt16(game.ownBars.keeper.GetPlayerByIndex(0).MinPosition));
                     }
                     else
                     {
-                        Coach.SetPlayerAngle(Bar.Keeper, 20);
-                        Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMaxYPosition(Player.Keeper));
+                        _CommunicationMgr.SetAngle(game.ownBars.keeper, 20);
+                        _CommunicationMgr.MovePlayer(game.ownBars.keeper, Convert.ToUInt16(game.ownBars.keeper.GetPlayerByIndex(0).MaxPosition));
                     }
                     _LastAttemptToFreeBallStopwatch.Restart();
                     _AttemptToFreeBallToTheLeft = !_AttemptToFreeBallToTheLeft;
@@ -135,13 +150,15 @@ namespace GameController
             _LastBallPosition = _CurrentBallPosition;
         }
 
-        private void SetStrikerPosition(Position ballPos)
+        private void SetStrikerPosition(Game game)
         {
-            int strikerBarXPosition = Coach.GetBarXPosition(Bar.Striker);
+            int strikerBarXPosition = (int)game.ownBars.striker.XPosition;
+            Position ballPos = game.ballPosition;
+
             //Ball hinter Stürmer => Ball durchlassen.
             if (ballPos.XPosition > strikerBarXPosition + Settings.StrikerShootingRange)
             {
-                Coach.SetPlayerAnglePass(Bar.Striker);
+                _CommunicationMgr.SetPlayerAnglePass(game.ownBars.striker);
             }
             //Ball vor Stürmer => Ball blocken.
             else
@@ -149,7 +166,7 @@ namespace GameController
                 //Erst wieder blocken wenn der letze Schuss lang genug her ist und der Ball von vorne kommt.
                 if (_LastStrikerShotStopwatch.ElapsedMilliseconds > Settings.BlockingMilisecs && ballPos.XPosition < strikerBarXPosition - Settings.StrikerShootingRange / 2)
                 {
-                    Coach.SetPlayerAngleBlock(Bar.Striker);
+                    _CommunicationMgr.SetPlayerAngleBlock(game.ownBars.striker);
                 }
             }
 
@@ -162,7 +179,7 @@ namespace GameController
                 int bx = ballPos.XPosition;
                 int by = ballPos.YPosition;
 
-                py = Coach.PlayingFieldCenter.YPosition;
+                py = game.playingField.Origin.Y;
                 px = -10;
 
                 // Geradengleichung
@@ -171,7 +188,7 @@ namespace GameController
                 newStrikerPosition = (int)((((py - by) / (px - bx)) * (strikerBarXPosition) + (((px * by) - (bx * py)) / (px - bx))));
                 if (Math.Abs(ballPos.YPosition - newStrikerPosition) > Settings.VerticalShootingRange)
                 {
-                    if (ballPos.YPosition > Coach.PlayingFieldCenter.YPosition)
+                    if (ballPos.YPosition > game.playingField.Origin.Y)
                         newStrikerPosition = ballPos.YPosition + Settings.VerticalShootingRange;
                     else
                         newStrikerPosition = ballPos.YPosition - Settings.VerticalShootingRange;
@@ -188,26 +205,28 @@ namespace GameController
                 }
             }
 
-            Player playerToMove = Player.StrikerOne;
-            if (Coach.IsYPositionValid(Player.StrikerOne, newStrikerPosition))
+            Player playerToMove = game.ownBars.striker.GetPlayerByIndex(0);
+            if (IsYPositionValid(game.ownBars.striker.GetPlayerByIndex(0), newStrikerPosition))
             {
-                playerToMove = Player.StrikerOne;
+                playerToMove = game.ownBars.striker.GetPlayerByIndex(0);
             }
-            else if (Coach.IsYPositionValid(Player.StrikerTwo, newStrikerPosition))
+            else if (IsYPositionValid(game.ownBars.striker.LastPlayer(), newStrikerPosition))
             {
-                playerToMove = Player.StrikerTwo;
+                playerToMove = game.ownBars.striker.LastPlayer();
             }
-            else if (Coach.IsYPositionValid(Player.StrikerThree, newStrikerPosition))
+            else if (IsYPositionValid(game.ownBars.striker.GetPlayerByIndex(2), newStrikerPosition))
             {
-                playerToMove = Player.StrikerThree;
+                playerToMove = game.ownBars.striker.GetPlayerByIndex(2);
             }
-            else if (ballPos.YPosition > Coach.GetPlayerMaxYPosition(Player.StrikerThree))
+            else if (ballPos.YPosition > game.ownBars.striker.GetPlayerByIndex(2).MaxPosition)
             {
-                playerToMove = Player.StrikerThree;
+                playerToMove = game.ownBars.striker.GetPlayerByIndex(2);
             }
 
-            if (newStrikerPosition > Coach.GetPlayerMaxYPosition(playerToMove))
-                Coach.MovePlayerToYPosition(playerToMove, Coach.GetPlayerMaxYPosition(playerToMove));
+            if (newStrikerPosition > playerToMove.MaxPosition)
+            {
+                _CommunicationMgr.MovePlayer(playerToMove.GetBar(), (ushort)playerToMove.MaxPosition);
+            }
             else if (newStrikerPosition < Coach.GetPlayerMinYPosition(playerToMove))
                 Coach.MovePlayerToYPosition(playerToMove, Coach.GetPlayerMinYPosition(playerToMove));
             else
@@ -603,6 +622,34 @@ namespace GameController
                     _LastKeeperShotStopwatch.Restart();
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines whether [is position valid] [the specified player].
+        /// </summary>
+        /// <param name="player">The player.</param>
+        /// <param name="position">The position.</param>
+        /// <returns>
+        ///     <c>true</c> if [is position valid] [the specified player]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsYPositionValid(Player player, int position)
+        {
+            return position >= player.MinPosition &&
+                   position <= player.MinPosition;
+        }
+
+        /// <summary>
+        /// Determines whether [is position valid] [the specified bar].
+        /// </summary>
+        /// <param name="bar">The bar which is checked.</param>
+        /// <param name="position">The y position for the check.</param>
+        /// <returns>
+        ///     <c>true</c> if [is position valid] [the specified bar]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsYPositionValid(Bar bar, int position)
+        {
+            return position >= bar.FirstPlayer().MinPosition &&
+                   position <= bar.LastPlayer().MaxPosition;
         }
 
     }

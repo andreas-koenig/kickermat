@@ -1,4 +1,4 @@
-﻿namespace Game
+﻿namespace GameProperties
 {
     using System;
     using System.Collections.Generic;

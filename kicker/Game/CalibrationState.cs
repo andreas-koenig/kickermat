@@ -1,4 +1,4 @@
-﻿namespace Game
+﻿namespace GameProperties
 {
     //TODO: Werden hier wirklich Motoren kalibriert oder ist nur die Reichweite der Spieler aus Sicht der NET-Anwendung wichtig?
     /// <summary>

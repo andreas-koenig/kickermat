@@ -1,7 +1,7 @@
 ﻿namespace PositionPrediction
 {
     using System;
-    using Game;
+    using GameProperties;
 
     /// <summary>
     /// the predicted Ballposition
@@ -42,12 +42,12 @@
         /// <param name="frameDifference">The frame difference.</param>
         public void SetValues(Position pos, int frameNumber, int frameDifference)
         {
-            this.xPosition = pos.xPosition;
-            this.yPosition = pos.yPosition;
-            this.valid = pos.valid;
+            this.XPosition = pos.XPosition;
+            this.YPosition = pos.YPosition;
+            this.Valid = pos.Valid;
             this.FrameDifference = frameDifference;
             this.FrameNumber = frameNumber;
-            this.inPlayingArea = pos.inPlayingArea;
+            this.InPlayingArea = pos.InPlayingArea;
         }
 
         /// <summary>
@@ -58,9 +58,9 @@
         /// <param name="frameDifference">The frame difference.</param>
         public void ResetValues(Position pos, Vector direction, int frameDifference)
         {
-            this.xPosition = pos.xPosition;
-            this.yPosition = pos.yPosition;
-            this.valid = pos.valid;
+            this.XPosition = pos.XPosition;
+            this.YPosition = pos.YPosition;
+            this.Valid = pos.Valid;
             this.FrameDifference = frameDifference;
             this.Direction = (Vector)direction.Clone();
         }
@@ -75,10 +75,10 @@
             ballPosition.Direction = (Vector)this.Direction.Clone();
             ballPosition.FrameDifference = this.FrameDifference;
             ballPosition.FrameNumber = this.FrameNumber;
-            ballPosition.valid = this.valid;
-            ballPosition.xPosition = this.xPosition;
-            ballPosition.yPosition = this.yPosition;
-            ballPosition.inPlayingArea = this.inPlayingArea;
+            ballPosition.Valid = this.Valid;
+            ballPosition.XPosition = this.XPosition;
+            ballPosition.YPosition = this.YPosition;
+            ballPosition.InPlayingArea = this.InPlayingArea;
             return ballPosition;
         }
     }

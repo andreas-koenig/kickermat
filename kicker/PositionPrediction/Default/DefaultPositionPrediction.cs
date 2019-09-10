@@ -2,7 +2,7 @@
 {
     using System;
     using System.Drawing;
-    using Game;
+    using GameProperties;
 
     /// <summary>
     /// Implements the default distance prediction which doesn't predict any values.
@@ -69,7 +69,7 @@
                 // Initialize values
                 if (this.isInitialized == false)
                 {
-                    if (ballPosition.valid == false)
+                    if (ballPosition.Valid == false)
                     {
                         return;
                     }
@@ -82,8 +82,8 @@
 
                 // Is a delta because of image-noise needed here ?
                 // Ball hat sich nicht bewegt
-                if ((ballPosition.xPosition == this.lastDetectedPosition.xPosition) &&
-                    (ballPosition.yPosition == this.lastDetectedPosition.yPosition) && (ballPosition.valid == true))
+                if ((ballPosition.XPosition == this.lastDetectedPosition.XPosition) &&
+                    (ballPosition.YPosition == this.lastDetectedPosition.YPosition) && (ballPosition.Valid == true))
                 {
                     predictedPosition.SetValues(ballPosition, currentFrame, predictedPosition.FrameDifference);
                     // keine Bewegung
@@ -108,7 +108,7 @@
                 }
 
                 // Ball wurde von Ballerkennung erkannt
-                if (ballPosition.valid == true)
+                if (ballPosition.Valid == true)
                 {
                     // Frameunterschied
                     operatingPosition.FrameDifference = currentFrame - operatingPosition.FrameNumber;
@@ -117,18 +117,18 @@
                     multiplier = (double)this.FramesToPredict / operatingPosition.FrameDifference;
 
                     // Berechnung des Richtungsvektors aus Position der Ballerkennung und Rechenposition
-                    operatingPosition.Direction.XPosition = ballPosition.xPosition - operatingPosition.xPosition;
-                    operatingPosition.Direction.YPosition = ballPosition.yPosition - operatingPosition.yPosition;
+                    operatingPosition.Direction.XPosition = ballPosition.XPosition - operatingPosition.XPosition;
+                    operatingPosition.Direction.YPosition = ballPosition.YPosition - operatingPosition.YPosition;
 
                     try
                     {
                         // vorhergesagte Position = Richtungsvektor * Streckung bzw. Stauchung + Ballposition
                         var predictedX =
                             System.Convert.ToInt32(operatingPosition.Direction.XPosition * multiplier) +
-                            ballPosition.xPosition;
+                            ballPosition.XPosition;
                         var predictedY =
                             System.Convert.ToInt32(operatingPosition.Direction.YPosition * multiplier) +
-                            ballPosition.yPosition;
+                            ballPosition.YPosition;
                         //Wenn die vorhergesagte Position den Spielbereich verlassen würde wird diese korrigiert.
                         if (!playingarea.Contains(predictedX, predictedY))
                         {
@@ -148,24 +148,24 @@
                             {
                                 predictedX += Math.Abs(predictedX - playingarea.Left);
                             }
-                            operatingPosition.xPosition = predictedX;
-                            operatingPosition.yPosition = predictedY;
+                            operatingPosition.XPosition = predictedX;
+                            operatingPosition.YPosition = predictedY;
                         }
                         else
                         {
-                            operatingPosition.xPosition = predictedX;
-                            operatingPosition.yPosition = predictedY;
+                            operatingPosition.XPosition = predictedX;
+                            operatingPosition.YPosition = predictedY;
                         }
                     }
 #pragma warning disable 168
                     catch (OverflowException e)
 #pragma warning restore 168
                     {
-                        operatingPosition.xPosition = ballPosition.xPosition;
-                        operatingPosition.yPosition = ballPosition.yPosition;
+                        operatingPosition.XPosition = ballPosition.XPosition;
+                        operatingPosition.YPosition = ballPosition.YPosition;
                     }
 
-                    operatingPosition.valid = true;
+                    operatingPosition.Valid = true;
                     this.lastDetectedPosition.ResetValues(ballPosition, operatingPosition.Direction, operatingPosition.FrameDifference);
                     this.lastDetectedPosition.FrameNumber = operatingPosition.FrameNumber = currentFrame;
                 }
@@ -179,10 +179,10 @@
                         // vorhergesagte Position = Richtungsvektor * Streckung bzw. Stauchung + Ballposition
                         var predictedX =
                             System.Convert.ToInt32(operatingPosition.Direction.XPosition * multiplier) +
-                            ballPosition.xPosition;
+                            ballPosition.XPosition;
                         var predictedY =
                             System.Convert.ToInt32(operatingPosition.Direction.YPosition * multiplier) +
-                            ballPosition.yPosition;
+                            ballPosition.YPosition;
                         //Wenn die vorhergesagte Position den Spielbereich verlassen würde wird diese korrigiert.
                         if (!playingarea.Contains(predictedX, predictedY))
                         {
@@ -202,24 +202,24 @@
                             {
                                 predictedX += Math.Abs(predictedX - playingarea.Left);
                             }
-                            operatingPosition.xPosition = predictedX;
-                            operatingPosition.yPosition = predictedY;
+                            operatingPosition.XPosition = predictedX;
+                            operatingPosition.YPosition = predictedY;
                         }
                         else
                         {
-                            operatingPosition.xPosition = predictedX;
-                            operatingPosition.yPosition = predictedY;
+                            operatingPosition.XPosition = predictedX;
+                            operatingPosition.YPosition = predictedY;
                         }
                     }
 #pragma warning disable 168
                     catch (OverflowException e)
 #pragma warning restore 168
                     {
-                        operatingPosition.xPosition = ballPosition.xPosition;
-                        operatingPosition.yPosition = ballPosition.yPosition;
+                        operatingPosition.XPosition = ballPosition.XPosition;
+                        operatingPosition.YPosition = ballPosition.YPosition;
                     }
 
-                    operatingPosition.valid = true;
+                    operatingPosition.Valid = true;
                     operatingPosition.FrameNumber = currentFrame;
                 }
 
@@ -227,10 +227,10 @@
             }
             else
             {
-                this.predictedPosition.valid = ballPosition.valid;
-                this.predictedPosition.inPlayingArea = ballPosition.inPlayingArea;
-                this.predictedPosition.xPosition = ballPosition.xPosition;
-                this.predictedPosition.yPosition = ballPosition.yPosition;
+                this.predictedPosition.Valid = ballPosition.Valid;
+                this.predictedPosition.InPlayingArea = ballPosition.InPlayingArea;
+                this.predictedPosition.XPosition = ballPosition.XPosition;
+                this.predictedPosition.YPosition = ballPosition.YPosition;
             }
         }
 

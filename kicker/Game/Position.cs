@@ -1,28 +1,41 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
-namespace Game
+namespace GameProperties
 {
     public class Position
     {
-        public int xPosition { get; set; }
-        public int yPosition { get; set; }
-        public bool valid { get; set; }
-        public bool inPlayingArea { get; set; }
-        public Rectangle boundingBox { get; }
+        private Position position;
+
+        public int XPosition { get; set; }
+        public int YPosition { get; set; }
+        public bool Valid { get; set; }
+        public bool InPlayingArea { get; set; }
+        public Rectangle BoundingBox { get; }
 
         public Position()
         {
-            this.xPosition = 0;
-            this.yPosition = 0;
-            this.valid = true;
-            this.inPlayingArea = true;
+            this.XPosition = 0;
+            this.YPosition = 0;
+            this.Valid = true;
+            this.InPlayingArea = true;
         }
         public Position(int xpos, int ypos, bool valid, bool inPlayingArea)
         {
-            this.xPosition = xpos;
-            this.yPosition = ypos;
-            this.valid = valid;
-            this.inPlayingArea = inPlayingArea;
+            this.XPosition = xpos;
+            this.YPosition = ypos;
+            this.Valid = valid;
+            this.InPlayingArea = inPlayingArea;
+        }
+
+        public Position(Position position)
+        {
+            this.position = position;
+        }
+
+        public Position Clone()
+        {
+            return new Position(this);
         }
     }
 }

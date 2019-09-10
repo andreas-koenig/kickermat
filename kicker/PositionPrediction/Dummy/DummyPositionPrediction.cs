@@ -1,7 +1,7 @@
 ﻿namespace PositionPrediction.Dummy
 {
     using System.Drawing;
-    using Game;
+    using GameProperties;
 
     /// <summary>
     /// Implements the default position prediction which doesn't predict any values.
@@ -34,9 +34,9 @@
         /// <param name="numberOfFrames">The number of frames.</param>
         public void Run(Position ballPosition, int numberOfFrames, Rectangle playingArea = new Rectangle())
         {
-            this.PredictedPosition.valid = ballPosition.valid;
-            this.PredictedPosition.xPosition = ballPosition.xPosition;
-            this.PredictedPosition.yPosition = ballPosition.yPosition;
+            this.PredictedPosition.Valid = ballPosition.Valid;
+            this.PredictedPosition.XPosition = ballPosition.XPosition;
+            this.PredictedPosition.YPosition = ballPosition.YPosition;
         }
 
         /// <summary>

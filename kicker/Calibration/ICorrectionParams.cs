@@ -1,6 +1,6 @@
 ﻿namespace Calibration
 {
-    using Game;
+    using GameProperties;
     /// <summary>
     /// Interface to an instance containing playing field parameters after correction.
     /// </summary>

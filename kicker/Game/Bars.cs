@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Game.BarType;
+using static GameProperties.BarType;
 
-namespace Game
+namespace GameProperties
 {
     //TODO: Datatypes for length and angle
     //TODO: Set AccessModifiers etc ...
@@ -50,7 +50,7 @@ namespace Game
     {
 
         public BarType barSelection;
-        public int XPosition { get { return players.First().XPostion; } }
+        public double XPosition { get { return players.First().XPostion; } }
         private List<Player> players;
         int angle { get; set; }
         
@@ -77,6 +77,11 @@ namespace Game
         public List<Player> GetPlayers()
         {
             return players;
+        }
+
+        public Player GetPlayerByIndex(int index)
+        {
+            return players.ElementAt(index);
         }
 
         /// <summary>
@@ -177,12 +182,12 @@ namespace Game
         private PlayerType playerType;
 
         //TODO: Axis?
-        int MinPosition { get; set; }
-        int MaxPosition { get; set; }
+        public double MinPosition { get; set; }
+        public double MaxPosition { get; set; }
 
-        internal int XPostion { get; set; }
+        internal double XPostion { get; set; }
 
-        internal int YPosition { get; set; }
+        internal double YPosition { get; set; }
 
         int angle { get; set; }
 

@@ -2,13 +2,14 @@
 {
     using System;
     using Calibration;
+    using GameProperties;
     using PlayerControl;
     using Sets;
 
     /// <summary>
     /// Manages the existing Communication-Interfaces
     /// </summary>
-    public sealed class CommunicationManager : IDisposable, ICommunicationSet
+    public sealed class CommunicationManager : IDisposable, IPlayerControl
     {
         /// <summary>
         /// Occurs when [communication set changed].
@@ -69,6 +70,26 @@
         public void Disconnect()
         {
             CommunicationSet.Disconnect();
+        }
+
+        void IPlayerControl.MovePlayer(Bar bar, ushort newPlayerPosition, bool waitForResponse)
+        {
+            PlayerControl.MovePlayer(bar, newPlayerPosition, false);
+        }
+
+        void IPlayerControl.SetAngle(Bar bar, short angle, bool waitForResponse)
+        {
+            PlayerControl.SetAngle(bar, angle, waitForResponse);
+        }
+
+        void IPlayerControl.SetPlayerAnglePass(Bar bar, bool wait = false)
+        {
+            PlayerControl.SetAngle(bar, -90, wait);
+        }
+
+        public void SetPlayerAngleBlock(Bar bar, bool wait = false)
+        {
+            PlayerControl.SetAngle(bar, 0, wait);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     //using GlobalDataTypes;
     using NetworkLayer.Packets.Udp.Enums;
-    using Game;
+    using GameProperties;
 
     /// <summary>
     /// Describes the interface which must be used for classes which implement calibration of the image processing

@@ -7,8 +7,8 @@
     using Communication.Calibration;
     using Communication.Manager;
     using System.Drawing;
-    using Game;
-    using static Game.Bar;
+    using GameProperties;
+    using static GameProperties.Bar;
     using Moq;
 
     /// <summary>
@@ -173,8 +173,8 @@
         private static Position CalculateBottomRight(BasicCalibrationSettings settings)
         {
             Position br = new Position(settings.PlayingFieldXOffset, settings.PlayingFieldYOffset, true, true);
-            br.xPosition += settings.PlayingFieldWidth;
-            br.yPosition += settings.PlayingFieldHeight;
+            br.XPosition += settings.PlayingFieldWidth;
+            br.YPosition += settings.PlayingFieldHeight;
             return br;
         }
 

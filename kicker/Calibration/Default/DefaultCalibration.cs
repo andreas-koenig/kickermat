@@ -9,8 +9,8 @@
     using VideoSource;
     using Communication.PlayerControl;
     using Communication.Manager;
-    using static Game.Bar;
-    using Game;
+    using static GameProperties.Bar;
+    using GameProperties;
     using Moq;
 
     /// <summary>

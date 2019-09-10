@@ -1,6 +1,8 @@
 ﻿namespace GameController
 {
-    using Game;
+    using GameProperties;
+    using Communication;
+    using Communication.Sets;
 
     /// <summary>
     /// Implementation of basic functionality of a game controller
@@ -27,25 +29,21 @@
         /// </summary>
         protected int ShootingRange { get; private set; }
 
-        public abstract void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse);
-
         /// <summary>
         /// Executes the game controller.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        public void Run(Position ballpos)
+        public void Run(ref Game game)
         {
             //this.ExecutionCount++;
-            if (PlayingField.IsGameRunning)
-                this.Play(ballpos);
+            if (game.IsRunning)
+                this.Play(ref game);
         }
-
-        public abstract void SetAngle(Bar bar, short angle, bool waitForResponse);
 
         /// <summary>
         /// Must be overriden by sub classes to implement a playing algorithm.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        protected abstract void Play(Position ballpos);
+        protected abstract void Play(ref Game game);
     }
 }
