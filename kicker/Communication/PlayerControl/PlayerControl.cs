@@ -37,8 +37,8 @@
         /// </summary>
         public PlayerControl()
         {
-            Game.GameStarted += this.Game_GameStarted;
-            Game.GameStopped += this.Game_GameStopped;
+            PlayingField.GameStarted += this.Game_GameStarted;
+            PlayingField.GameStopped += this.Game_GameStopped;
 
             //TODO: Register at ASP Net Core Controller here
             //this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();

@@ -36,7 +36,7 @@
         public void Run(Position ballpos)
         {
             //this.ExecutionCount++;
-            if (Game.IsGameRunning)
+            if (PlayingField.IsGameRunning)
                 this.Play(ballpos);
         }
 

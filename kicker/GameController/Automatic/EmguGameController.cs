@@ -40,7 +40,7 @@ namespace GameController
             _OwnbarDetection = ServiceLocator.LocateService<IOwnBarDetection>();
         }
 
-        protected override void Play(Game.Position ballPos)
+        protected override void Play(Position ballPos)
         {
             _CurrentBallPosition = ballPos.Clone();
             if (_CurrentBallPosition.Valid)

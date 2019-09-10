@@ -2,19 +2,39 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
+    using static BarType;
 
     public class Game
     {
-        /// <summary>
-        /// Lock object to make class thread-safe.
-        /// </summary>
-        private static readonly object lockObject = new object();
-
-        //TODO: Should the GameController get a list of ownPlayers?
-        private readonly List<Bar> ownBars;
-        private readonly List<Bar> opponentBars;
+        private Bars ownBars;
+        private Bars opponentBars;
+        private Position ballPosition;
 
         public CalibrationState State { get; protected set; }
+
+        private Boolean isRunning;
+        public Boolean IsRunning
+        {
+            get
+            {
+                return IsRunning;
+            }
+            internal set
+            {
+                isRunning = value;
+            }
+        }
+
+        public void Init()
+        {
+            ownBars = new Bars();
+            opponentBars = new Bars();
+        }
+    }
+
+    public class PlayingField
+    {
         public int playingFieldWidth { get; private set; }
         public int playingFieldLength { get; private set; }
 
@@ -32,53 +52,11 @@
         /// <summary>
         /// Gets the position of the top left corner of the playing field.
         /// </summary>
-        public Position PlayingFieldOffset { get; private set; }
+        //public Position PlayingFieldOffset { get; private set; }
 
         /// <summary>
         /// Gets the position of the center of the playing field.
         /// </summary>
-        public Position PlayingFieldCenter { get; private set; }
-
-        /// <summary>
-        /// Occurs when the game is started.
-        /// </summary>
-        public static event EventHandler GameStarted;
-
-        /// <summary>
-        /// Occurs when the game is stopped.
-        /// </summary>
-        public static event EventHandler GameStopped;
-
-        /// <summary>
-        /// Starts the game.
-        /// </summary>
-        public static void StartGame()
-        {
-            lock (lockObject)
-            {
-                IsGameRunning = true;
-                if (GameStarted != null)
-                {
-                    GameStarted(null, new EventArgs());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Stops the game.
-        /// </summary>
-        public static void StopGame()
-        {
-            lock (lockObject)
-            {
-                IsGameRunning = false;
-                if (GameStopped != null)
-                {
-                    GameStopped(null, new EventArgs());
-                }
-            }
-        }
-
-        public static bool IsGameRunning { get; private set; } = false;
+        public Point PlayingFieldCenter { get; private set; }
     }
 }
