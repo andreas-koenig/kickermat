@@ -20,9 +20,5 @@ namespace VideoSource.Dalsa
         [NumberParameter("Brightness", "The brightness of the camera",
             BRIGHTNESS_DEFAULT, BRIGHTNESS_MIN, BRIGHTNESS_MAX, 1)]
         public double Brightness { get; set; }
-
-        [NumberParameter("Exposure Time", "The exposure time in microseconds",
-            EXPOSURE_TIME_DEFAULT, EXPOSURE_TIME_MIN, EXPOSURE_TIME_MAX, 10)]
-        public double ExposureTime { get; set; }
     }
 }

@@ -45,12 +45,11 @@ namespace webapp
             });
 
             // Kicker services
-            services.AddSingleton<IVideoSource, DalsaVideoSource>();
+            services.AddSingleton<IVideoSource, DalsaCamera>();
             services.AddTransient<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<IBallSearch, BallSearch>();
             services.AddSingleton<IBarSearch, BarSearch>();
-            services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
 
             // Configuration
             var cameraSection = Configuration.GetSection("Camera");
@@ -64,7 +63,6 @@ namespace webapp
             // Configure SignalR hubs
             app.UseSignalR(route =>
             {
-                route.MapHub<CameraHub>(SIGNALR_BASE_PATH + "/camera");
                 route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
             });
 

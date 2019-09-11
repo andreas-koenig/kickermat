@@ -86,14 +86,13 @@ bool Camera::StopAcquisition() {
     }
     
     bool success = false;
-    if (transfer->IsGrabbing()) {
+    if (transfer != nullptr && transfer->IsGrabbing()) {
         success = transfer->Freeze();
         if (!transfer->Wait(TRANSFER_WAIT_TIMEOUT)) {
             success = transfer->Abort();
         };
     }
 
-    buffer->Clear();
     DestroyObjects();
     acquisition_running = false;
     
@@ -114,7 +113,6 @@ void Camera::ServerCallback(SapManCallbackInfo* info) {
     switch (info->GetEventType()) {
     case SapManager::EventServerConnected:
         camera->cam_connected(server_name);
-        camera->StartAcquisition();
         break;
     case SapManager::EventServerDisconnected:
         camera->cam_disconnected(server_name);

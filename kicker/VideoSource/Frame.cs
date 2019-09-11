@@ -16,7 +16,7 @@ namespace VideoSource
 
         public void Release()
         {
-            // Not neccessary
+            Mat.Dispose();
         }
     }
 }

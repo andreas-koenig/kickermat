@@ -87,14 +87,7 @@ namespace VideoSource
                 {
                     return;
                 }
-                /*
-                if (oldConsumerCount == null && newConsumerCount == null ||
-                    !(oldConsumerCount != null && newConsumerCount == null) ||
-                    oldConsumerCount <= newConsumerCount)
-                {
-                    return;
-                }
-                */
+
                 _consumerCount -= 1;
 
                 if (_acquisitionRunning && _consumerCount == 0)

@@ -67,5 +67,5 @@ bool SetFeatureValue(Camera* camera, char* feature_name, double feature_value) {
         camera->CreateObjects();
     }
 
-    return camera->device->SetFeatureValue(feature_name, feature_value);
+    return camera->device->SetFeatureValue(feature_name, (int)feature_value);
 }

@@ -1,14 +1,9 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { Component, Input, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { VideoSource } from '@api/api.model';
+import { CAMERA } from '@api/api';
 
-import { VIDEOSOURCE_ENDPOINTS, VideoSourceEndpoint } from '@api/api';
-import { VideoSource } from '../../api/api.model';
-
-enum EndpointStatus {
-  Error,
-  Loading,
-  Streaming,
-  Disconnected
+enum CameraStatus {
+  Loading, Success, Failure
 }
 
 @Component({
@@ -16,93 +11,34 @@ enum EndpointStatus {
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.scss']
 })
-export class VideoPlayerComponent implements OnInit, OnDestroy {
+export class VideoPlayerComponent implements OnDestroy {
+  @Input('videoSource') public videoSource = VideoSource.Camera;
+  @Input('videoHeight') public videoHeight = "90vh";
 
-  private connection: HubConnection | undefined;
-  private endpoint: VideoSourceEndpoint | undefined;
+  @ViewChild('img', { static: true }) public img!: ElementRef<HTMLImageElement>;
 
-  @Input('videoSource') videoSource = VideoSource.Camera;
-  @Input('videoHeight') videoHeight = "90vh";
-  public imageBase64 = "";
-  public status: EndpointStatus = EndpointStatus.Loading;
-  public statusEnum = EndpointStatus;
-  public cameraName: string | undefined;
+  public status = CameraStatus.Loading;
+  public cameraStatusEnum = CameraStatus;
+  public cameraSrc = CAMERA;
 
-  constructor() {
-    this.endpoint = VIDEOSOURCE_ENDPOINTS.get(this.videoSource);
-
-    if (!this.endpoint) {
-      // TODO: throw error
-      return;
-    }
-
-    this.connection = new HubConnectionBuilder()
-      .withUrl(this.endpoint.hub)
-      .build();
-  }
-
-  ngOnInit() {
-    if (!this.connection || !this.endpoint) {
-      return;
-    }
-
-    this.connection.start().catch(err => {
-      console.log('[VideoPlayer]: Connection to %s failed: %O', this.videoSource, err);
-      // TODO: show image
-    }).then(() => {
-      console.log('[VideoPlayer] Started connection to %s', this.videoSource);
-      this.startCameraStream();
-    });
-
-    this.connection.on(this.endpoint.disconnected, (cameraName: string) => {
-      console.log('[VideoPlayer] Camera %s disconnected', this.cameraName);
-      this.status = EndpointStatus.Disconnected;
-      this.cameraName = cameraName;
-    });
-
-    this.connection.on(this.endpoint.connected, (cameraName: string) => {
-      console.log('[VideoPlayer] Camera %s connected', this.cameraName);
-      this.cameraName = cameraName;
-
-      if (this.status = EndpointStatus.Error) {
-        this.status = EndpointStatus.Loading;
-        this.startCameraStream();
-      } else {
-        this.status = EndpointStatus.Streaming;
-      }
-    });
-  }
+  constructor() { }
 
   ngOnDestroy() {
-    if (this.connection) {
-      this.connection.stop();
-    }
+    this.img.nativeElement.src = "";
   }
 
-  public startCameraStream() {
-    if (!this.connection || !this.endpoint) {
-      return;
+  public retry() {
+    this.status = CameraStatus.Loading;
+    this.img.nativeElement.src = this.cameraSrc;
+  }
+
+  public error() {
+    this.status = CameraStatus.Failure;
+  }
+
+  public loaded() {
+    if (this.status !== CameraStatus.Success) {
+      this.status = CameraStatus.Success;
     }
-
-    this.status = EndpointStatus.Loading;
-
-    this.connection.stream(this.endpoint.video, this.videoSource).subscribe({
-      next: (img: string) => {
-        this.imageBase64 = "data:image/png;base64," + img;
-        if (this.status != EndpointStatus.Streaming) {
-          this.status = EndpointStatus.Streaming;
-        }
-      },
-      complete: () => {
-        console.log('[VideoPlayer] Stream completed');
-        // no action
-      },
-      error: (err: any) => {
-        console.log('[VideoPlayer] Video stream stopped: %O', err);
-        this.status = EndpointStatus.Error;
-      }
-    });
-
-    console.log('[VideoPlayer] Started stream');
   }
 }
