@@ -365,13 +365,16 @@ namespace GameController
                 }
             }
         }
-        private void SetDefensePosition(Position ballPos)
+        private void SetDefensePosition(Game game)
         {
-            int defenseBarXPosition = Coach.GetBarXPosition(Bar.Defense);
+            int defenseBarXPosition = (int)game.ownBars.defense.XPosition;
+            Bars ownBars = game.ownBars;
+            Position ballPos = game.ballPosition;
+            Bar defense = ownBars.defense;
             //Ball hinter Defense. Beine nach oben um Schüsse durchzulassen.
             if (ballPos.XPosition > defenseBarXPosition + Settings.StrikerShootingRange)
             {
-                Coach.SetPlayerAnglePass(Bar.Defense);
+                _CommunicationMgr.SetPlayerAnglePass(defense);
             }
             //Ball vor Defense => blocken
             else
@@ -380,9 +383,13 @@ namespace GameController
                 if (_LastDefenseShotStopwatch.ElapsedMilliseconds > Settings.BlockingMilisecs)
                 {
                     if (ballPos.XPosition < defenseBarXPosition - Settings.DefenseShootingRange)
-                        Coach.SetPlayerAngle(Bar.Defense, 12);
+                    {
+                        _CommunicationMgr.SetAngle(defense, 12);
+                    }                     
                     else
-                        Coach.SetPlayerAngle(Bar.Defense, 0);
+                    {
+                        _CommunicationMgr.SetAngle(defense, 0);
+                    }
                 }
             }
 
@@ -396,22 +403,19 @@ namespace GameController
                 int by = ballPos.YPosition;
 
                 double deltamax = 15;
-
-                int z = Coach.PlayingFieldHeight, e = Coach.PlayingFieldWidth, y = Coach.GoalTop;
+                //TODO: Length == Height of legacy-code?
+                //TODO: What is GoalTop and why is it needed ?
+                int GoalTop = 100;
+                int z = (int)game.playingField.Length , e = (int)game.playingField.Width, y = GoalTop;
                 double delta = ((z / 2.0) - by) / (z / 2.0) * deltamax;
                 delta = delta < 0 ? -1 * delta : delta;
 
                 // Punkt P
-                px = e + Coach.PlayingFieldOffset.XPosition + delta;
-                py = by < ((z / 2) + Coach.PlayingFieldOffset.YPosition) ? ((z + y) / 3.0) + Coach.PlayingFieldOffset.YPosition : ((2.0 / 3.0) * z - ((1.0 / 3.0) * y)) + Coach.PlayingFieldOffset.YPosition;
+                int xOffset = game.playingField.PlayingFieldOffset.XPosition;
+                int yOffset = game.playingField.PlayingFieldOffset.YPosition;
+                px = e + xOffset + delta;
+                py = by < ((z / 2) + yOffset) ? ((z + y) / 3.0) + yOffset: ((2.0 / 3.0) * z - ((1.0 / 3.0) * y)) + yOffset;
                 //py = 255;
-
-                //Korrigiere Koordinaten. 
-                var pos1 = new Position((int)px, (int)py, true, true);
-                SwissKnife.ParallaxCorrection(Coach.CameraLongZ, Coach.PlayerShortZ, Coach.PlayingFieldCenter, pos1);
-
-                px = pos1.XPosition;
-                py = pos1.YPosition;
 
                 // Geradengleichung
                 // g: y = ((py-by)/(px-bx))*x + ((px*by-bx*py)/(px-bx))
@@ -419,44 +423,49 @@ namespace GameController
                 newDefensePosition = (int)(((py - by) / (px - bx) * defenseBarXPosition) + (((px * by) - (bx * py)) / (px - bx)));
             }
 
-            Player playerToMove = Player.DefenseOne;
-            if (Coach.IsYPositionValid(Player.DefenseOne, newDefensePosition))
+            Player playerToMove = defense.GetPlayerByPosition(1);
+            if(defense.GetPlayerByPosition(1).IsYPositionValid(newDefensePosition))
             {
-                playerToMove = Player.DefenseOne;
+                playerToMove = defense.GetPlayerByPosition(1);
             }
-            else if (Coach.IsYPositionValid(Player.DefenseTwo, newDefensePosition))
+            else if (defense.GetPlayerByPosition(2).IsYPositionValid(newDefensePosition))
             {
-                playerToMove = Player.DefenseTwo;
+                playerToMove = defense.GetPlayerByPosition(2);
             }
-            else if (ballPos.YPosition > Coach.GetPlayerMaxYPosition(Player.DefenseTwo))
+            else if (ballPos.YPosition > ownBars.defense.GetPlayerByPosition(2).MaxPosition)
             {
-                playerToMove = Player.DefenseTwo;
+                playerToMove = defense.GetPlayerByPosition(2);
             }
 
-            if (newDefensePosition > Coach.GetPlayerMaxYPosition(playerToMove))
-                Coach.MovePlayerToYPosition(playerToMove, Coach.GetPlayerMaxYPosition(playerToMove));
-            else if (newDefensePosition < Coach.GetPlayerMinYPosition(playerToMove))
-                Coach.MovePlayerToYPosition(playerToMove, Coach.GetPlayerMinYPosition(playerToMove));
+            if (newDefensePosition > playerToMove.MaxPosition)
+            {
+                _CommunicationMgr.MovePlayer(playerToMove.GetBar(), Convert.ToUInt16(playerToMove.MaxPosition));
+            }
+            else if (newDefensePosition < playerToMove.MinPosition)
+            {
+                _CommunicationMgr.MovePlayer(playerToMove.GetBar(), Convert.ToUInt16(playerToMove.MinPosition));
+            }
             else
-                Coach.MovePlayerToYPosition(playerToMove, newDefensePosition);
-
+            {
+                _CommunicationMgr.MovePlayer(playerToMove.GetBar(), Convert.ToUInt16(newDefensePosition));
+            }
             _CurrentDefensePosition = newDefensePosition;
             //Wenn der ball in Reichweite ist und genug Zeit seit dem letzen Schuss vergangen ist schießen.
             if (_LastDefenseShotStopwatch.ElapsedMilliseconds > Settings.ShootingMilisecs && ballPos.XPosition >= defenseBarXPosition - Settings.DefenseShootingRange && ballPos.XPosition < defenseBarXPosition + 15)
             {
                 if (Settings.UseOwnBarDetectionToDeterminePlayerPositions)
                 {
-                    var playerPosition = _OwnbarDetection.GetPlayerPosition(playerToMove);
+                    var playerPosition = playerToMove;
                     //Schieße nur wenn der Ball auch in YPosition erreicht wird
                     if (playerPosition.YPosition - Settings.VerticalShootingRange < ballPos.YPosition && playerPosition.YPosition + Settings.VerticalShootingRange > ballPos.YPosition)
                     {
-                        Coach.SetPlayerAngle(Bar.Defense, 60);
+                        _CommunicationMgr.SetAngle(defense, 60);
                         _LastDefenseShotStopwatch.Restart();
                     }
                 }
                 else
                 {
-                    Coach.SetPlayerAngle(Bar.Defense, 60);
+                    _CommunicationMgr.SetAngle(defense, 60);
                     _LastDefenseShotStopwatch.Restart();
                 }
             }

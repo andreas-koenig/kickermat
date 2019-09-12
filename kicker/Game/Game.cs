@@ -48,13 +48,20 @@
         /// </summary>
         /// <param name="width">The width of the playing field.</param>
         /// <param name="height">The height of the playing field.</param>
-        public double Width { get; private set; }
-        public double Length { get; private set; }
+        public double Width { get; internal set; }
+        public double Length { get; internal set; }
 
         /// <summary>
         /// Gets the position of the origin of the playing field.
         /// </summary>
-        public Point Origin { get; private set; }
+        public Point Origin { get; internal set; }
+
+        //NOTE: This property is used by the legacy GameController
+        //TODO: Only parts of the class "Position" are used ....
+        /// <summary>
+        /// Gets the position of the top left corner of the playing field.
+        /// </summary>
+        public Position PlayingFieldOffset { get; internal set; }
 
         /// <summary>
         /// Gets the position of the top left corner of the playing field.
