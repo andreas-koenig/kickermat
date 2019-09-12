@@ -227,10 +227,14 @@ namespace GameController
             {
                 _CommunicationMgr.MovePlayer(playerToMove.GetBar(), (ushort)playerToMove.MaxPosition);
             }
-            else if (newStrikerPosition < Coach.GetPlayerMinYPosition(playerToMove))
-                Coach.MovePlayerToYPosition(playerToMove, Coach.GetPlayerMinYPosition(playerToMove));
+            else if (newStrikerPosition < playerToMove.MinPosition)
+            {
+                _CommunicationMgr.MovePlayer(playerToMove.GetBar(), (ushort)playerToMove.MinPosition);
+            }
             else
-                Coach.MovePlayerToYPosition(playerToMove, newStrikerPosition);
+            {
+                _CommunicationMgr.MovePlayer(playerToMove.GetBar(), (ushort)newStrikerPosition);
+            }
 
             //Wenn der ball in Reichweite ist und genug Zeit seit dem letzen Schuss vergangen ist schießen.
             if (_LastStrikerShotStopwatch.ElapsedMilliseconds > Settings.ShootingMilisecs && ballPos.XPosition >= strikerBarXPosition - Settings.StrikerShootingRange && ballPos.XPosition < strikerBarXPosition + 15)
