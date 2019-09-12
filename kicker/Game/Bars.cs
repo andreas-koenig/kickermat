@@ -79,7 +79,7 @@ namespace GameProperties
             return players;
         }
 
-        public Player GetPlayerByIndex(int index)
+        public Player GetPlayerByPosition(int index)
         {
             return players.ElementAt(index);
         }
@@ -113,6 +113,21 @@ namespace GameProperties
             }
 
             throw new ArgumentException("Invalid bar.");
+        }
+
+        //TODO: Maybe this can be substituted by some GetNearestPlayer() method
+        /// <summary>
+        /// Determines whether [is position valid] [the specified bar].
+        /// </summary>
+        /// <param name="bar">The bar which is checked.</param>
+        /// <param name="position">The y position for the check.</param>
+        /// <returns>
+        ///     <c>true</c> if [is position valid] [the specified bar]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsYPositionValid(int position)
+        {
+            return position >= this.FirstPlayer().MinPosition &&
+                   position <= this.LastPlayer().MaxPosition;
         }
     }
 
@@ -207,6 +222,8 @@ namespace GameProperties
             //TODO: Is this return needed ?
             //return (Bar)0xFF;
         }
+
+        //TODO: Set Label at object creation?
         public string GetLabel()
         {
             switch (playerType)
@@ -223,9 +240,22 @@ namespace GameProperties
                 case PlayerType.StrikerTwo: return "S2";
                 case PlayerType.StrikerThree: return "S3";
             }
-
             return "LabelUnset";
+        }
 
+        //TODO: Maybe this can later on be substituted by some GetNearestPlayer() method
+        /// <summary>
+        /// Determines whether [is position valid] [the specified player].
+        /// </summary>
+        /// <param name="player">The player.</param>
+        /// <param name="position">The position.</param>
+        /// <returns>
+        ///     <c>true</c> if [is position valid] [the specified player]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsYPositionValid(int position)
+        {
+            return position >= this.MinPosition &&
+                   position <= this.MaxPosition;
         }
     }
 }
