@@ -8,6 +8,23 @@ using OpenCvSharp;
 
 namespace VideoSource.Dalsa
 {
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct RoiSettings
+    {
+        private int XMin;
+        private int YMin;
+        private int Width;
+        private int Height;
+
+        public RoiSettings(int xMin, int yMin, int width, int height)
+        {
+            XMin = xMin;
+            YMin = yMin;
+            Width = width;
+            Height = height;
+        }
+    }
+
     //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate void CameraConnected(string name);
     internal delegate void CameraDisconnected(string name);
@@ -15,6 +32,12 @@ namespace VideoSource.Dalsa
 
     public class DalsaCamera : BaseVideoSource, IConfigurable<DalsaSettings>, IDisposable
     {
+        // constants
+        private const int X_MIN = 32;
+        private const int Y_MIN = 196;
+        private const int WIDTH = 1152;
+        private const int HEIGHT = 660;
+
         // native DLL bindings
         internal const string DALSA_DLL = @"..\DalsaVideoSource.dll";
 
@@ -23,8 +46,8 @@ namespace VideoSource.Dalsa
         private static CameraDisconnected _disconnectedDelegate;
 
         [DllImport(DALSA_DLL, EntryPoint = "CreateCamera")]
-        private static extern IntPtr DLL_CreateCamera(string name, FrameArrived frameArrived,
-            CameraConnected connected, CameraDisconnected disconnected);
+        private static extern IntPtr DLL_CreateCamera(string name, RoiSettings roi,
+            FrameArrived frameArrived, CameraConnected connected, CameraDisconnected disconnected);
 
         [DllImport(DALSA_DLL, EntryPoint = "DestroyCamera")]
         private static extern void DLL_DestroyCamera(IntPtr camera);
@@ -70,7 +93,8 @@ namespace VideoSource.Dalsa
         {
             lock (_lockObject)
             {
-                _cameraPtr = DLL_CreateCamera(_name, _frameArrivedDelegate,
+                var roi = new RoiSettings(X_MIN, Y_MIN, WIDTH, HEIGHT);
+                _cameraPtr = DLL_CreateCamera(_name, roi, _frameArrivedDelegate,
                     _connectedDelegate, _disconnectedDelegate);
             }
         }
@@ -147,13 +171,14 @@ namespace VideoSource.Dalsa
                     return;
                 }
 
-                var bayerMat = new Mat(1024, 1280, MatType.CV_8U, frameAddress);
+                var bayerMat = new Mat(HEIGHT, WIDTH, MatType.CV_8U, frameAddress);
                 var bgrMat = bayerMat.CvtColor(ColorConversionCodes.BayerBG2BGR);
                 bayerMat.Dispose();
                 DLL_ReleaseBuffer(_this._cameraPtr, bufferIndex);
 
                 var frame = new Frame(bgrMat);
                 HandleFrameArrived(new FrameArrivedArgs(frame));
+                //frame.Release();
 
                 // Manual garbage collection as this is called from unmanaged code
                 _count += 1;

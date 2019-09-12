@@ -46,7 +46,7 @@ namespace webapp
 
             // Kicker services
             services.AddSingleton<IVideoSource, DalsaCamera>();
-            services.AddTransient<ICameraCalibration, CameraCalibration>();
+            services.AddSingleton<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
             services.AddSingleton<IBallSearch, BallSearch>();
             services.AddSingleton<IBarSearch, BarSearch>();

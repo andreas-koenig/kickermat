@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MjpegVideoPlayerComponent } from './mjpeg-video-player.component';
+import { VideoPlayerComponent } from './video-player.component';
 
-describe('MjpegVideoPlayerComponent', () => {
-  let component: MjpegVideoPlayerComponent;
-  let fixture: ComponentFixture<MjpegVideoPlayerComponent>;
+describe('VideoPlayerComponent', () => {
+  let component: VideoPlayerComponent;
+  let fixture: ComponentFixture<VideoPlayerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MjpegVideoPlayerComponent ]
+      declarations: [ VideoPlayerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MjpegVideoPlayerComponent);
+    fixture = TestBed.createComponent(VideoPlayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

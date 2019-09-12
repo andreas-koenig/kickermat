@@ -20,7 +20,7 @@ namespace ImageProcessing.Preprocessing
         private IWritableOptions<CalibrationSettings> _calibrationOptions;
 
         public Preprocessor(ILogger<Preprocessor> logger, IVideoSource camera,
-            IWritableOptions<CalibrationSettings> calibrationOptions) : base(logger)
+            IWritableOptions<CalibrationSettings> calibrationOptions) : base(camera, logger)
         {
             _logger = logger;
             _calibrationOptions = calibrationOptions;
@@ -29,8 +29,7 @@ namespace ImageProcessing.Preprocessing
 
         protected override IFrame ProcessFrame(IFrame frame)
         {
-            frame.Mat = UndistortFrame(frame.Mat);
-            return frame;
+            return new Frame(UndistortFrame(frame.Mat));
         }
 
         public Mat UndistortFrame(Mat frame)

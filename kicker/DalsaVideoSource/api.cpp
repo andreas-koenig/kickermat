@@ -19,12 +19,13 @@ void GetAvailableCameras() {
 }
 
 void* CreateCamera(char* camera_name,
+    RoiSettings roi,
     void __stdcall frame_callback(int index, void* address),
     void __stdcall connected_callback(char* server_name),
     void __stdcall disconnected_callback(char* server_name)
 ) {
-    auto camera = new Camera(camera_name,
-        frame_callback, connected_callback, disconnected_callback);
+    auto camera = new Camera(camera_name, roi, frame_callback,
+        connected_callback, disconnected_callback);
 
     return camera;
 }
@@ -50,12 +51,12 @@ bool StopAcquisition(Camera* camera) {
 }
 
 bool ReleaseBuffer(Camera* camera, int buffer_index) {
-    if (camera == nullptr || camera->buffer == nullptr) {
-        std::cout << "camera or buffer null" << std::endl;
+    if (camera == nullptr || camera->trash_buffer == nullptr) {
+        std::cout << "[Dalsa VideoSource] ReleaseBuffer: Camera or buffer null" << std::endl;
         return false;
     }
 
-    return camera->buffer->SetState(buffer_index, SapBuffer::StateEmpty);
+    return camera->trash_buffer->SetState(buffer_index, SapBuffer::StateEmpty);
 }
 
 bool SetFeatureValue(Camera* camera, char* feature_name, double feature_value) {

@@ -6,15 +6,25 @@
 const int TRANSFER_WAIT_TIMEOUT = 5000;
 const int BUFFER_SIZE = 5;
 
+struct RoiSettings {
+    int x_min;
+    int y_min;
+    int width;
+    int height;
+};
+
 class Camera {
 public:
     char* name;
 
     // Acquisition objects
     SapAcqDevice* device;
-    SapBufferWithTrash* buffer;
+    SapBufferWithTrash* trash_buffer;
     SapTransfer* transfer;
+
+    // Status & Setting
     bool acquisition_running = false;
+    RoiSettings roi;
 
     // API Callbacks
     void (*frame_arrived)(int, void*);
@@ -33,6 +43,7 @@ public:
     // Constructors & Destructors
     Camera(
         char* camera_name,
+        RoiSettings roi,
         void __stdcall frame_callback(int index, void* address),
         void __stdcall connected_callback(char* server_name),
         void __stdcall disconnected_callback(char* server_name)

@@ -9,34 +9,38 @@ using VideoSource;
 
 namespace ImageProcessing.Calibration
 {
-    public class CameraCalibration : ICameraCalibration
+    internal enum CalibrationState
+    {
+        Off, Running, Finished
+    }
+
+    public class CameraCalibration : BaseVideoProcessor, ICameraCalibration
     {
         // Constants
         private const int BOARD_WIDTH = 9;
         private const int BOARD_HEIGHT = 6;
         private const int SQUARE_SIZE = 50;
         private const int AMOUNT_FRAMES = 25;
+        private const int WAIT_FRAMES = 30;
         private static Size _boardSize = new Size(BOARD_WIDTH, BOARD_HEIGHT);
 
         // Calibration
         private readonly object _objectLock;
         private CalibrationDoneDelegate _calibrationDone;
         private ChessboardRecognizedDelegate _chessboardRecognized;
-        private bool _isCalibrationRunning = false;
+        private CalibrationState _state;
         private volatile bool _isFindingCorners = false;
-        private readonly List<Point2f[]> _chessboardCorners;
+        private List<Point2f[]> _chessboardCorners;
         private RingBuffer<Mat> _frames;
+        private uint _frameCount = 0;
 
-        // Video
-        private readonly IVideoSource _videoSource;
-
+        // Logging & Options
         private readonly ILogger<ICameraCalibration> _logger;
         private readonly IWritableOptions<CalibrationSettings> _calibrationOptions;
 
-        public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger,
-            IWritableOptions<CalibrationSettings> calibrationOptions)
+        public CameraCalibration(IVideoSource camera, ILogger<ICameraCalibration> logger,
+            IWritableOptions<CalibrationSettings> calibrationOptions) : base(camera, logger)
         {
-            _videoSource = videoSource;
             _objectLock = new object();
             _chessboardCorners = new List<Point2f[]>();
             _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
@@ -50,15 +54,18 @@ namespace ImageProcessing.Calibration
         {
             lock (_objectLock)
             {
-                if (_isCalibrationRunning)
+                if (_state == CalibrationState.Running)
                 {
                     AbortCalibration();
                 }
 
                 _calibrationDone += calibrationDone;
                 _chessboardRecognized += chessboardRecognized;
-                _isCalibrationRunning = true;
-                _videoSource.StartAcquisition(this);
+                _state = CalibrationState.Running;
+                if (!IsAcquisitionRunning)
+                {
+                    StartAcquisition();
+                }
             }
 
             _logger.LogInformation("Calibration started");
@@ -68,35 +75,50 @@ namespace ImageProcessing.Calibration
         {
             lock (_objectLock)
             {
-                _videoSource.StopAcquisition(this);
-                _isCalibrationRunning = false;
+                _state = CalibrationState.Off;
                 _calibrationDone = null;
                 _chessboardRecognized = null;
                 _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
+                StopAcquisition();
             }
         }
 
-        public void OnFrameArrived(object sender, FrameArrivedArgs args)
+        protected override IFrame ProcessFrame(IFrame frame)
         {
-            _frames.Add(args.Frame.Mat);
-            if (!_isFindingCorners)
+            if (_state == CalibrationState.Running)
             {
-                _ = FindChessboardCornersAsync(_frames.Take());
-            }
-
-            if (_isCalibrationRunning && _chessboardCorners.Count == AMOUNT_FRAMES)
-            {
-                lock (_objectLock)
+                _frames.Add(frame.Mat);
+                if (!_isFindingCorners && _frameCount % WAIT_FRAMES == 0)
                 {
-                    _videoSource.StopAcquisition(this);
-
-                    DoCalibration(args.Frame.Mat);
-                    _isCalibrationRunning = false;
-                    _calibrationDone();
-                    _calibrationDone = null;
-                    _chessboardRecognized = null;
+                    _ = FindChessboardCornersAsync(_frames.Take());
                 }
+                _frameCount += 1;
+
+                if (_chessboardCorners.Count == AMOUNT_FRAMES)
+                {
+                    lock (_objectLock)
+                    {
+                        DoCalibration(frame.Mat);
+                        _state = CalibrationState.Finished;
+                        _calibrationDone();
+                        _calibrationDone = null;
+                        _chessboardRecognized = null;
+                        _frames.Clear();
+                        _chessboardCorners = new List<Point2f[]>();
+                    }
+                }
+
+                return frame;
             }
+
+            else if (_state == CalibrationState.Finished)
+            {
+                var cameraMatrix = _calibrationOptions.Value.GetCameraMatrixAsMat();
+                var distCoeffs = _calibrationOptions.Value.GetDistCoeffsAsMat();
+                return new Frame(frame.Mat.Undistort(cameraMatrix, distCoeffs));
+            }
+
+            return frame;
         }
 
         private Task FindChessboardCornersAsync(Mat frame)
@@ -205,16 +227,6 @@ namespace ImageProcessing.Calibration
                 changes.CameraMatrix = cameraMatrixArray;
                 changes.DistortionCoefficients = distCoeffsArray;
             });
-        }
-
-        public void OnCameraDisconnected(object sender, CameraEventArgs args)
-        {
-            // TODO
-        }
-
-        public void OnCameraConnected(object sender, CameraEventArgs args)
-        {
-            // TODO
         }
     }
 }

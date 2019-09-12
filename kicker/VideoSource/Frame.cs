@@ -7,7 +7,17 @@ namespace VideoSource
 {
     public class Frame : IFrame
     {
-        public Mat Mat { get; set; }
+        private Mat _mat;
+
+        public Mat Mat {
+            get
+            {
+                if (_mat.IsDisposed)
+                    throw new VideoSourceException("Frame has already been released");
+                return _mat;
+            }
+            private set => _mat = value;
+        }
 
         public Frame(Mat mat)
         {

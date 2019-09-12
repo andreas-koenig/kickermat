@@ -26,6 +26,7 @@ namespace Webapp.Hubs
             _channel = Channel.CreateUnbounded<int>();
             _cancellationToken = cancellationToken;
             _cameraCalibration.StartCalibration(CalibrationDone, ChessboardRecognized);
+            Context.ConnectionAborted.Register(() => _cameraCalibration.AbortCalibration());
 
             return _channel.Reader;
         }

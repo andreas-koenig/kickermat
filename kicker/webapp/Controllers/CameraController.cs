@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,13 @@ using VideoSource;
 
 namespace Webapp.Controllers
 {
+    public enum VideoSource
+    {
+        Camera = 0,
+        Calibration = 1,
+        ImageProcessing = 2
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class CameraController : ControllerBase, IVideoConsumer
@@ -21,13 +29,22 @@ namespace Webapp.Controllers
         private const string BOUNDARY = "camera_image";
         private readonly byte[] _imgHeaderBytes;
         private readonly Task _doneTask;
-        private readonly IVideoSource _videoSource;
+        private IVideoSource _videoSource;
+
+        // VideoSources
+        private readonly IVideoSource _camera;
+        private readonly ICameraCalibration _calibration;
 
         private readonly ILogger<CameraController> _logger;
 
-        public CameraController(IVideoSource videoSource, ILogger<CameraController> logger)
+        public CameraController(
+            IVideoSource videoSource,
+            ICameraCalibration calibration,
+            ILogger<CameraController> logger)
         {
-            _videoSource = videoSource;
+            _camera = videoSource;
+            _calibration = calibration;
+
             var imgHeader = String.Format("\r\n--{0}\r\nContent-Type: image/jpeg\r\n\r\n", BOUNDARY);
             _imgHeaderBytes = Encoding.ASCII.GetBytes(imgHeader);
 
@@ -35,9 +52,9 @@ namespace Webapp.Controllers
             _doneTask = new Task(() => AbortConnection());
         }
 
-        // GET: api/Camera
+        // GET: api/camera
         [HttpGet]
-        public Task Get()
+        public Task Get([FromQuery(Name = "videoSource")] VideoSource source)
         {
             HttpContext.RequestAborted.Register(AbortConnection);
             HttpContext.Response.Headers.Add("Cache-Control", "no-store");
@@ -46,6 +63,7 @@ namespace Webapp.Controllers
 
             try
             {
+                _videoSource = GetVideoSource(source);
                 _videoSource.StartAcquisition(this);
             }
             catch (Exception ex)
@@ -57,6 +75,20 @@ namespace Webapp.Controllers
             }
 
             return _doneTask;
+        }
+
+        [NonAction]
+        private IVideoSource GetVideoSource(VideoSource source)
+        {
+            switch (source)
+            {
+                case VideoSource.Camera:
+                    return _camera;
+                case VideoSource.Calibration:
+                    return (IVideoSource)_calibration;
+                default:
+                    return _camera; // TODO: Add ImageProcessing
+            }
         }
 
         [NonAction]
@@ -80,7 +112,7 @@ namespace Webapp.Controllers
             Response.Body.Write(_imgHeaderBytes);
             Response.Body.Write(imgBytes, 0, imgBytes.Length);
 
-            args.Frame.Release();
+            //args.Frame.Release();
         }
 
         [NonAction]
@@ -88,6 +120,7 @@ namespace Webapp.Controllers
         {
             _videoSource.StopAcquisition(this);
             Response.Body.Close();
+            GC.Collect();
         }
     }
 }

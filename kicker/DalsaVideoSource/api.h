@@ -10,6 +10,7 @@
 
 extern "C" {
     DALSA_API void* CreateCamera(char* camera_name,
+        RoiSettings roi,
         void __stdcall frame_callback(int index, void* address),
         void __stdcall connected_callback(char* server_name),
         void __stdcall disconnected_callback(char* server_name)

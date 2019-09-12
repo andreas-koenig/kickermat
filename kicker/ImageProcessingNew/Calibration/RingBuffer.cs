@@ -47,6 +47,17 @@ namespace ImageProcessing.Calibration
             }
         }
 
+        public void Clear()
+        {
+            lock (_objectLock)
+            {
+                for (int i = 0; i < _buffer.Length; i++)
+                {
+                    _buffer[i] = default;
+                }
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return ((IEnumerable<T>)_buffer).GetEnumerator();

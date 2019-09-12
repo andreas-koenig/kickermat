@@ -4,11 +4,13 @@
 
 Camera::Camera(
     char* camera_name,
+    RoiSettings roi,
     void __stdcall frame_callback(int index, void* address),
     void __stdcall connected_callback(char* server_name),
     void __stdcall disconnected_callback(char* server_name)
 ) {
     name = camera_name;
+    this->roi = roi;
     frame_arrived = frame_callback;
     cam_connected = connected_callback;
     cam_disconnected = disconnected_callback;
@@ -20,8 +22,10 @@ Camera::Camera(
         Camera::ServerCallback, this);
     
     device = new SapAcqDevice(name, FALSE);
-    buffer = new SapBufferWithTrash(BUFFER_SIZE, device);
-    transfer = new SapAcqDeviceToBuf(device, buffer, XferCallback, this);
+    trash_buffer = new SapBufferWithTrash(BUFFER_SIZE, device);
+    trash_buffer->SetWidth(roi.width);
+    trash_buffer->SetHeight(roi.height);
+    transfer = new SapAcqDeviceToBuf(device, trash_buffer, XferCallback, this);
 }
 Camera::~Camera() {
     StopAcquisition();
@@ -29,7 +33,7 @@ Camera::~Camera() {
 
     delete name;
     delete device;
-    delete buffer;
+    delete trash_buffer;
     delete transfer;
 
     SapManager::UnregisterServerCallback();
@@ -42,7 +46,7 @@ bool Camera::CreateObjects() {
         return false;
     }
 
-    if (!buffer->Create()) {
+    if (!trash_buffer->Create()) {
         DestroyObjects();
         return false;
     }
@@ -52,14 +56,15 @@ bool Camera::CreateObjects() {
         return false;
     }
     transfer->SetAutoEmpty(false);
+    return true;
 }
 
 void Camera::DestroyObjects() {
     if (transfer != nullptr)
         transfer->Destroy();
 
-    if (buffer != nullptr)
-        buffer->Destroy();
+    if (trash_buffer != nullptr)
+        trash_buffer->Destroy();
 
     if (device != nullptr)
         device->Destroy();
@@ -102,6 +107,10 @@ bool Camera::StopAcquisition() {
 void Camera::ConfigureCamera() {
     device->SetFeatureValue("autoBrightnessMode", true);
     device->SetFeatureValue("BalanceWhiteAuto", "Periodic");
+    device->SetFeatureValue("Width", roi.width);
+    device->SetFeatureValue("Height", roi.height);
+    device->SetFeatureValue("OffsetX", roi.x_min);
+    device->SetFeatureValue("OffsetY", roi.y_min);
 }
 
 void Camera::ServerCallback(SapManCallbackInfo* info) {
@@ -125,20 +134,19 @@ void Camera::XferCallback(SapXferCallbackInfo* info) {
     auto camera = (Camera*) info->GetContext();
 
     if (info->IsTrash()) {
-        std::cout << "Camera " << camera->name << ": Frame ended up in trash buffer" << std::endl;
 		return;
 	}
 
-	int index = camera->buffer->GetIndex();
+	int index = camera->trash_buffer->GetIndex();
 	void* address;
-	bool success = camera->buffer->GetAddress(index, &address);
+	bool success = camera->trash_buffer->GetAddress(index, &address);
     
     if (!success) {
         std::cout << "[Dalsa VideoSource] Failed to get buffer address" << std::endl;
         return;
     }
 	
-    camera->frame_arrived(camera->buffer->GetIndex(), address);
+    camera->frame_arrived(camera->trash_buffer->GetIndex(), address);
 }
 
 void Camera::ErrorCallback(SapManCallbackInfo* info) {

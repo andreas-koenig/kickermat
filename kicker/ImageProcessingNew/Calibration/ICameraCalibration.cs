@@ -8,7 +8,7 @@ namespace ImageProcessing.Calibration
     public delegate void CalibrationDoneDelegate();
     public delegate void ChessboardRecognizedDelegate(int progress);
 
-    public interface ICameraCalibration : IVideoConsumer
+    public interface ICameraCalibration : IVideoProcessor
     {
         /// <summary>
         /// Start the calibration to calculate the parameters for the correction of the radial and

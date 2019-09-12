@@ -1,7 +1,7 @@
 <div id="video" fxLayout="row" fxLayoutAlign="center center" [ngStyle]="{'height': videoHeight}">
   <div id="img-container" [ngStyle]="{'height': videoHeight}">
     <img id="image" #img
-         src="http://localhost:5001/api/camera"
+         src="http://localhost:5001/api/camera?videoSource={{videoSource}}"
          [ngClass]="{'failure': status == cameraStatusEnum.Failure}"
          (error)="error()"
          (abort)="error()"

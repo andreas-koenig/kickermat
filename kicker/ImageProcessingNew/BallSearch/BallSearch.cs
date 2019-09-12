@@ -19,7 +19,7 @@ namespace ImageProcessing.BallSearch
         private const int HIGH_V = (int)((100.0 / 100) * 255);
 
         private IVideoSource _camera;
-        public BallSearch(IVideoSource camera, ILogger<BallSearch> logger): base(logger)
+        public BallSearch(IVideoSource camera, ILogger<BallSearch> logger): base(camera, logger)
         {
             _camera = camera;
         }
