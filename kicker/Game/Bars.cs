@@ -52,7 +52,7 @@ namespace GameProperties
         public BarType barSelection;
         public double XPosition { get { return players.First().XPostion; } }
         private List<Player> players;
-        int angle { get; set; }
+        public int angle { get; set; }
         
         public Bar(BarType barSelection)
         {
@@ -185,9 +185,9 @@ namespace GameProperties
         public double MinPosition { get; set; }
         public double MaxPosition { get; set; }
 
-        internal double XPostion { get; set; }
+        public double XPostion { get; internal set; }
 
-        internal double YPosition { get; set; }
+        public double YPosition { get; internal set; }
 
         int angle { get; set; }
 

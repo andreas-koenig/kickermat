@@ -154,6 +154,7 @@ namespace GameController
         {
             int strikerBarXPosition = (int)game.ownBars.striker.XPosition;
             Position ballPos = game.ballPosition;
+            Bars ownBars = game.ownBars;
 
             //Ball hinter Stürmer => Ball durchlassen.
             if (ballPos.XPosition > strikerBarXPosition + Settings.StrikerShootingRange)
@@ -241,24 +242,26 @@ namespace GameController
             {
                 if (Settings.UseOwnBarDetectionToDeterminePlayerPositions)
                 {
-                    var playerPosition = _OwnbarDetection.GetPlayerPosition(playerToMove);
+                    var playerPosition = playerToMove;
                     //Schieße nur wenn der Ball auch in YPosition erreicht wird
                     if (playerPosition.YPosition - Settings.VerticalShootingRange < ballPos.YPosition && playerPosition.YPosition + Settings.VerticalShootingRange > ballPos.YPosition)
                     {
-                        Coach.SetPlayerAngle(Bar.Striker, 60);
+                        _CommunicationMgr.SetAngle(ownBars.striker, 60);
                         _LastStrikerShotStopwatch.Restart();
                     }
                 }
                 else
                 {
-                    Coach.SetPlayerAngle(Bar.Striker, 60);
+                    //TODO: Twice the same behaviour ?
+                    _CommunicationMgr.SetAngle(ownBars.striker, 60);
                     _LastStrikerShotStopwatch.Restart();
                 }
             }
         }
-        private void SetMidFieldposition(Position ballPos)
+        private void SetMidFieldposition(Game game)
         {
-            int midfieldBarXPosition = Coach.GetBarXPosition(Bar.Midfield);
+            int midfieldBarXPosition = (int)game.ownBars.midfield.XPosition;
+            Position ballPos = game.ballPosition;
             //Ball hinter Mittelfeld. Beine nach oben um Schüsse durchzulassen.
             if (ballPos.XPosition > midfieldBarXPosition + Settings.StrikerShootingRange)
             {
