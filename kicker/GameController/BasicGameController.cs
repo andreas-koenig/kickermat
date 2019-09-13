@@ -33,17 +33,17 @@
         /// Executes the game controller.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        public void Run(ref Game game)
+        public void Run(Game game)
         {
             //this.ExecutionCount++;
             if (game.IsRunning)
-                this.Play(ref game);
+                this.Play( game);
         }
 
         /// <summary>
         /// Must be overriden by sub classes to implement a playing algorithm.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        protected abstract void Play(ref Game game);
+        protected abstract void Play( Game game);
     }
 }

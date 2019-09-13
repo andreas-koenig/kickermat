@@ -474,25 +474,31 @@ namespace GameController
         private Stopwatch _KeeperFreeBallStopwatch = new Stopwatch();
         private int _KeeperFreeBallStage = 0;
 
-        private void SetKeeperPosition(Position ballPos)
+        private void SetKeeperPosition(Game game)
         {
-            int keeperBarXPosition = Coach.GetBarXPosition(Bar.Keeper);
-            int defenseBarXPosition = Coach.GetBarXPosition(Bar.Defense);
+            int keeperBarXPosition = Convert.ToInt32(game.ownBars.keeper.XPosition);
+            int defenseBarXPosition = Convert.ToInt32(game.ownBars.defense.XPosition);
+            Player keeper = game.ownBars.keeper.FirstPlayer();
+            Position ballPos = game.ballPosition;
             int newKeeperPosition = ballPos.YPosition;
             //Ball hinter Torwart => Versuche den Ball wegzuschlagen
             if (ballPos.XPosition > keeperBarXPosition + 10)
             {
                 //Ball is reachable for Keeper -> Try to free it.
-                if (ballPos.YPosition < Coach.GetPlayerMaxYPosition(Player.Keeper) + Settings.VerticalShootingRange && ballPos.YPosition > Coach.GetPlayerMinYPosition(Player.Keeper) - Settings.VerticalShootingRange)
+                if (ballPos.YPosition < keeper.MaxPosition + Settings.VerticalShootingRange && ballPos.YPosition > keeper.MinPosition - Settings.VerticalShootingRange)
                 {
                     switch (_KeeperFreeBallStage)
                     {
                         //Move Keeper to a safe location in order to not shoot the ball into the own goal.
                         case 0:
-                            if (ballPos.YPosition >= _OwnbarDetection.GetPlayerPosition(Player.Keeper).YPosition)
-                                Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMinYPosition(Player.Keeper));
+                            if (ballPos.YPosition >= keeper.YPosition)
+                            {
+                                _CommunicationMgr.MovePlayer(keeper.GetBar(), Convert.ToUInt16(keeper.MinPosition));
+                            }
                             else
-                                Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMaxYPosition(Player.Keeper));
+                            {
+                                _CommunicationMgr.MovePlayer(keeper.GetBar(), Convert.ToUInt16(keeper.MaxPosition));
+                            }
                             _KeeperFreeBallStopwatch.Restart();
                             _KeeperFreeBallStage++;
                             break;
@@ -500,7 +506,7 @@ namespace GameController
                         case 1:
                             if (_LastKeeperShotStopwatch.ElapsedMilliseconds > 1500)
                             {
-                                Coach.SetPlayerAngle(Bar.Keeper, -50);
+                                _CommunicationMgr.SetAngle(keeper.GetBar(), -50);
                                 _LastKeeperShotStopwatch.Restart();
                                 _KeeperFreeBallStage++;
                             }
@@ -509,21 +515,27 @@ namespace GameController
                         case 2:
                             if (_KeeperFreeBallStopwatch.ElapsedMilliseconds > 500)
                             {
-                                if (newKeeperPosition > Coach.GetPlayerMaxYPosition(Player.Keeper))
-                                    Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMaxYPosition(Player.Keeper));
-                                else if (newKeeperPosition < Coach.GetPlayerMinYPosition(Player.Keeper))
-                                    Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMinYPosition(Player.Keeper));
+                                if (newKeeperPosition > keeper.MaxPosition)
+                                {
+                                    _CommunicationMgr.MovePlayer(keeper.GetBar(), keeper.GetMaxPosition());
+                                }
+                                else if (newKeeperPosition < keeper.MinPosition)
+                                {
+                                    _CommunicationMgr.MovePlayer(keeper.GetBar(), keeper.GetMinPosition());
+                                }
                                 else
-                                    Coach.MovePlayerToYPosition(Player.Keeper, newKeeperPosition);
-                                _LastKeeperShotStopwatch.Restart();
-                                _KeeperFreeBallStage++;
+                                {
+                                    _CommunicationMgr.MovePlayer(keeper.GetBar(), Convert.ToUInt16(newKeeperPosition));
+                                    _LastKeeperShotStopwatch.Restart();
+                                    _KeeperFreeBallStage++;
+                                }
                             }
                             break;
                         //Try to shoot Ball.
                         case 3:
                             if (_LastKeeperShotStopwatch.ElapsedMilliseconds > 500)
                             {
-                                Coach.SetPlayerAngle(Bar.Keeper, 12);
+                                _CommunicationMgr.SetAngle(keeper.GetBar(), 12);
                                 _KeeperFreeBallStage++;
                                 _KeeperFreeBallStopwatch.Restart();
                             }
@@ -562,14 +574,20 @@ namespace GameController
             if (_LastKeeperShotStopwatch.ElapsedMilliseconds > Settings.BlockingMilisecs)
             {
                 if (ballPos.XPosition < defenseBarXPosition)
-                    Coach.SetPlayerAngle(Bar.Keeper, 12);
+                {
+                    _CommunicationMgr.SetAngle(keeper.GetBar(), 12);
+                }
                 else
                 {
                     //Ball kommt von der Seite. Stelle den Winkel so, dass das Tor zugemacht wird.
-                    if (!Coach.IsYPositionValid(Bar.Keeper, ballPos.YPosition))
-                        Coach.SetPlayerAngle(Bar.Keeper, -40);
+                    if (keeper.IsYPositionValid(ballPos.YPosition))
+                    {
+                        _CommunicationMgr.SetAngle(keeper.GetBar(), -40);
+                    }
                     else
-                        Coach.SetPlayerAngle(Bar.Keeper, 0);
+                    {
+                        _CommunicationMgr.SetAngle(keeper.GetBar(), 0);
+                    }
                 }
             }
             //Ball vor Defense. Versuche den Ball relativ zur Tormitte zu folgen und den Weg damit zu blockieren.
@@ -581,38 +599,34 @@ namespace GameController
                 int by = ballPos.YPosition;
 
                 double deltamax = 15.0;
-                int z = Coach.PlayingFieldHeight, e = Coach.PlayingFieldWidth, y = Coach.GoalTop;
+
+                //TODO: Length == legacy Height ?
+                //TODO: Again Goaltop ...
+                int GoalTop = 100;
+                int z = game.playingField.GetLength(), e = game.playingField.GetWidth(), y = GoalTop;
                 double delta = ((z / 2.0) - by) / (z / 2.0) * deltamax;
                 delta = delta < 0 ? -1 * delta : delta;
 
                 // Punkt P versetzt zum Punkt für Verteidigung.
-                px = e + Coach.PlayingFieldOffset.XPosition + delta;
-                if (by < ((z / 2) + Coach.PlayingFieldOffset.YPosition))
+                px = e + game.playingField.PlayingFieldOffset.XPosition + delta;
+                if (by < ((z / 2) + game.playingField.PlayingFieldOffset.YPosition))
                 {
-                    py = ((5.0 / 6.0) * z) - ((2.0 / 3.0) * y) + Coach.PlayingFieldOffset.YPosition;
+                    py = ((5.0 / 6.0) * z) - ((2.0 / 3.0) * y) + game.playingField.PlayingFieldOffset.YPosition;
                 }
                 else
                 {
-                    py = ((1.0 / 6.0) * z) + ((2.0 / 3.0) * y) + Coach.PlayingFieldOffset.YPosition;
+                    py = ((1.0 / 6.0) * z) + ((2.0 / 3.0) * y) + game.playingField.PlayingFieldOffset.YPosition;
                 }
-
-                //Korrigiere Koordinaten.
-                var pos1 = new Position((int)px, (int)py, true, true);
-                SwissKnife.ParallaxCorrection(Coach.CameraLongZ, Coach.PlayerShortZ, Coach.PlayingFieldCenter, pos1);
-
-                px = pos1.XPosition;
-                py = pos1.YPosition;
-
                 //Wenn Ball vor dem Mittelfeld ist keine ganz so extreme position einnehmen, sondern eher zur Tormitte.
-                if (ballPos.XPosition < Coach.GetBarXPosition(Bar.Midfield))
-                    py = Coach.PlayingFieldCenter.YPosition;
+                if (ballPos.XPosition < game.ownBars.midfield.XPosition)
+                    py = game.playingField.Origin.Y;
 
                 // Geradengleichung
                 // g: y = ((py-by)/(px-bx))*x + ((px*by-bx*py)/(px-bx))
                 // Tormannstange: x = keeperBarXPosition
 
                 // Wenn Ball zwischen Defense and Midfield, dann nimmt Keeper modifizierte dynamische Defense-Position ein
-                if (ballPos.XPosition > Coach.GetBarXPosition(Bar.Midfield))
+                if (ballPos.XPosition > game.ownBars.midfield.XPosition)
                 {
                     // Bessere Keeperposition um schräge Schüsse zu verhindern
                     newKeeperPosition = (int)(((py - by) / (px - bx) * keeperBarXPosition) + (((px * by) - (bx * py)) / (px - bx)) * 1.04);
@@ -624,29 +638,36 @@ namespace GameController
                 }
             }
 
-            if (newKeeperPosition > Coach.GetPlayerMaxYPosition(Player.Keeper))
-                Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMaxYPosition(Player.Keeper));
-            else if (newKeeperPosition < Coach.GetPlayerMinYPosition(Player.Keeper))
-                Coach.MovePlayerToYPosition(Player.Keeper, Coach.GetPlayerMinYPosition(Player.Keeper));
+            if (newKeeperPosition > keeper.MaxPosition)
+            {
+                _CommunicationMgr.MovePlayer(keeper.GetBar(), keeper.GetMaxPosition());
+            }
+            else if (newKeeperPosition < Convert.ToUInt16(keeper.MinPosition))
+            {
+                _CommunicationMgr.MovePlayer(keeper.GetBar(), keeper.GetMinPosition());
+            }
             else
-                Coach.MovePlayerToYPosition(Player.Keeper, newKeeperPosition);
+            {
+                _CommunicationMgr.MovePlayer(keeper.GetBar(), Convert.ToUInt16(newKeeperPosition));
+            }
+
 
             //Wenn der ball in Reichweite ist und genug Zeit seit dem letzen Schuss vergangen ist schießen.
-            if (_LastKeeperShotStopwatch.ElapsedMilliseconds > Settings.ShootingMilisecs && ballPos.XPosition >= Coach.GetBarXPosition(Bar.Keeper) - Settings.KeeperShootingRange && ballPos.XPosition < Coach.GetBarXPosition(Bar.Keeper) + 15)
+            if (_LastKeeperShotStopwatch.ElapsedMilliseconds > Settings.ShootingMilisecs && ballPos.XPosition >= keeper.XPostion - Settings.KeeperShootingRange && ballPos.XPosition < keeper.XPostion + 15)
             {
                 if (Settings.UseOwnBarDetectionToDeterminePlayerPositions)
                 {
-                    var keeperPosition = _OwnbarDetection.GetPlayerPosition(Player.Keeper);
+                    var keeperPosition = keeper;
                     //Schieße nur wenn der Ball auch in YPosition erreicht wird
                     if (keeperPosition.YPosition - Settings.VerticalShootingRange < ballPos.YPosition && keeperPosition.YPosition + Settings.VerticalShootingRange > ballPos.YPosition)
                     {
-                        Coach.SetPlayerAngle(Bar.Keeper, 60);
+                        _CommunicationMgr.SetAngle(keeper.GetBar(), 60);
                         _LastKeeperShotStopwatch.Restart();
                     }
                 }
                 else
                 {
-                    Coach.SetPlayerAngle(Bar.Keeper, 60);
+                    _CommunicationMgr.SetAngle(keeper.GetBar(), 60);
                     _LastKeeperShotStopwatch.Restart();
                 }
             }

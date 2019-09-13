@@ -37,9 +37,6 @@
         /// </summary>
         public PlayerControl()
         {
-            PlayingField.GameStarted += this.Game_GameStarted;
-            PlayingField.GameStopped += this.Game_GameStopped;
-
             //TODO: Register at ASP Net Core Controller here
             //this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
             if (this.networkLayer == null)
@@ -98,7 +95,7 @@
         {
             switch (playerBar.barSelection)
             {
-                case Bar.BarType.All:
+                case BarType.All:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
                     this.NetworkObject.DefensePosition = newPlayerPosition;
                     this.NetworkObject.MidfieldPosition = newPlayerPosition;
@@ -110,7 +107,7 @@
                     }
 
                     break;
-                case Bar.BarType.Keeper:
+                case BarType.Keeper:
                     this.NetworkObject.KeeperPosition = newPlayerPosition;
                     if (waitForResponse)
                     {
@@ -118,7 +115,7 @@
                     }
 
                     break;
-                case Bar.BarType.Defense:
+                case BarType.Defense:
                     this.NetworkObject.DefensePosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -127,7 +124,7 @@
                     }
 
                     break;
-                case Bar.BarType.Midfield:
+                case BarType.Midfield:
                     this.NetworkObject.MidfieldPosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -136,7 +133,7 @@
                     }
 
                     break;
-                case Bar.BarType.Striker:
+                case BarType.Striker:
                     this.NetworkObject.StrikerPosition = newPlayerPosition;
 
                     if (waitForResponse)
@@ -176,7 +173,7 @@
         {
             switch (bar.barSelection)
             {
-                case Bar.BarType.All:
+                case BarType.All:
                     this.NetworkObject.KeeperAngle = angle;
                     this.NetworkObject.DefenseAngel = angle;
                     this.NetworkObject.MidfieldAngel = angle;
@@ -188,7 +185,7 @@
                     }
 
                     break;
-                case Bar.BarType.Keeper:
+                case BarType.Keeper:
                     this.NetworkObject.KeeperAngle = angle;
 
                     if (waitForResponse)
@@ -197,7 +194,7 @@
                     }
 
                     break;
-                case Bar.BarType.Defense:
+                case BarType.Defense:
                     this.NetworkObject.DefenseAngel = angle;
 
                     if (waitForResponse)
@@ -206,7 +203,7 @@
                     }
 
                     break;
-                case Bar.BarType.Midfield:
+                case BarType.Midfield:
                     this.NetworkObject.MidfieldAngel = angle;
 
                     if (waitForResponse)
@@ -215,7 +212,7 @@
                     }
 
                     break;
-                case Bar.BarType.Striker:
+                case BarType.Striker:
                     this.NetworkObject.StrikerAngel = angle;
 
                     if (waitForResponse)
@@ -273,24 +270,14 @@
             }
         }
 
-        /// <summary>
-        /// Handles the GameStarted event of the Game control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void Game_GameStarted(object sender, EventArgs e)
+        public void SetPlayerAnglePass(Bar bar, bool wait = false)
         {
-            this.resetEvent.Set();
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Handles the GameStopped event of the Game control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void Game_GameStopped(object sender, EventArgs e)
+        public void SetPlayerAngleBlock(Bar bar, bool wait = false)
         {
-            this.resetEvent.Reset();
+            throw new NotImplementedException();
         }
     }
 }

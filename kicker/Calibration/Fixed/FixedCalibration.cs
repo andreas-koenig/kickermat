@@ -116,7 +116,7 @@
             // Set the bar position as x position for each player on that bar
             foreach (Bar bar in Enum.GetValues(typeof(Bar)))
             {
-                if (bar.barSelection != Bar.BarType.All)
+                if (bar.barSelection != BarType.All)
                 {
                     foreach (Player player in bar.GetPlayers())
                     {

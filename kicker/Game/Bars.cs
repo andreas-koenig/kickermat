@@ -200,6 +200,18 @@ namespace GameProperties
         public double MinPosition { get; set; }
         public double MaxPosition { get; set; }
 
+        //NOTE: Needed for GameController, remove in future
+        public ushort GetMinPosition()
+        {
+            return Convert.ToUInt16(MinPosition);
+        }
+
+        //NOTE: Needed for GameController, remove in future
+        public ushort GetMaxPosition()
+        {
+            return Convert.ToUInt16(MaxPosition);
+        }
+
         public double XPostion { get; internal set; }
 
         public double YPosition { get; internal set; }

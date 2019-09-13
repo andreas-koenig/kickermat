@@ -51,6 +51,11 @@
         public double Width { get; internal set; }
         public double Length { get; internal set; }
 
+        public int GetWidth() { return Convert.ToInt32(Width); }
+
+        public int GetLength() { return Convert.ToInt32(Width); }
+
+
         /// <summary>
         /// Gets the position of the origin of the playing field.
         /// </summary>
