@@ -2,41 +2,22 @@
 {
     using System;
     using Calibration;
+    using Communication.NetworkLayer;
     using GameProperties;
     using PlayerControl;
-    using Sets;
 
     /// <summary>
     /// Manages the existing Communication-Interfaces
     /// </summary>
-    public sealed class CommunicationManager : IDisposable, IPlayerControl
+    public sealed class CommunicationManager : IDisposable
     {
-        /// <summary>
-        /// Occurs when [communication set changed].
-        /// </summary>
-        public event EventHandler<NewCommunicationSetEventArgs> CommunicationSetChanged;        
 
-        /// <summary>
-        /// Gets the currently used communication set.
-        /// </summary>
-        public ICommunicationSet CommunicationSet { get; private set; }
+        public IPlayerControl PlayerControl { private set; get; }
 
-        /// <summary>
-        /// Gets the player control.
-        /// </summary>
-        /// <value>The player control.</value>
-        public IPlayerControl PlayerControl => CommunicationSet.PlayerControl;
+        public ICalibrationControl CalibrationControl { private set; get; }
 
-        /// <summary>
-        /// Gets the calibration control.
-        /// </summary>
-        /// <value>The calibration control.</value>
-        public ICalibrationControl CalibrationControl => CommunicationSet.CalibrationControl;
+        public INetworkLayer NetworkLayer { private set; get; }
 
-        /// <summary>
-        /// Gets or sets the Settings.
-        /// </summary>
-        /// <value>The Settings.</value>
         internal CommunicationManagerSettings Settings { get; set; }
 
         /// <summary>
@@ -44,45 +25,40 @@
         /// </summary>
         public void Dispose()
         {
-
+            //TODO: Disconnect
         }
 
-        /// <summary>
-        /// Inits the communication set.
-        /// </summary>
-        /// <param name="newCommunicationSet">The new communication set.</param>
-        internal void InitCommunicationSet(ICommunicationSet newCommunicationSet)
+        public CommunicationManager(IPlayerControl playerControl, ICalibrationControl calibrationControl, INetworkLayer networkLayer)
         {
-            this.Settings.CommunicationSet = newCommunicationSet.GetType();
-            this.CommunicationSet = newCommunicationSet;
-
-            if (this.CommunicationSetChanged != null)
-            {
-                this.CommunicationSetChanged(this, new NewCommunicationSetEventArgs(newCommunicationSet));
-            }
+            PlayerControl = playerControl;
+            CalibrationControl = calibrationControl;
+            NetworkLayer = networkLayer;
+            
         }
 
         public void Connect()
         {
-            CommunicationSet.Connect();
+           //TODO: Moq
+           //NetworkLayer.Connect();
         }
 
         public void Disconnect()
         {
-            CommunicationSet.Disconnect();
+            //TODO: Moq
+            //NetworkLayer.Connect();
         }
 
-        void IPlayerControl.MovePlayer(Bar bar, ushort newPlayerPosition, bool waitForResponse)
+        void MovePlayer(Bar bar, ushort newPlayerPosition, bool waitForResponse)
         {
             PlayerControl.MovePlayer(bar, newPlayerPosition, false);
         }
 
-        void IPlayerControl.SetAngle(Bar bar, short angle, bool waitForResponse)
+        void SetAngle(Bar bar, short angle, bool waitForResponse)
         {
             PlayerControl.SetAngle(bar, angle, waitForResponse);
         }
 
-        void IPlayerControl.SetPlayerAnglePass(Bar bar, bool wait = false)
+        void SetPlayerAnglePass(Bar bar, bool wait = false)
         {
             PlayerControl.SetAngle(bar, -90, wait);
         }

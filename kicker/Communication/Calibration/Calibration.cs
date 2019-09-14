@@ -54,9 +54,9 @@
                 Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0, this.datagram, 0, 2);
                 this.ZeroFillDatagramFromOffset(2);
 
-                this.networkLayer.Send(this.datagram);
+                //this.networkLayer.Send(this.datagram);
 
-                byte[] retVal = this.networkLayer.Read();
+                //byte[] retVal = this.networkLayer.Read();
                 return (ControllerStatus)BitConverter.ToUInt16(retVal, 2);
             }
         }
@@ -98,9 +98,9 @@
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, this.datagram, 4, 2);
                     this.ZeroFillDatagramFromOffset(6);
 
-                    this.networkLayer.Send(this.datagram);
+                    //this.networkLayer.Send(this.datagram);
 
-                    byte[] returnDatagram = this.networkLayer.Read();
+                    //byte[] returnDatagram = this.networkLayer.Read();
 
                     //TODO: Throw Exception
                     //if ((ControllerStatus)BitConverter.ToUInt16(returnDatagram, 2) != ControllerStatus.Ok)

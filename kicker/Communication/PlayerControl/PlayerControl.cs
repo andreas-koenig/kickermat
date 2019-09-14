@@ -37,8 +37,6 @@
         /// </summary>
         public PlayerControl()
         {
-            //TODO: Register at ASP Net Core Controller here
-            //this.networkLayer = ServiceLocator.LocateService<NetworkLayer>();
             if (this.networkLayer == null)
             {
                 //SwissKnife.ShowError(this, "No network service available.");
@@ -259,15 +257,16 @@
         /// </summary>
         private void ContiniousSending()
         {
-            while (true)
-            {
-                this.resetEvent.WaitOne();
+            //Unused
+            //while (true)
+            //{
+            //    this.resetEvent.WaitOne();
 
-                this.networkLayer.Send(this.NetworkObject);
-                this.NetworkObject.ClearReplyRequested();
+            //    this.networkLayer.Send(this.NetworkObject);
+            //    this.NetworkObject.ClearReplyRequested();
 
-                Thread.Sleep(this.MessageIntervall);
-            }
+            //    Thread.Sleep(this.MessageIntervall);
+            //}
         }
 
         public void SetPlayerAnglePass(Bar bar, bool wait = false)

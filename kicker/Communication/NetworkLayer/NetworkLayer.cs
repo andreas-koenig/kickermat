@@ -1,4 +1,4 @@
-namespace Communication.NetworkLayer.Udp
+﻿namespace Communication.NetworkLayer.Udp
 {
     using System;
     using System.Diagnostics;
@@ -7,50 +7,79 @@ namespace Communication.NetworkLayer.Udp
     using System.Net.Sockets;
     using System.Text;
     using System.Threading;
-    //using System.Windows.Forms;
     using Packets.Tcp.Enum;
     using Packets.Udp;
-    //using Utilities;
 
     /// <summary>
-    /// The netwoklayer service
+    /// The networklayer service
     /// </summary>
     public sealed class NetworkLayer : IDisposable
     {
         /// <summary>
         /// UDP client for communication with the gateway.
         /// </summary>
-        private readonly UdpClient udpClient;
+        private readonly UdpConnection udpConnection;
 
         /// <summary>
         /// TCP client for communication with the gateway.
         /// </summary>
-        private TcpClient tcpClient;
-
-        /// <summary>
-        /// Endpoint which is used to recieve data from the gateway.
-        /// </summary>
-        private IPEndPoint endPoint;
-
-        /// <summary>
-        /// Sequence number for positioning, is incremented for each transmission 
-        /// to get information about the order of the received packets at the gateway.
-        /// </summary>
-        private uint sequenceNumber;
-
-        /// <summary>
-        /// Thread for waiting for incomming messages from the gateway.
-        /// </summary>
-        private Thread tcpReader;
+        private TcpConnection tcpConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkLayer"/> class.
         /// </summary>
         public NetworkLayer()
         {
-            this.sequenceNumber = 0;
-            this.udpClient = new UdpClient();
+            //TODO: Read Settings from config ?
+            this.udpConnection = new UdpConnection(System.Net.IPAddress.Parse("127.0.0.1"), 80);
+            this.tcpConnection = new TcpConnection(System.Net.IPAddress.Parse("127.0.0.1"), 80);
         }
+
+        public void Connect()
+        {
+            //TODO: Try Catch ?
+            this.tcpConnection.Connect();
+        }
+
+        /// <summary>
+        /// Disconnects from the remote host.
+        /// </summary>
+        public void Disconnect()
+        {
+            this.tcpConnection.Close();
+            this.udpConnection.Close();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.udpConnection != null)
+            {
+                this.udpConnection.Close();
+            }
+
+            if (this.tcpConnection != null)
+            {
+                this.tcpConnection.Close();
+            }
+
+            //TODO: Why?
+            GC.SuppressFinalize(this);
+        }
+    }
+    
+    public class TcpConnection : TcpClient
+    {
+        /// <summary>
+        /// Endpoint which is used to recieve data from the gateway.
+        /// </summary>
+        private IPEndPoint endPoint;
+        /// <summary>
+        /// Thread for waiting for incomming messages from the gateway.
+        /// </summary>
+        private Thread tcpReader;
 
         /// <summary>
         /// Delegate for handling <see cref="TcpNetworkPacketReceived"/>
@@ -64,117 +93,56 @@ namespace Communication.NetworkLayer.Udp
         /// </summary>
         internal event TcpNetworkPacketReceivedEventHandler TcpNetworkPacketReceived;
 
-        /// <summary>
-        /// Connects to the remote host.
-        /// </summary>
-        /// <param name="ipAddress">Remote hosts ip address.</param>
-        /// <param name="udpPort">The udp port to use.</param>
-        /// <param name="tcpPort">The tcp port to use.</param>
-        public void Connect(IPAddress ipAddress, ushort udpPort, ushort tcpPort)
+        public TcpConnection(IPAddress ipAddress, int tcpPort)
         {
-            this.udpClient.Connect(ipAddress, udpPort);
-            this.endPoint = (IPEndPoint)this.udpClient.Client.RemoteEndPoint;
+            //TODO: Load from settings
+            this.NoDelay = true;
+            this.ReceiveBufferSize = 64;
+            this.SendBufferSize = 64;
+            this.endPoint.Address = ipAddress;
+            this.endPoint.Port = tcpPort;
 
-            this.tcpClient = new TcpClient();
-            this.tcpClient.NoDelay = true;
-            this.tcpClient.ReceiveBufferSize = 64;
-            this.tcpClient.SendBufferSize = 64;
-            this.tcpClient.Connect(ipAddress, tcpPort);
+        }
 
-            this.tcpReader = new Thread(this.TcpConnection);
+        //TODO: Use default implementation
+        public void Connect()
+        {
+            //TODO: Try Catch
+            //TODO: If there is already a connection ... close and reconnect ?
+            this.Connect(endPoint.Address, endPoint.Port);
+        }
+
+        public void Close()
+        {
+            this.tcpReader.Abort();
+            this.GetStream().Close();
+        }
+
+        private void Read()
+        {
+            this.tcpReader = new Thread(this.ReadTcpStream);
             this.tcpReader.Name = "TCP Connection";
             this.tcpReader.IsBackground = true;
             this.tcpReader.Start();
         }
 
         /// <summary>
-        /// Disconnects from the remote host.
-        /// </summary>
-        public void Disconnect()
-        {
-            this.tcpReader.Abort();
-            this.tcpClient.GetStream().Close();
-            this.udpClient.Close();
-        }
-
-        /// <summary>
-        /// Sends a <see cref="PlayerPositions"/> to the server.
-        /// </summary>
-        /// <param name="networkObject">The <see cref="PlayerPositions "/> to send.</param>
-        public int Send(PlayerPositions networkObject)
-        {
-            networkObject.SequenceNumber = this.sequenceNumber;
-            byte[] datagram = networkObject.Serialize();
-            var ret = this.Send(datagram);
-            this.sequenceNumber++;
-            return ret;
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            if (this.udpClient != null)
-            {
-                this.udpClient.Close();
-            }
-
-            if (this.tcpClient != null)
-            {
-                this.tcpClient.Close();
-            }
-
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Sends a byte[] to the server.
-        /// </summary>
-        /// <param name="datagram">The datagram to send.</param>
-        internal int Send(byte[] datagram)
-        {
-            return this.udpClient.Send(datagram, datagram.Length);
-        }
-
-        /// <summary>
-        /// Reads a datagram from the network stream.
-        /// </summary>
-        /// <returns>The byte[] read from the stream.</returns>
-        internal byte[] Read()
-        {
-            //Workaround for readTimeout because of threading issues.
-            Stopwatch sw = new Stopwatch();
-            sw.Restart();
-            while (sw.ElapsedMilliseconds < 1000)
-            {
-                if (udpClient.Client.Available > 0)
-                {
-                    //byte[] datagram = this.udpClient.ReceiveAsync().Result.Buffer;
-                    byte[] datagram = this.udpClient.Receive(ref this.endPoint);
-
-                    return datagram;
-                }
-            }
-            return new byte[] { };
-        }
-
-        /// <summary>
         /// TCP connection thread. Reading the TCP packets and initializing connection. (Service connection.)
         /// </summary>
-        private void TcpConnection()
+        private void ReadTcpStream()
         {
-            using (NetworkStream networkStream = this.tcpClient.GetStream())
+            using (NetworkStream networkStream = this.GetStream())
             {
                 try
                 {
+                    //TODO: Establish Connection?
                     byte[] buffer = new byte[6];
-                    Buffer.BlockCopy(((IPEndPoint)this.udpClient.Client.LocalEndPoint).Address.GetAddressBytes(), 0, buffer, 0, 4);
-                    Buffer.BlockCopy(BitConverter.GetBytes(((IPEndPoint)this.udpClient.Client.LocalEndPoint).Port), 0, buffer, 4, 2);
+                    Buffer.BlockCopy(((IPEndPoint)this.Client.LocalEndPoint).Address.GetAddressBytes(), 0, buffer, 0, 4);
+                    Buffer.BlockCopy(BitConverter.GetBytes(((IPEndPoint)this.Client.LocalEndPoint).Port), 0, buffer, 4, 2);
                     networkStream.Write(buffer, 0, buffer.Length);
 
                     byte[] header = new byte[4];
-                    while (this.tcpClient.Connected)
+                    while (this.Connected)
                     {
                         // Read header
                         networkStream.Read(header, 0, 4);
@@ -210,6 +178,70 @@ namespace Communication.NetworkLayer.Udp
                     //SwissKnife.ShowException(this, e);
                 }
             }
+        }
+    }
+
+    public class UdpConnection : UdpClient
+    {
+        /// <summary>
+        /// Endpoint which is used to recieve data from the gateway.
+        /// </summary>
+        private IPEndPoint endPoint;
+        /// <summary>
+        /// Sequence number for positioning, is incremented for each transmission 
+        /// to get information about the order of the received packets at the gateway.
+        /// </summary>
+        private uint sequenceNumber;
+
+        public UdpConnection(IPAddress ipAddress, int port)
+        {
+            this.sequenceNumber = 0;
+            this.endPoint.Address = ipAddress;
+            this.endPoint.Port = port;
+        }
+
+        /// <summary>
+        /// Sends a <see cref="PlayerPositions"/> to the server.
+        /// </summary>
+        /// <param name="networkObject">The <see cref="PlayerPositions "/> to send.</param>
+        public int Send(PlayerPositions networkObject)
+        {
+            networkObject.SequenceNumber = this.sequenceNumber;
+            byte[] datagram = networkObject.Serialize();
+            var ret = this.Send(datagram);
+            this.sequenceNumber++;
+            return ret;
+        }
+
+        /// <summary>
+        /// Sends a byte[] to the server.
+        /// </summary>
+        /// <param name="datagram">The datagram to send.</param>
+        internal int Send(byte[] datagram)
+        {
+            return this.Send(datagram, datagram.Length);
+        }
+
+        /// <summary>
+        /// Reads a datagram from the network stream.
+        /// </summary>
+        /// <returns>The byte[] read from the stream.</returns>
+        internal byte[] Read()
+        {
+            //Workaround for readTimeout because of threading issues.
+            Stopwatch sw = new Stopwatch();
+            sw.Restart();
+            while (sw.ElapsedMilliseconds < 1000)
+            {
+                if (this.Client.Available > 0)
+                {
+                    //byte[] datagram = this.udpClient.ReceiveAsync().Result.Buffer;
+                    byte[] datagram = this.Receive(ref this.endPoint);
+
+                    return datagram;
+                }
+            }
+            return new byte[] { };
         }
     }
 }
