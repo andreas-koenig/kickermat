@@ -143,11 +143,11 @@
                 default:
                     throw new ArgumentOutOfRangeException("playerBar");
             }
-            this.networkLayer.Send(this.NetworkObject);
+            this.networkLayer.udpConnection.Send(this.NetworkObject);
             if (waitForResponse)
             {
                 // TODO: Check return code in Packet
-                this.networkLayer.Read();
+                this.networkLayer.udpConnection.Read();
             }
         }
 
@@ -222,11 +222,11 @@
                 default:
                     throw new ArgumentOutOfRangeException("bar");
             }
-            this.networkLayer.Send(this.NetworkObject);
+            this.networkLayer.udpConnection.Send(this.NetworkObject);
             if (waitForResponse)
             {
                 // TODO: Check return code in Packet
-                this.networkLayer.Read();
+                this.networkLayer.udpConnection.Read();
             }
         }
 

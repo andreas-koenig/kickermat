@@ -18,12 +18,12 @@
         /// <summary>
         /// UDP client for communication with the gateway.
         /// </summary>
-        private readonly UdpConnection udpConnection;
+        public UdpConnection udpConnection;
 
         /// <summary>
         /// TCP client for communication with the gateway.
         /// </summary>
-        private TcpConnection tcpConnection;
+        public TcpConnection tcpConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkLayer"/> class.
@@ -217,7 +217,7 @@
         /// Sends a byte[] to the server.
         /// </summary>
         /// <param name="datagram">The datagram to send.</param>
-        internal int Send(byte[] datagram)
+        public int Send(byte[] datagram)
         {
             return this.Send(datagram, datagram.Length);
         }
