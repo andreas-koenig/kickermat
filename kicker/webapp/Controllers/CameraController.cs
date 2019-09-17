@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using ImageProcessing.BarSearch;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,16 +35,19 @@ namespace Webapp.Controllers
         // VideoSources
         private readonly IVideoSource _camera;
         private readonly ICameraCalibration _calibration;
+        private readonly IBarSearch _barSearch;
 
         private readonly ILogger<CameraController> _logger;
 
         public CameraController(
             IVideoSource videoSource,
             ICameraCalibration calibration,
+            IBarSearch barSearch,
             ILogger<CameraController> logger)
         {
             _camera = videoSource;
             _calibration = calibration;
+            _barSearch = barSearch;
 
             var imgHeader = String.Format("\r\n--{0}\r\nContent-Type: image/jpeg\r\n\r\n", BOUNDARY);
             _imgHeaderBytes = Encoding.ASCII.GetBytes(imgHeader);
@@ -86,6 +90,8 @@ namespace Webapp.Controllers
                     return _camera;
                 case VideoSource.Calibration:
                     return (IVideoSource)_calibration;
+                case VideoSource.ImageProcessing:
+                    return (IVideoSource)_barSearch;
                 default:
                     return _camera; // TODO: Add ImageProcessing
             }
@@ -111,8 +117,6 @@ namespace Webapp.Controllers
 
             Response.Body.Write(_imgHeaderBytes);
             Response.Body.Write(imgBytes, 0, imgBytes.Length);
-
-            //args.Frame.Release();
         }
 
         [NonAction]

@@ -30,20 +30,20 @@ namespace VideoSource.Dalsa
     internal delegate void CameraDisconnected(string name);
     internal delegate void FrameArrived(int bufferIndex, IntPtr frameAddress);
 
-    public class DalsaCamera : BaseVideoSource, IConfigurable<DalsaSettings>, IDisposable
+    public class DalsaCamera : BaseVideoSource, IConfigurable<DalsaSettings>
     {
         // constants
-        private const int X_MIN = 32;
-        private const int Y_MIN = 196;
-        private const int WIDTH = 1152;
+        private const int X_MIN = 64;
+        private const int Y_MIN = 184;
+        private const int WIDTH = 1184;
         private const int HEIGHT = 660;
 
         // native DLL bindings
         internal const string DALSA_DLL = @"..\DalsaVideoSource.dll";
 
-        private static FrameArrived _frameArrivedDelegate;
-        private static CameraConnected _connectedDelegate;
-        private static CameraDisconnected _disconnectedDelegate;
+        private readonly FrameArrived _frameArrivedDelegate;
+        private readonly CameraConnected _connectedDelegate;
+        private readonly CameraDisconnected _disconnectedDelegate;
 
         [DllImport(DALSA_DLL, EntryPoint = "CreateCamera")]
         private static extern IntPtr DLL_CreateCamera(string name, RoiSettings roi,
@@ -71,22 +71,27 @@ namespace VideoSource.Dalsa
         private IntPtr _cameraPtr = IntPtr.Zero;
         private string _name;
         private unsafe bool _acquisitionRunning;
-        private bool _disposed = false;
         private readonly object _lockObject = new object();
-        private static DalsaCamera _this;
-        private uint _count = 0;
 
         public DalsaCamera(ILogger<DalsaCamera> logger, IWritableOptions<DalsaSettings>
             options) : base(logger)
         {
             Options = options;
             _name = options.Value.CameraName;
-            _this = this;
+
             _frameArrivedDelegate = FrameArrived;
             _connectedDelegate = CameraConnected;
             _disconnectedDelegate = CameraDisconnected;
 
             CreateCamera();
+        }
+
+        ~DalsaCamera()
+        {
+            if (!_cameraPtr.Equals(IntPtr.Zero))
+            {
+                DLL_DestroyCamera(_cameraPtr);
+            }
         }
 
         private void CreateCamera()
@@ -108,7 +113,7 @@ namespace VideoSource.Dalsa
         }
 
         protected override void StartAcquisition()
-        {
+        { 
             lock (_lockObject)
             {
                 if (_cameraPtr.Equals(IntPtr.Zero))
@@ -164,9 +169,9 @@ namespace VideoSource.Dalsa
 
         private void FrameArrived(int bufferIndex, IntPtr frameAddress)
         {
-            lock (_this?._lockObject)
+            lock (_lockObject)
             {
-                if (!_this._acquisitionRunning)
+                if (!_acquisitionRunning)
                 {
                     return;
                 }
@@ -174,37 +179,11 @@ namespace VideoSource.Dalsa
                 var bayerMat = new Mat(HEIGHT, WIDTH, MatType.CV_8U, frameAddress);
                 var bgrMat = bayerMat.CvtColor(ColorConversionCodes.BayerBG2BGR);
                 bayerMat.Dispose();
-                DLL_ReleaseBuffer(_this._cameraPtr, bufferIndex);
+                DLL_ReleaseBuffer(_cameraPtr, bufferIndex);
 
                 var frame = new Frame(bgrMat);
                 HandleFrameArrived(new FrameArrivedArgs(frame));
-                //frame.Release();
-
-                // Manual garbage collection as this is called from unmanaged code
-                _count += 1;
-                if (_count % 100 == 0)
-                {
-                    GC.Collect();
-                }
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            DLL_DestroyCamera(_cameraPtr);
-
-            _disposed = true;
         }
     }
 }
