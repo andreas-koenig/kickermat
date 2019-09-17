@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using OpenCvSharp;
 
 namespace VideoSource
 {
     public abstract class BaseVideoProcessor : BaseVideoSource, IVideoProcessor
     {
-        public BaseVideoProcessor(ILogger<IVideoSource> logger) : base(logger)
+        private readonly IVideoSource _videoSource;
+
+        public BaseVideoProcessor(IVideoSource videoSource, ILogger logger) : base(logger)
         {
+            _videoSource = videoSource;
         }
 
         protected abstract IFrame ProcessFrame(IFrame frame);
@@ -27,6 +31,16 @@ namespace VideoSource
         {
             args.Frame = ProcessFrame(args.Frame);
             HandleFrameArrived(args);
+        }
+
+        protected override void StartAcquisition()
+        {
+            _videoSource.StartAcquisition(this);
+        }
+
+        protected override void StopAcquisition()
+        {
+            _videoSource.StopAcquisition(this);
         }
     }
 }

@@ -65,6 +65,15 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
         open: false,
         selected: false,
         disabled: false
+      },
+      {
+        path: 'processing',
+        level: 2,
+        title: 'Processing',
+        icon: 'search',
+        open: false,
+        selected: false,
+        disabled: false
       }
     ]
   }

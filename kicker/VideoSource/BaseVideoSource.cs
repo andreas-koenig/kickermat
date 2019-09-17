@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace VideoSource
 {
     public abstract class BaseVideoSource : IVideoSource
     {
-        protected ILogger<IVideoSource> Logger { get; private set; }
+        protected ILogger Logger { get; private set; }
         private readonly object _objectLock = new object();
         private int _consumerCount = 0;
-        private bool _acquisitionRunning = false;
+        protected bool IsAcquisitionRunning { get; set; } = false;
 
         private EventHandler<FrameArrivedArgs> FrameArrived { get; set; }
         private EventHandler<CameraEventArgs> CameraConnected { get; set; }
         private EventHandler<CameraEventArgs> CameraDisconnected { get; set; }
 
-        public BaseVideoSource(ILogger<IVideoSource> logger)
+        public BaseVideoSource(ILogger logger)
         {
             Logger = logger;
         }
@@ -49,7 +50,7 @@ namespace VideoSource
             try
             {
                 StartAcquisition();
-                _acquisitionRunning = true;
+                IsAcquisitionRunning = true;
 
                 Logger.LogInformation("Acquisition started ({} consumers)", _consumerCount);
             }
@@ -87,20 +88,13 @@ namespace VideoSource
                 {
                     return;
                 }
-                /*
-                if (oldConsumerCount == null && newConsumerCount == null ||
-                    !(oldConsumerCount != null && newConsumerCount == null) ||
-                    oldConsumerCount <= newConsumerCount)
-                {
-                    return;
-                }
-                */
+
                 _consumerCount -= 1;
 
-                if (_acquisitionRunning && _consumerCount == 0)
+                if (IsAcquisitionRunning && _consumerCount == 0)
                 {
                     StopAcquisition();
-                    _acquisitionRunning = false;
+                    IsAcquisitionRunning = false;
                     Logger.LogInformation("Acquisition stopped");
                     return;
                 }

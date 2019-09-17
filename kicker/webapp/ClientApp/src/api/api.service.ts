@@ -24,4 +24,9 @@ export class ApiService {
 
     return this.http.put(url, value);
   }
+
+  public startBallSearch() {
+    const url = REST_BASE + '/imageprocessing';
+    this.http.get(url).subscribe();
+  }
 }

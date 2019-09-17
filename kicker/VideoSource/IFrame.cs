@@ -7,7 +7,7 @@ namespace VideoSource
 {
     public interface IFrame
     {
-        Mat Mat { get; set; }
+        Mat Mat { get; }
 
         void Release();
     }

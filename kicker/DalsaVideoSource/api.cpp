@@ -3,34 +3,9 @@
 #include <mutex>
 
 #include "api.h"
-#include "controller.h"
+#include "camera.h"
 
-void startup(
-    void __stdcall frame_callback(int index, void* address),
-    void __stdcall connected_callback(char* server_name),
-    void __stdcall disconnected_callback(char* server_name)
-) {
-    SapManager::Open();
-
-    CameraController* ctrl = CameraController::getInstance();
-
-    ctrl->frame_arrived = frame_callback;
-    ctrl->cam_connected = connected_callback;
-    ctrl->cam_disconnected = disconnected_callback;
-
-    SapManager::SetDisplayStatusMode(SapManager::StatusCallback, CameraController::ErrorCallback);
-    SapManager::RegisterServerCallback(
-        SapManager::EventServerDisconnected | SapManager::EventServerConnected,
-        CameraController::ServerCallback);
-}
-
-void shutdown() {
-    CameraController::releaseInstance();
-    SapManager::UnregisterServerCallback();
-    SapManager::Close();
-}
-
-void get_available_cameras() {
+void GetAvailableCameras() {
     int server_count = SapManager::GetServerCount();
     char** cameras = new char* [server_count]();
 
@@ -43,57 +18,55 @@ void get_available_cameras() {
     // TODO: return cameras to C# caller
 }
 
-bool start_acquisition(char* camera_name) {
-    bool success = CameraController::getInstance()->start_acquisition(camera_name);
-    if (success) {
-        std::cout << "[Dalsa VideoSource] Acquisition started" << std::endl;
-    }
-    else {
-        std::cout << "[Dalsa VideoSource] Acquisition start failed" << std::endl;
-    }
+void* CreateCamera(char* camera_name,
+    RoiSettings roi,
+    void __stdcall frame_callback(int index, void* address),
+    void __stdcall connected_callback(char* server_name),
+    void __stdcall disconnected_callback(char* server_name)
+) {
+    auto camera = new Camera(camera_name, roi, frame_callback,
+        connected_callback, disconnected_callback);
 
-    return success;
+    return camera;
 }
 
-void stop_acquisition() {
-	CameraController::getInstance()->stop_acquisition();
-	std::cout << "[Dalsa VideoSource] Acquisition stopped" << std::endl;
+void DestroyCamera(Camera* camera) {
+    delete camera;
 }
 
-void release_buffer(int index) {
-    CameraController::getInstance()->buffer->SetState(index, SapBuffer::StateEmpty);
-}
-
-bool get_feat_value(char* camera_name, char* feature_name, double* value) {
-    SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
-    bool destroy = camera == nullptr;
-    if (destroy) {
-        camera = new SapAcqDevice(camera_name, FALSE);
-        camera->Create();
-    }
-
-    bool success = camera->GetFeatureValue(feature_name, value);
-    if (destroy) {
-        camera->Destroy();
-        delete camera;
+bool StartAcquisition(Camera* camera) {
+    if (camera == nullptr) {
+        return false;
     }
     
-    return success;
+    return camera->StartAcquisition();
 }
 
-bool set_feat_value(char* camera_name, char* feature_name, double value) {
-    SapAcqDevice* camera = CameraController::getInstance()->acquisitionDevice;
-    bool destroy = camera == nullptr;
-    if (destroy) {
-        camera = new SapAcqDevice(camera_name, FALSE);
-        camera->Create();
+bool StopAcquisition(Camera* camera) {
+    if (camera == nullptr) {
+        return false;
     }
 
-    bool success = camera->SetFeatureValue(feature_name, value);
-    if (destroy) {
-        camera->Destroy();
-        delete camera;
+    return camera->StopAcquisition();
+}
+
+bool ReleaseBuffer(Camera* camera, int buffer_index) {
+    if (camera == nullptr || camera->trash_buffer == nullptr) {
+        std::cout << "[Dalsa VideoSource] ReleaseBuffer: Camera or buffer null" << std::endl;
+        return false;
     }
 
-    return success;
+    return camera->trash_buffer->SetState(buffer_index, SapBuffer::StateEmpty);
+}
+
+bool SetFeatureValue(Camera* camera, char* feature_name, double feature_value) {
+    if (camera == nullptr) {
+        return false;
+    }
+    
+    if (camera->device == nullptr) {
+        camera->CreateObjects();
+    }
+
+    return camera->device->SetFeatureValue(feature_name, (int)feature_value);
 }

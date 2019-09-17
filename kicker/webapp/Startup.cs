@@ -1,7 +1,10 @@
 ﻿using System.IO;
 using Configuration;
+using ImageProcessing.BallSearch;
+using ImageProcessing.BarSearch;
 using ImageProcessing.Calibration;
 using ImageProcessing.Preprocessing;
+using ImageProcessingNew.BarSearch;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -43,15 +46,19 @@ namespace webapp
             });
 
             // Kicker services
-            services.AddSingleton<IVideoSource, DalsaVideoSource>();
-            services.AddTransient<ICameraCalibration, CameraCalibration>();
+            services.AddSingleton<IVideoSource, DalsaCamera>();
+            services.AddSingleton<ICameraCalibration, CameraCalibration>();
             services.AddSingleton<IPreprocessor, Preprocessor>();
-            services.AddSingleton<ICameraConnectionHandler, CameraConnectionHandler>();
+            services.AddSingleton<IBallSearch, BallSearch>();
+            services.AddSingleton<IBarSearch, BarSearch>();
 
             // Configuration
             var cameraSection = Configuration.GetSection("Camera");
             services.ConfigureWritable<DalsaSettings>(cameraSection.GetSection("Dalsa"));
             services.ConfigureWritable<CalibrationSettings>(cameraSection.GetSection("Calibration"));
+
+            var imgProcSection = Configuration.GetSection("ImageProcessing");
+            services.ConfigureWritable<BarSearchSettings>(imgProcSection.GetSection("BarSearch"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +67,6 @@ namespace webapp
             // Configure SignalR hubs
             app.UseSignalR(route =>
             {
-                route.MapHub<CameraHub>(SIGNALR_BASE_PATH + "/camera");
                 route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
             });
 

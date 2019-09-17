@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<app-video-player videoHeight="50vh"></app-video-player>
+<app-video-player [videoSource]="camera"></app-video-player>
 
 <div fxLayout="row" fxLayoutAlign="center">
   <nz-progress *ngIf="calibrationRunning" [nzPercent]="progress" nzType="circle">

@@ -1,6 +1,7 @@
 export enum VideoSource {
   Camera = 0,
-  Preprocessing = 1
+  Calibration = 1,
+  ImageProcessing = 2
 }
 
 export enum KickerComponent {

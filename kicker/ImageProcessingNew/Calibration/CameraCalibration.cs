@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Configuration;
 using Microsoft.Extensions.Logging;
@@ -11,37 +9,42 @@ using VideoSource;
 
 namespace ImageProcessing.Calibration
 {
-    public class CameraCalibration : ICameraCalibration
+    internal enum CalibrationState
+    {
+        Off, Running, Finished
+    }
+
+    public class CameraCalibration : BaseVideoProcessor, ICameraCalibration
     {
         // Constants
         private const int BOARD_WIDTH = 9;
         private const int BOARD_HEIGHT = 6;
         private const int SQUARE_SIZE = 50;
         private const int AMOUNT_FRAMES = 25;
-        private const int FRAME_BUFFER_SIZE = 10;
+        private const int WAIT_FRAMES = 30;
         private static Size _boardSize = new Size(BOARD_WIDTH, BOARD_HEIGHT);
 
         // Calibration
-        private object _objectLock;
+        private readonly object _objectLock;
         private CalibrationDoneDelegate _calibrationDone;
         private ChessboardRecognizedDelegate _chessboardRecognized;
-        private bool _isCalibrationRunning = false;
+        private CalibrationState _state;
         private volatile bool _isFindingCorners = false;
-        private readonly List<Point2f[]> _chessboardCorners;
+        private List<Point2f[]> _chessboardCorners;
         private RingBuffer<Mat> _frames;
+        private uint _frameCount = 0;
 
-        // Video
-        private readonly IVideoSource _videoSource;
-
+        // Logging & Options
         private readonly ILogger<ICameraCalibration> _logger;
+        private readonly IWritableOptions<CalibrationSettings> _calibrationOptions;
 
-        public CameraCalibration(IVideoSource videoSource, ILogger<ICameraCalibration> logger,
-            IWritableOptions<CalibrationSettings> options)
+        public CameraCalibration(IVideoSource camera, ILogger<ICameraCalibration> logger,
+            IWritableOptions<CalibrationSettings> calibrationOptions) : base(camera, logger)
         {
-            _videoSource = videoSource;
             _objectLock = new object();
             _chessboardCorners = new List<Point2f[]>();
             _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
+            _calibrationOptions = calibrationOptions;
             _logger = logger;
         }
 
@@ -51,15 +54,18 @@ namespace ImageProcessing.Calibration
         {
             lock (_objectLock)
             {
-                if (_isCalibrationRunning)
+                if (_state == CalibrationState.Running)
                 {
                     AbortCalibration();
                 }
 
                 _calibrationDone += calibrationDone;
                 _chessboardRecognized += chessboardRecognized;
-                _isCalibrationRunning = true;
-                _videoSource.StartAcquisition(this);
+                _state = CalibrationState.Running;
+                if (!IsAcquisitionRunning)
+                {
+                    StartAcquisition();
+                }
             }
 
             _logger.LogInformation("Calibration started");
@@ -69,35 +75,50 @@ namespace ImageProcessing.Calibration
         {
             lock (_objectLock)
             {
-                _videoSource.StopAcquisition(this);
-                _isCalibrationRunning = false;
+                _state = CalibrationState.Off;
                 _calibrationDone = null;
                 _chessboardRecognized = null;
                 _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
+                StopAcquisition();
             }
         }
 
-        public void OnFrameArrived(object sender, FrameArrivedArgs args)
+        protected override IFrame ProcessFrame(IFrame frame)
         {
-            _frames.Add(args.Frame.Mat);
-            if (!_isFindingCorners)
+            if (_state == CalibrationState.Running)
             {
-                _ = FindChessboardCornersAsync(_frames.Take());
-            }
-
-            if (_isCalibrationRunning && _chessboardCorners.Count == AMOUNT_FRAMES)
-            {
-                lock (_objectLock)
+                _frames.Add(frame.Mat);
+                if (!_isFindingCorners && _frameCount % WAIT_FRAMES == 0)
                 {
-                    _videoSource.StopAcquisition(this);
-
-                    var result = CalculateDistortionParameters(args.Frame.Mat);
-                    _isCalibrationRunning = false;
-                    _calibrationDone(result);
-                    _calibrationDone = null;
-                    _chessboardRecognized = null;
+                    _ = FindChessboardCornersAsync(_frames.Take());
                 }
+                _frameCount += 1;
+
+                if (_chessboardCorners.Count == AMOUNT_FRAMES)
+                {
+                    lock (_objectLock)
+                    {
+                        DoCalibration(frame.Mat);
+                        _state = CalibrationState.Finished;
+                        _calibrationDone();
+                        _calibrationDone = null;
+                        _chessboardRecognized = null;
+                        _frames.Clear();
+                        _chessboardCorners = new List<Point2f[]>();
+                    }
+                }
+
+                return frame;
             }
+
+            else if (_state == CalibrationState.Finished)
+            {
+                var cameraMatrix = _calibrationOptions.Value.GetCameraMatrixAsMat();
+                var distCoeffs = _calibrationOptions.Value.GetDistCoeffsAsMat();
+                return new Frame(frame.Mat.Undistort(cameraMatrix, distCoeffs));
+            }
+
+            return frame;
         }
 
         private Task FindChessboardCornersAsync(Mat frame)
@@ -153,10 +174,11 @@ namespace ImageProcessing.Calibration
             }
         }
 
-        private CalibrationResult CalculateDistortionParameters(Mat frame)
+        private void CalculateDistortionParameters(out Mat cameraMatrix, out Mat distCoeffs,
+            Size size)
         {
-            Mat cameraMatrix = new MatOfDouble(Mat.Eye(3, 3, MatType.CV_64FC1));
-            Mat distCoeffs = new MatOfDouble();
+            cameraMatrix = new MatOfDouble(Mat.Eye(3, 3, MatType.CV_64FC1));
+            distCoeffs = new MatOfDouble();
             var objectPoints = new List<Mat>();
             var imagePoints = new List<Mat>();
             var cornerPositions = calcBoardCornerPositions();
@@ -166,26 +188,45 @@ namespace ImageProcessing.Calibration
                 objectPoints.Add(MatOfPoint3f.FromArray(cornerPositions));
                 imagePoints.Add(MatOfPoint2f.FromArray(_chessboardCorners[i]));
             }
-            
+
             double error = Cv2.CalibrateCamera(objectPoints, imagePoints,
-                frame.Size(), cameraMatrix, distCoeffs,
-                out var rotationVectors, out var translationVectors,
+                size, cameraMatrix, distCoeffs, out var rotationVectors, out var translationVectors,
                 CalibrationFlags.FixK4 | CalibrationFlags.FixK5);
 
-            var result = new CalibrationResult(cameraMatrix, distCoeffs, error);
-            _logger.LogInformation("Calibration done:\n{}", result);
-
-            return result;
+            _logger.LogInformation("Calculated Distortion Parameters with reprojection error: {}",
+                error);
         }
 
-        public void OnCameraDisconnected(object sender, CameraEventArgs args)
+        private void DoCalibration(Mat frame)
         {
-            throw new NotImplementedException();
+            CalculateDistortionParameters(out var cameraMatrix, out var distCoeffs, frame.Size());
+            SaveCalibrationResult(cameraMatrix, distCoeffs);
+            _logger.LogInformation("Finished camera calibration");
         }
 
-        public void OnCameraConnected(object sender, CameraEventArgs args)
+        private void SaveCalibrationResult(Mat cameraMatrix, Mat distCoeffs)
         {
-            throw new NotImplementedException();
+            double[][] cameraMatrixArray = new double[3][];
+            for (int i = 0; i < 3; i++)
+            {
+                cameraMatrixArray[i] = new double[3];
+                for (int k = 0; k < 3; k++)
+                {
+                    cameraMatrixArray[i][k] = cameraMatrix.Get<double>(i, k);
+                }
+            }
+
+            double[] distCoeffsArray = new double[5];
+            for (int i = 0; i < 5; i++)
+            {
+                distCoeffsArray[i] = distCoeffs.Get<double>(i);
+            }
+
+            _calibrationOptions.Update(changes =>
+            {
+                changes.CameraMatrix = cameraMatrixArray;
+                changes.DistortionCoefficients = distCoeffsArray;
+            });
         }
     }
 }
