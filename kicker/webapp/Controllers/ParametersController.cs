@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Configuration;
+using ImageProcessing.BarSearch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VideoSource;
@@ -122,6 +123,8 @@ namespace webapp.Controllers
             {
                 case "Camera":
                     return _services.GetService(typeof(IVideoSource));
+                case "BarSearch":
+                    return _services.GetService(typeof(IBarSearch));
                 default:
                     return null;
             }

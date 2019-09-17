@@ -4,6 +4,7 @@ using ImageProcessing.BallSearch;
 using ImageProcessing.BarSearch;
 using ImageProcessing.Calibration;
 using ImageProcessing.Preprocessing;
+using ImageProcessingNew.BarSearch;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,9 @@ namespace webapp
             var cameraSection = Configuration.GetSection("Camera");
             services.ConfigureWritable<DalsaSettings>(cameraSection.GetSection("Dalsa"));
             services.ConfigureWritable<CalibrationSettings>(cameraSection.GetSection("Calibration"));
+
+            var imgProcSection = Configuration.GetSection("ImageProcessing");
+            services.ConfigureWritable<BarSearchSettings>(imgProcSection.GetSection("BarSearch"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
