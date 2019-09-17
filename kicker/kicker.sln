@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kicker", "Kicker\Kicker.csproj", "{3A5CA133-1B36-4EDE-9888-011DF15C7B32}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A2047211-A53A-4942-AC4C-19898F647B60} = {A2047211-A53A-4942-AC4C-19898F647B60}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoSource", "VideoSource\VideoSource.csproj", "{DABB69DD-30F1-47E3-949C-2D6748D47F2B}"
 EndProject
@@ -51,7 +54,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessingNew", "ImageProcessingNew\ImageProcessingNew.csproj", "{2F78B187-6424-4E4D-8878-10669B327784}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Configuration\Configuration.csproj", "{7CEC4273-D715-459F-BE75-13A8DB9A43B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configuration\Configuration.csproj", "{7CEC4273-D715-459F-BE75-13A8DB9A43B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

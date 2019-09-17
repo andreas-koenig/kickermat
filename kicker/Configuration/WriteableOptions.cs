@@ -32,7 +32,6 @@ namespace Configuration
 
         public void Update(Action<T> applyChanges)
         {
-
             var fileProvider = _environment.ContentRootFileProvider;
             var fileInfo = fileProvider.GetFileInfo(_file);
             var physicalPath = fileInfo.PhysicalPath;
@@ -49,7 +48,13 @@ namespace Configuration
 
             var sectionPath = _section.Replace(":", ".");
             var changes = JObject.Parse(JsonConvert.SerializeObject(sectionObject));
-            jObject.SelectToken(sectionPath).Replace(changes);
+
+            var sectionToken = jObject.SelectToken(sectionPath);
+            if (sectionToken != null)
+                sectionToken.Replace(changes);
+            else
+                jObject.AddFirst(changes);
+            // TODO: Add new value at correct path if it does not exist yet.
 
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }

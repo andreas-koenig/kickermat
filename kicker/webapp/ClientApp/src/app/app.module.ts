@@ -12,13 +12,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { VideoPlayerComponent } from './video-player/video-player.component';
 import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { ParameterListComponent } from './parameter-list/parameter-list.component';
 import { KickerParameterComponent } from './parameter-list/kicker-parameter/kicker-parameter.component';
 import { PreprocessingComponent } from './preprocessing/preprocessing.component';
 import { KickerComponent } from './kicker/kicker.component';
+import { ImageProcessingComponent } from './image-processing/image-processing.component';
+import { VideoPlayerComponent } from './video-player/video-player.component';
 
 const routes: Route[] = [
   {
@@ -41,6 +42,10 @@ const routes: Route[] = [
   {
     path: 'image/preprocessing',
     component: PreprocessingComponent
+  },
+  {
+    path: 'image/processing',
+    component: ImageProcessingComponent
   }
 ]
 
@@ -58,6 +63,8 @@ registerLocaleData(en);
     KickerParameterComponent,
     PreprocessingComponent,
     KickerComponent,
+    ImageProcessingComponent,
+    VideoPlayerComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,7 +7,7 @@ import { VideoSource } from '@api/api.model';
   styleUrls: ['./preprocessing.component.scss']
 })
 export class PreprocessingComponent implements OnInit {
-  public videoSource = VideoSource.Preprocessing;
+  public videoSource = VideoSource.Camera;
 
   constructor() { }
 

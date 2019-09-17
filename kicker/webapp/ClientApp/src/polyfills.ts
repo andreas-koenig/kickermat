@@ -33,3 +33,12 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// Workaround for bug with MessagePack
+// https://github.com/aspnet/SignalR/issues/2736#issuecomment-411156907
+(window as any).global = window;
+(window as any).process = {
+  env: { DEBUG: undefined },
+  version: '1',
+};
+global.Buffer = global.Buffer || require('buffer').Buffer;
