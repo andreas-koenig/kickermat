@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<InfoWarnings>
+  <Info>Begin full analysis with NDepend v2019.2.7</Info>
+  <Warning>Input directory not found {C:\Program Files\dotnet\store\x64\netcoreapp2.2}</Warning>
+  <Info>.NET Assemblies resolved from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}
+   C:\Userdata\HSP\kickermat_2019\kicker\bin\debug\netcoreapp2.2\VideoSource.dll
+   C:\Userdata\HSP\kickermat_2019\kicker\bin\debug\netcoreapp2.2\Game.dll
+   C:\Userdata\HSP\kickermat_2019\kicker\bin\debug\netcoreapp2.2\Webapp.dll
+   C:\Userdata\HSP\kickermat_2019\kicker\ImageProcessingNew\bin\debug\netcoreapp2.2\ImageProcessingNew.dll
+   C:\Userdata\HSP\kickermat_2019\kicker\bin\debug\netcoreapp2.2\Configuration.dll</Info>
+  <Info>No .NET Assembly filtered out from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}.</Info>
+  <Warning>Can't load the assembly {PositionPrediction}:
+The file {C:\Userdata\HSP\kickermat_2019\kickerbin\Debug\PositionPrediction.dll} doesn't exist.
+Failed attempt to resolve this assembly from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}.</Warning>
+  <Warning>Can't load the assembly {Communication}:
+The file {C:\Userdata\HSP\kickermat_2019\kickerbin\Debug\Communication.dll} doesn't exist.
+Failed attempt to resolve this assembly from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}.</Warning>
+  <Warning>Can't load the assembly {Calibration}:
+The file {C:\Userdata\HSP\kickermat_2019\kickerbin\Debug\Calibration.dll} doesn't exist.
+Failed attempt to resolve this assembly from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}.</Warning>
+  <Warning>Can't load the assembly {GameController}:
+The file {C:\Userdata\HSP\kickermat_2019\kickerbin\Debug\GameController.dll} doesn't exist.
+Failed attempt to resolve this assembly from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}.</Warning>
+  <Warning>Can't load the assembly {DalsaVideoSource}:
+The file {C:\Userdata\HSP\kickermat_2019\kicker\bin\debug\DalsaVideoSource.dll} is not a valid .NET assembly.
+Did a post-compilation tool touched its bytes or was it compiled with a non-standard .NET compiler?
+Unexpected Exception Type: {System.BadImageFormatException}  Exception Message: {Format of the executable (.exe) or library (.dll) is invalid.}
+Failed attempt to resolve this assembly from the Visual Studio solution file {C:\Userdata\HSP\kickermat_2019\kicker\kicker.sln}.</Warning>
+  <Info>Concurrent mode</Info>
+  <Info>.NET Assemblies loaded from {C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.2.7} 
+   mscorlib.dll   v4.0.0.0
+   System.IO.FileSystem.dll   v4.1.1.0
+   System.Threading.Tasks.dll   v4.1.1.0
+   System.ComponentModel.dll   v4.0.3.0
+   System.Linq.dll   v4.2.1.0
+   System.Drawing.Primitives.dll   v4.2.0.0
+   System.Collections.dll   v4.1.1.0
+   System.Resources.ResourceManager.dll   v4.1.1.0
+   System.Runtime.InteropServices.dll   v4.2.1.0
+   System.Threading.dll   v4.1.1.0
+   System.Diagnostics.Debug.dll   v4.1.1.0
+   System.Runtime.Extensions.dll   v4.2.1.0
+   System.Runtime.dll   v4.2.1.0</Info>
+  <Info>.NET Assemblies loaded from {C:\Program Files\dotnet\sdk\NuGetFallbackFolder} 
+   .\Microsoft.Extensions.FileProviders.Abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Diagnostics\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Diagnostics.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.StaticFiles\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.StaticFiles.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Mvc\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.dll   v2.2.0.0
+   .\Microsoft.AspNetCore\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Hosting\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll   v2.2.0.0
+   .\Microsoft.Extensions.Options.ConfigurationExtensions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Mvc.Abstractions\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Abstractions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Cors\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Cors.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.SignalR\1.1.0\lib\netstandard2.0\Microsoft.AspNetCore.SignalR.dll   v1.1.0.0
+   .\Microsoft.AspNetCore.SpaServices.Extensions\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.SpaServices.Extensions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Http.Abstractions\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Hosting.Abstractions\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.Abstractions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.SignalR.Common\1.1.0\lib\netcoreapp2.2\Microsoft.AspNetCore.SignalR.Common.dll   v1.1.0.0
+   .\System.Threading.Channels\4.5.0\lib\netcoreapp2.1\System.Threading.Channels.dll   v4.0.0.0
+   .\Microsoft.AspNetCore.SignalR.Core\1.1.0\lib\netstandard2.0\Microsoft.AspNetCore.SignalR.Core.dll   v1.1.0.0
+   .\Microsoft.Extensions.Configuration.Abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll   v2.2.0.0
+   .\Microsoft.Extensions.DependencyInjection.Abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Razor.Runtime\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Razor.Runtime.dll   v2.2.0.0
+   .\Microsoft.AspNetCore.Mvc.Core\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll   v2.2.0.0</Info>
+  <Info>.NET Assembly loaded from {C:\Users\had38837\.nuget\packages} 
+   .\OpenCvSharp3-AnyCPU\4.0.0.20181129\lib\net20\OpenCvSharp.dll   v1.0.0.0</Info>
+  <Info>29 source files parsed ; all source files found ; all source files in-sync with PDB</Info>
+  <Info>0 code rule has been extracted from code.</Info>
+  <Info>No dependency cycle detected in assemblies referencement graph.</Info>
+  <Info>Do merge code generated by compiler into application code.</Info>
+  <Info>Analyse dependencies of your application.</Info>
+  <Info>No SuppressMessageAttribute found in the analyzed code base. Since NDepend v2018.2 SuppressMessageAttribute can be used to suppress NDepend issues. Don't forget to set in your projects the compilation symbol CODE_ANALYSIS to use this attribute to suppress NDepend issues.</Info>
+  <Info>Log trend metrics values.</Info>
+  <Info>Execute queries and rules.</Info>
+  <Error>2 quality gates fail:
+  - 'Critical Rules Violated' value 1 rules greater than fail threshold 0 rules
+  - 'Debt Rating per Namespace' value 1 namespaces greater than fail threshold 0 namespaces</Error>
+  <Info>NDepend analysis done. Duration: 00:21</Info>
+  <Info>Building the report (standard).</Info>
+</InfoWarnings>
