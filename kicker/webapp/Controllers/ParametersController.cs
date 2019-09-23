@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Configuration;
-using ImageProcessing.BarSearch;
+using ImageProcessing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VideoSource;
@@ -14,8 +14,8 @@ namespace webapp.Controllers
     [ApiController]
     public class ParametersController : ControllerBase
     {
-        private ILogger<ParametersController> _logger;
-        private IServiceProvider _services;
+        private readonly ILogger<ParametersController> _logger;
+        private readonly IServiceProvider _services;
 
         public ParametersController(ILogger<ParametersController> logger,
             IServiceProvider services)
@@ -33,12 +33,17 @@ namespace webapp.Controllers
                 return NotFound(String.Format("The component {0} was not found", component));
             }
 
-            if (!IsIConfigurable(kickerComponent))
+            IWritableOptions options;
+            try
             {
-                return Ok(); // component does not implement IConfigurable<SettingsType>
+                options = GetWritableOptions(kickerComponent);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get configurable options: {0}", ex);
+                return BadRequest();
             }
 
-            var options = GetWritableOptions(kickerComponent);
             var optionsProperties = options.ValueObject.GetType().GetProperties();
             var attrs = new List<KickerParameterAttribute>();
             foreach (var opt in optionsProperties)
@@ -64,7 +69,17 @@ namespace webapp.Controllers
                 return NotFound(String.Format("The component {0} was not found", component));
             }
 
-            var options = GetWritableOptions(kickerComponent);
+            IWritableOptions options;
+            try
+            {
+                options = GetWritableOptions(kickerComponent);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get configurable options: {0}", ex);
+                return BadRequest();
+            }
+
             var optionsProperties = options.ValueObject.GetType().GetProperties();
 
             foreach (var prop in optionsProperties)
@@ -72,27 +87,27 @@ namespace webapp.Controllers
                 var kickerAttrs = prop.GetCustomAttributes(typeof(KickerParameterAttribute), true);
                 foreach (var attr in kickerAttrs)
                 {
-                    if (((KickerParameterAttribute)attr).Name.Equals(parameter))
+                    if (!((KickerParameterAttribute)attr).Name.Equals(parameter))
+                    {
+                        continue;
+                    }
+
+                    try
                     {
                         options.Update(changes =>
                         {
                             prop.SetValue(changes, Convert.ChangeType(value, prop.PropertyType));
                         });
-
-                        try
-                        {
-                            ((IConfigurable)kickerComponent).ApplyOptions();
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError("Failed to apply options: {0}", ex);
-                            var msg = string.Format("Failed to set parameter {0} to {1}",
-                                parameter, value);
-                            return BadRequest(msg);
-                        }
-
-                        return Ok();
                     }
+                    catch (Exception ex)
+                    {
+                        var msg = string.Format("Failed to set parameter {0} to {1}",
+                            parameter, value);
+                        _logger.LogError(msg + ": {0}", ex);
+                        return BadRequest(msg);
+                    }
+
+                    return Ok();
                 }
             }
 
@@ -108,11 +123,7 @@ namespace webapp.Controllers
                 return NotFound(String.Format("The component {0} was not found", component));
             }
 
-            if (!IsIConfigurable(kickerComponent))
-            {
-                var msg = String.Format("The component {0} has not parameters to save", component);
-                return BadRequest(msg);
-            }
+            // TODO: Implement save parameters functionality
 
             return Ok();
         }
@@ -123,8 +134,8 @@ namespace webapp.Controllers
             {
                 case "Camera":
                     return _services.GetService(typeof(IVideoSource));
-                case "BarSearch":
-                    return _services.GetService(typeof(IBarSearch));
+                case "ImageProcessor":
+                    return _services.GetService(typeof(IImageProcessor));
                 default:
                     return null;
             }
@@ -132,23 +143,21 @@ namespace webapp.Controllers
 
         private IWritableOptions GetWritableOptions(object component)
         {
-            return (IWritableOptions)component
-                .GetType()
-                .GetProperty("Options")
-                .GetValue(component);
-        }
+            var attrs = component.GetType()
+                .GetCustomAttributes(typeof(ConfigurableOptionsAttribute), false);
 
-        private bool IsIConfigurable(object component)
-        {
-            foreach (var i in component.GetType().GetInterfaces())
+            if (attrs?.Length == 0)
             {
-                if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IConfigurable<>))
-                {
-                    return true;
-                }
+                var msg = string.Format("Component {0} has no configurable options",
+                    component.GetType().FullName);
+                throw new Exception(msg);
             }
 
-            return false;
+            var optionsType = ((ConfigurableOptionsAttribute)attrs[0]).OptionsType;
+            var writableOptionsType = typeof(IWritableOptions<>)
+                .MakeGenericType(new Type[] { optionsType });
+
+            return (IWritableOptions)_services.GetService(writableOptionsType);
         }
     }
 }

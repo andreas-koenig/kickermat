@@ -11,6 +11,8 @@ namespace Configuration
         public string Name { get; protected set; }
         public string Description { get; protected set; }
         public object Value { get; set; }
+
+        public object DefaultValue { get; protected set; }
         
 
         public KickerParameterAttribute(string name, string description)

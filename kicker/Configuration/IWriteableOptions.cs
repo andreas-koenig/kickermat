@@ -10,6 +10,8 @@ namespace Configuration
     {
         object ValueObject { get; }
         void Update(Action<object> applyChanges);
+
+        void RegisterChangeListener(Action onChange);
     }
 
     public interface IWritableOptions<out T>

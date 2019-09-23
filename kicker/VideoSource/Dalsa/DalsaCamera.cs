@@ -30,7 +30,8 @@ namespace VideoSource.Dalsa
     internal delegate void CameraDisconnected(string name);
     internal delegate void FrameArrived(int bufferIndex, IntPtr frameAddress);
 
-    public class DalsaCamera : BaseVideoSource, IConfigurable<DalsaSettings>
+    [ConfigurableOptions(typeof(DalsaSettings))]
+    public class DalsaCamera : BaseVideoSource
     {
         // constants
         private const int X_MIN = 64;
@@ -66,7 +67,7 @@ namespace VideoSource.Dalsa
             double featureValue);
 
         // members
-        public IWritableOptions<DalsaSettings> Options { get; }
+        private readonly IWritableOptions<DalsaSettings> _options;
 
         private IntPtr _cameraPtr = IntPtr.Zero;
         private string _name;
@@ -76,7 +77,8 @@ namespace VideoSource.Dalsa
         public DalsaCamera(ILogger<DalsaCamera> logger, IWritableOptions<DalsaSettings>
             options) : base(logger)
         {
-            Options = options;
+            _options = options;
+            _options.RegisterChangeListener(ApplyOptions);
             _name = options.Value.CameraName;
 
             _frameArrivedDelegate = FrameArrived;
@@ -104,9 +106,9 @@ namespace VideoSource.Dalsa
             }
         }
 
-        public void ApplyOptions()
+        private void ApplyOptions()
         {
-            if (!DLL_SetFeatureValue(_cameraPtr, "autoBrightnessTarget", Options.Value.Brightness))
+            if (!DLL_SetFeatureValue(_cameraPtr, "autoBrightnessTarget", _options.Value.Brightness))
             {
                 throw new VideoSourceException("Could not apply options to camera");
             }

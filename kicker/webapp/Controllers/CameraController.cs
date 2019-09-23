@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using ImageProcessing.BarSearch;
+using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,19 +35,19 @@ namespace Webapp.Controllers
         // VideoSources
         private readonly IVideoSource _camera;
         private readonly ICameraCalibration _calibration;
-        private readonly IBarSearch _barSearch;
+        private readonly IImageProcessor _imageProcessor;
 
         private readonly ILogger<CameraController> _logger;
 
         public CameraController(
             IVideoSource videoSource,
             ICameraCalibration calibration,
-            IBarSearch barSearch,
+            IImageProcessor imageProcessor,
             ILogger<CameraController> logger)
         {
             _camera = videoSource;
             _calibration = calibration;
-            _barSearch = barSearch;
+            _imageProcessor = imageProcessor;
 
             var imgHeader = String.Format("\r\n--{0}\r\nContent-Type: image/jpeg\r\n\r\n", BOUNDARY);
             _imgHeaderBytes = Encoding.ASCII.GetBytes(imgHeader);
@@ -73,7 +73,7 @@ namespace Webapp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("Could not start camera acquisition: {0}", ex);
-                var task = new Task<IActionResult>(() => StatusCode(500));
+                var task = new Task(() => Response.StatusCode = 500);
                 task.Start();
                 return task;
             }
@@ -91,7 +91,7 @@ namespace Webapp.Controllers
                 case VideoSource.Calibration:
                     return (IVideoSource)_calibration;
                 case VideoSource.ImageProcessing:
-                    return (IVideoSource)_barSearch;
+                    return (IVideoSource)_imageProcessor;
                 default:
                     return _camera; // TODO: Add ImageProcessing
             }

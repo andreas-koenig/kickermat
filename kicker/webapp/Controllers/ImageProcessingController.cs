@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageProcessing.BallSearch;
-using ImageProcessing.BarSearch;
+using ImageProcessing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +12,11 @@ namespace Webapp.Controllers
     [ApiController]
     public class ImageProcessingController : ControllerBase
     {
-        private IBallSearch _ballSearch;
-        private IBarSearch _barSearch;
+        private IImageProcessor _imageProcessor;
 
-        public ImageProcessingController(IBallSearch ballSearch, IBarSearch barSearch)
+        public ImageProcessingController(IImageProcessor imageProcessor)
         {
-            _ballSearch = ballSearch;
-            _barSearch = barSearch;
+            _imageProcessor = imageProcessor;
         }
 
         [HttpGet]

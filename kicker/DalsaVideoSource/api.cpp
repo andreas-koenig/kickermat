@@ -64,7 +64,7 @@ bool SetFeatureValue(Camera* camera, char* feature_name, double feature_value) {
         return false;
     }
     
-    if (camera->device == nullptr) {
+    if (!camera->resources_created) {
         camera->CreateObjects();
     }
 

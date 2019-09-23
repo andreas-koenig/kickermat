@@ -13,6 +13,7 @@ namespace Configuration
         private readonly IOptionsMonitor<T> _options;
         private readonly string _section;
         private readonly string _file;
+        private static Action OnChange;
 
         public WritableOptions(
             IHostingEnvironment environment,
@@ -35,9 +36,9 @@ namespace Configuration
             var fileProvider = _environment.ContentRootFileProvider;
             var fileInfo = fileProvider.GetFileInfo(_file);
             var physicalPath = fileInfo.PhysicalPath;
-            
+
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath));
-            
+
             var sections = _section.Split(":");
             var sectionName = sections[sections.Length - 1];
             var sectionObject = jObject.TryGetValue(sectionName, out JToken section)
@@ -53,15 +54,23 @@ namespace Configuration
             if (sectionToken != null)
                 sectionToken.Replace(changes);
             else
-                jObject.AddFirst(changes);
-            // TODO: Add new value at correct path if it does not exist yet.
+                throw new Exception("Path " + sectionPath + " does not exist.");
+                // TODO: Add object at path if not exists
 
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
+
+            // Notify subscribers about update
+            OnChange?.Invoke();
         }
 
         public void Update(Action<object> applyChanges)
         {
             Update((Action<T>)applyChanges);
+        }
+
+        public void RegisterChangeListener(Action onChange)
+        {
+            OnChange += onChange;
         }
     }
 }

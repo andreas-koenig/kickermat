@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Configuration;
 using OpenCvSharp;
 
 namespace ImageProcessing.Calibration
 {
+    [KickerOptions(new string[] { "Camera", "Calibration" })]
     public class CalibrationSettings
     {
         public double[][] CameraMatrix { get; set; }

@@ -24,6 +24,7 @@ public:
 
     // Status & Setting
     bool acquisition_running = false;
+    bool resources_created = false;
     RoiSettings roi;
 
     // API Callbacks

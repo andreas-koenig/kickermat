@@ -16,7 +16,6 @@ import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { ParameterListComponent } from './parameter-list/parameter-list.component';
 import { KickerParameterComponent } from './parameter-list/kicker-parameter/kicker-parameter.component';
-import { PreprocessingComponent } from './preprocessing/preprocessing.component';
 import { KickerComponent } from './kicker/kicker.component';
 import { ImageProcessingComponent } from './image-processing/image-processing.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
@@ -40,11 +39,7 @@ const routes: Route[] = [
     component: CalibrationComponent
   },
   {
-    path: 'image/preprocessing',
-    component: PreprocessingComponent
-  },
-  {
-    path: 'image/processing',
+    path: 'imgproc',
     component: ImageProcessingComponent
   }
 ]
@@ -61,7 +56,6 @@ registerLocaleData(en);
     CalibrationComponent,
     ParameterListComponent,
     KickerParameterComponent,
-    PreprocessingComponent,
     KickerComponent,
     ImageProcessingComponent,
     VideoPlayerComponent,
@@ -70,10 +64,10 @@ registerLocaleData(en);
     BrowserModule,
     RouterModule.forRoot(routes),
     FlexLayoutModule,
-    NgZorroAntdModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgZorroAntdModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],

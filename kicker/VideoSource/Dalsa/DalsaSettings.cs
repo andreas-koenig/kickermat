@@ -5,6 +5,7 @@ using Configuration;
 
 namespace VideoSource.Dalsa
 {
+    [KickerOptions(new string[] { "Camera", "Dalsa" })]
     public class DalsaSettings
     {
         // Parameter constants

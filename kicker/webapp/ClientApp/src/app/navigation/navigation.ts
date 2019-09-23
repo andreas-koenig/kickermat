@@ -49,32 +49,12 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
     ]
   },
   {
-    path: 'image',
+    path: 'imgproc',
     level: 1,
     title: 'Image Processing',
     icon: 'picture',
     open: false,
     selected: false,
     disabled: false,
-    children: [
-      {
-        path: 'preprocessing',
-        level: 2,
-        title: 'Preprocessing',
-        icon: 'scan',
-        open: false,
-        selected: false,
-        disabled: false
-      },
-      {
-        path: 'processing',
-        level: 2,
-        title: 'Processing',
-        icon: 'search',
-        open: false,
-        selected: false,
-        disabled: false
-      }
-    ]
   }
 ]

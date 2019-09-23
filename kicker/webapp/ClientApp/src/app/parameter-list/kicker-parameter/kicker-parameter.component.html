@@ -1,6 +1,9 @@
-<h3>{{parameter.name}}</h3>
-
-<p class="description">{{parameter.description}}</p>
+<div fxLayout="row" fxLayoutGap="0.5em" fxLayoutAlign="start center">
+  <h3>{{parameter.name}}</h3>
+  <button nzShape="circle" nzType="default" nzTooltipTitle="Title" nz-button nz-tooltip>
+    <i nz-icon nzType="question" nzTheme="outline"></i>
+  </button>
+</div>
 
 <ng-container *ngIf="isNumberParameter(parameter)">
   <div fxLayout="row">

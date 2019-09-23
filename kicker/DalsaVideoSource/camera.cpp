@@ -56,6 +56,7 @@ bool Camera::CreateObjects() {
         return false;
     }
     transfer->SetAutoEmpty(false);
+    resources_created = true;
     return true;
 }
 
@@ -68,6 +69,8 @@ void Camera::DestroyObjects() {
 
     if (device != nullptr)
         device->Destroy();
+
+    resources_created = false;
 }
 
 bool Camera::StartAcquisition() {
