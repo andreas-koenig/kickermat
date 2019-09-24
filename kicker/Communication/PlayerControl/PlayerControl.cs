@@ -25,7 +25,7 @@
         /// <summary>
         /// Backing storage for <see cref="NetworkObject"/>
         /// </summary>
-        private PlayerPositions networkObject;
+        private PlayerPosition networkObject;
 
         /// <summary>
         /// Reset event for starting/stopping cyclic transmission.
@@ -43,7 +43,7 @@
             }
 
             this.lockerNetworkObject = new object();
-            this.NetworkObject = new PlayerPositions();
+            this.NetworkObject = new PlayerPosition();
 
             this.resetEvent = new ManualResetEvent(false);
 
@@ -64,7 +64,7 @@
         /// Gets or sets the network object.
         /// </summary>
         /// <value>The network object.</value>
-        private PlayerPositions NetworkObject
+        private PlayerPosition NetworkObject
         {
             get
             {
@@ -91,64 +91,8 @@
         /// <param name="waitForResponse">if set to <c>true</c> [wait for response].</param>
         public void MovePlayer(Bar playerBar, ushort newPlayerPosition, bool waitForResponse)
         {
-            switch (playerBar.barSelection)
-            {
-                case BarType.All:
-                    this.NetworkObject.KeeperPosition = newPlayerPosition;
-                    this.NetworkObject.DefensePosition = newPlayerPosition;
-                    this.NetworkObject.MidfieldPosition = newPlayerPosition;
-                    this.NetworkObject.StrikerPosition = newPlayerPosition;
+  
 
-                    if (waitForResponse)
-                    {
-                        this.NetworkObject.ReplyRequested = PositionBits.All;
-                    }
-
-                    break;
-                case BarType.Keeper:
-                    this.NetworkObject.KeeperPosition = newPlayerPosition;
-                    if (waitForResponse)
-                    {
-                        this.NetworkObject.ReplyRequested |= PositionBits.KeeperPosition;
-                    }
-
-                    break;
-                case BarType.Defense:
-                    this.NetworkObject.DefensePosition = newPlayerPosition;
-
-                    if (waitForResponse)
-                    {
-                        this.NetworkObject.ReplyRequested |= PositionBits.DefensePosition;
-                    }
-
-                    break;
-                case BarType.Midfield:
-                    this.NetworkObject.MidfieldPosition = newPlayerPosition;
-
-                    if (waitForResponse)
-                    {
-                        this.NetworkObject.ReplyRequested |= PositionBits.MidfieldPosition;
-                    }
-
-                    break;
-                case BarType.Striker:
-                    this.NetworkObject.StrikerPosition = newPlayerPosition;
-
-                    if (waitForResponse)
-                    {
-                        this.NetworkObject.ReplyRequested |= PositionBits.StrikerPosition;
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("playerBar");
-            }
-            this.networkLayer.udpConnection.Send(this.NetworkObject);
-            if (waitForResponse)
-            {
-                // TODO: Check return code in Packet
-                this.networkLayer.udpConnection.Read();
-            }
         }
 
         /// <summary>
@@ -173,9 +117,9 @@
             {
                 case BarType.All:
                     this.NetworkObject.KeeperAngle = angle;
-                    this.NetworkObject.DefenseAngel = angle;
-                    this.NetworkObject.MidfieldAngel = angle;
-                    this.NetworkObject.StrikerAngel = angle;
+                    this.NetworkObject.DefenseAngle = angle;
+                    this.NetworkObject.MidfieldAngle = angle;
+                    this.NetworkObject.StrikerAngle = angle;
 
                     if (waitForResponse)
                     {
@@ -193,7 +137,7 @@
 
                     break;
                 case BarType.Defense:
-                    this.NetworkObject.DefenseAngel = angle;
+                    this.NetworkObject.DefenseAngle = angle;
 
                     if (waitForResponse)
                     {
@@ -202,7 +146,7 @@
 
                     break;
                 case BarType.Midfield:
-                    this.NetworkObject.MidfieldAngel = angle;
+                    this.NetworkObject.MidfieldAngle = angle;
 
                     if (waitForResponse)
                     {
@@ -211,7 +155,7 @@
 
                     break;
                 case BarType.Striker:
-                    this.NetworkObject.StrikerAngel = angle;
+                    this.NetworkObject.StrikerAngle = angle;
 
                     if (waitForResponse)
                     {

@@ -44,6 +44,7 @@ namespace GameProperties
         public Bar defense = new Bar(Defense);
         public Bar midfield = new Bar(Midfield);
         public Bar striker = new Bar(Striker);
+        //TODO: "All" needed for Calibration ?
     }
 
     public class Bar
