@@ -18,7 +18,7 @@
 
         public INetworkLayer NetworkLayer { private set; get; }
 
-        internal CommunicationManagerSettings Settings { get; set; }
+        //internal CommunicationManagerSettings Settings { get; set; }
 
         /// <summary>
         /// Free allocated resources.
