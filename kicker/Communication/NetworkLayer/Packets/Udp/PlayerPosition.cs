@@ -7,7 +7,7 @@
     /// <summary>
     /// The networkobject containing the new player positions.
     /// </summary>
-    public class PlayerPosition
+    public class NetworkObject
     {
         public UdpPacketType PacketType { get; set; }
 
@@ -19,7 +19,8 @@
         /// <summary>
         /// UDP-Datagram
         /// </summary>
-        private byte[] positionPayload;
+   
+        public byte[] Datagram { get; private set; }
 
         /// <summary>
         /// The current keeper position.
@@ -200,12 +201,13 @@
         /// <summary>
         /// Gets or sets the sequence number.
         /// </summary>
-        public static uint SequenceNumber { get; set; }
+        public uint SequenceNumber { get; set; }
 
+        //TODO: Use a Factory for similar Network-Objects ?
         //TODO: Is "All" needed? Otherwise use PlayerType instead of Bar?
-        public PlayerPosition(Bar bar, ushort position, short angle, UdpPacketType packetType = UdpPacketType.SetPositionsAndAngles, bool waitForResponse = false)
+        public NetworkObject(Bar bar, ushort position, short angle, bool waitForResponse = false)
         {
-            positionPayload = new byte[datagramLength];
+            Datagram = new byte[datagramLength];
 
             switch (bar.barSelection)
             {
@@ -274,28 +276,55 @@
             }
         }
 
-        public PlayerPosition(Bar bar, UdpPacketType packetType)
+        public NetworkObject(Bar bar, UdpPacketType packetType)
         {
-            positionPayload = new byte[datagramLength];
+            Datagram = new byte[datagramLength];
 
             //TODO: Move all bars ?! if-clause from legacy-code
             if (!bar.barSelection.Equals(BarType.All))
             {
                 if (packetType.Equals(UdpPacketType.SetMinPosition))
                 {
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)packetType), 0, this.positionPayload, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, this.positionPayload, 2, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, this.positionPayload, 4, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)packetType), 0, Datagram, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, Datagram, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, Datagram, 4, 2);
                     this.ZeroFillDatagramFromOffset(6);
                 } 
                 else if (packetType.Equals(UdpPacketType.SetMaxPosition))
                 {
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)packetType), 0, this.positionPayload, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, this.positionPayload, 2, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)255), 0, this.positionPayload, 4, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)packetType), 0, Datagram, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, Datagram, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)255), 0, Datagram, 4, 2);
                     this.ZeroFillDatagramFromOffset(6);
                 }
             }
+        }
+
+        public NetworkObject(Bar bar, ushort barLengthInPixel)
+        {
+            Datagram = new byte[datagramLength];
+
+            ushort udpId = (ushort)bar.barSelection;
+            Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetBarLengthInPixel), 0, Datagram, 0, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(udpId), 0, Datagram, 2, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(barLengthInPixel), 0, Datagram, 4, 2);
+            ZeroFillDatagramFromOffset(6);
+        }
+
+        public NetworkObject(Bar bar, int nullAngle)
+        {
+            Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetNullAngle), 0, Datagram, 0, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, Datagram, 2, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes((short)nullAngle), 0, Datagram, 0, 4);
+            ZeroFillDatagramFromOffset(6);
+        }
+
+        public NetworkObject()
+        {
+            // NOTE: Reset positions with this object
+            // NOTE: Integral values have default 0
+            OptionsValidFor = PositionBits.All;
+            ReplyRequested = PositionBits.None;
         }
 
         /// <summary>
@@ -346,14 +375,14 @@
         /// <param name="offset">The offset.</param>
         private void ZeroFillDatagramFromOffset(int offset)
         {
-            if (offset > this.positionPayload.Length)
+            if (offset > Datagram.Length)
             {
                 throw new ArgumentException("Offset is out of datagram bounds");
             }
 
-            for (int i = offset; i < this.positionPayload.Length; i++)
+            for (int i = offset; i < Datagram.Length; i++)
             {
-                this.positionPayload[i] = 0x00;
+                Datagram[i] = 0x00;
             }
         }
     }

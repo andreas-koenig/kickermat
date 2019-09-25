@@ -9,6 +9,6 @@
     /// </summary>
     public interface IKickerControl
     {
-        void Send(PlayerPosition position);
+        void Send(NetworkObject position);
     }
 }

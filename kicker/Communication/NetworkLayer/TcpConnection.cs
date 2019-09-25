@@ -45,8 +45,7 @@ namespace Communication.NetworkLayer
             this.NoDelay = _tcpConnectionOptions.Value.NoDelay;
             this.ReceiveBufferSize = _tcpConnectionOptions.Value.ReceiveBufferSize;
             this.SendBufferSize = _tcpConnectionOptions.Value.SendBufferSize;
-            this.endPoint.Address = _tcpConnectionOptions.Value.IpAddress;
-            this.endPoint.Port = _tcpConnectionOptions.Value.TcpPort;
+            this.endPoint = new IPEndPoint(_tcpConnectionOptions.Value.IpAddress, _tcpConnectionOptions.Value.TcpPort);
         }
 
         public void Connect()

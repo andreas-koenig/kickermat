@@ -26,28 +26,32 @@ namespace Communication.NetworkLayer
         /// Sequence number for positioning, is incremented for each transmission 
         /// to get information about the order of the received packets at the gateway.
         /// </summary>
-        private uint _sequenceNumber;
+        public uint _SequenceNumber { get; private set; }
 
+        /// <summary>
+        /// UDP-Datagram
+        /// </summary>
+        public byte[] Datagram { get; private set; }
 
         public UdpConnection(ILogger<UdpConnection> logger, IWritableOptions<UdpConnectionSettings> udpConnectionOptions)
         {
             _logger = logger;
             _udpConnectionOptions =  udpConnectionOptions;
-            _sequenceNumber = 0;
+            _SequenceNumber = 0;
             _endPoint.Address = _udpConnectionOptions.Value.IpAddress;
             _endPoint.Port = _udpConnectionOptions.Value.Port;
         }
 
         /// <summary>
-        /// Sends a <see cref="PlayerPosition"/> to the server.
+        /// Sends a <see cref="NetworkObject"/> to the server.
         /// </summary>
-        /// <param name="networkObject">The <see cref="PlayerPosition "/> to send.</param>
-        public int Send(PlayerPosition networkObject)
+        /// <param name="networkObject">The <see cref="NetworkObject "/> to send.</param>
+        public int Send(NetworkObject networkObject)
         {
-            networkObject.SequenceNumber = this._sequenceNumber;
+            networkObject.SequenceNumber = this._SequenceNumber;
             byte[] datagram = networkObject.Serialize();
             var ret = this.Send(datagram);
-            this._sequenceNumber++;
+            this._SequenceNumber++;
             return ret;
         }
 
@@ -86,10 +90,10 @@ namespace Communication.NetworkLayer
         {
             get
             {
-                Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0, this.datagram, 0, 2);
+                Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0, Datagram, 0, 2);
                 ZeroFillDatagramFromOffset(2);
 
-                this.Send(this.datagram);
+                this.Send(Datagram);
 
                 // TODO: error handling
                 byte[] retVal = this.Read();
@@ -103,14 +107,14 @@ namespace Communication.NetworkLayer
         /// <param name="offset">The offset.</param>
         private void ZeroFillDatagramFromOffset(int offset)
         {
-            if (offset > this.datagram.Length)
+            if (offset > Datagram.Length)
             {
                 throw new ArgumentException("Offset is out of datagram bounds");
             }
 
-            for (int i = offset; i < this.datagram.Length; i++)
+            for (int i = offset; i < Datagram.Length; i++)
             {
-                this.datagram[i] = 0x00;
+                Datagram[i] = 0x00;
             }
         }
     }
