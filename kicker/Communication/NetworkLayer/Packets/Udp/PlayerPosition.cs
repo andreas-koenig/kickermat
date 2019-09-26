@@ -204,13 +204,14 @@
         public uint SequenceNumber { get; set; }
 
         //TODO: Use a Factory for similar Network-Objects ?
-        //TODO: Is "All" needed? Otherwise use PlayerType instead of Bar?
+
         public NetworkObject(Bar bar, ushort position, short angle, bool waitForResponse = false)
         {
             Datagram = new byte[datagramLength];
 
             switch (bar.barSelection)
             {
+                //TODO: Is "All" needed? Otherwise use PlayerType instead of Bar?
                 case BarType.All:
 
                     this.KeeperPosition = position;

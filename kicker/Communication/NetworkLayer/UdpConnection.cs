@@ -90,12 +90,12 @@ namespace Communication.NetworkLayer
         {
             get
             {
+                // TODO: Exception Handling Concept
                 Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0, Datagram, 0, 2);
                 ZeroFillDatagramFromOffset(2);
-
+                
                 this.Send(Datagram);
-
-                // TODO: error handling
+        
                 byte[] retVal = this.Read();
                 return (ControllerStatus)BitConverter.ToUInt16(retVal, 2);
             }

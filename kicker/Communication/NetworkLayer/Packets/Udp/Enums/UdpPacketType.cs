@@ -1,4 +1,4 @@
-namespace Communication.NetworkLayer.Packets.Udp.Enums
+﻿namespace Communication.NetworkLayer.Packets.Udp.Enums
 {
     /// <summary>
     /// They type of the received udp packet.
@@ -10,7 +10,7 @@ namespace Communication.NetworkLayer.Packets.Udp.Enums
         /// </summary>
         SetPositionsAndAngles = 0x00,
 
-        //TODO: Unused
+
         /// <summary>
         /// Udp packet contains informations about the current positions.
         /// </summary>
@@ -31,13 +31,11 @@ namespace Communication.NetworkLayer.Packets.Udp.Enums
         /// </summary>
         SetMinPosition = 0x04,
 
-        //TODO: HACK?
         /// <summary>
         /// Udp packet contains informations about the bar length in pixel.
         /// </summary>
         SetBarLengthInPixel = 0x05,
 
-        // TODO: Unused
         /// <summary>
         /// Udp packet contains informations about the null angle.
         /// </summary>

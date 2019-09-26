@@ -10,13 +10,11 @@
         /// </summary>
         Ok = 0x00,
         
-        // TODO : Unused
         /// <summary>
         /// Initialisation running
         /// </summary>
         Running = 0x01,
 
-        // TODO: Unused
         /// <summary>
         /// Fehler bei der Initialisierung aufgetreten
         /// </summary>

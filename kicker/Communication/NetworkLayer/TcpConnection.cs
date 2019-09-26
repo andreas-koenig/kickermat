@@ -73,11 +73,11 @@ namespace Communication.NetworkLayer
             }
         }
 
-        private void Read()
+        private void Communicate()
         {
             try
             {
-                this.tcpReader = new Thread(this.ReadTcpStream);
+                this.tcpReader = new Thread(this.ReadWriteTcpStream);
                 this.tcpReader.Name = "TCP Connection";
                 this.tcpReader.IsBackground = true;
                 this.tcpReader.Start();
@@ -91,7 +91,7 @@ namespace Communication.NetworkLayer
         /// <summary>
         /// TCP connection thread. Reading the TCP packets and initializing connection. (Service connection.)
         /// </summary>
-        private void ReadTcpStream()
+        private void ReadWriteTcpStream()
         {
             using (NetworkStream networkStream = this.GetStream())
             {
@@ -106,6 +106,7 @@ namespace Communication.NetworkLayer
                     byte[] header = new byte[4];
                     while (this.Connected)
                     {
+                        //TODO: Errorhandling, conversion might fail
                         // Read header
                         networkStream.Read(header, 0, 4);
                         TcpPacketType packetType = (TcpPacketType)BitConverter.ToUInt16(header, 0);
@@ -137,7 +138,7 @@ namespace Communication.NetworkLayer
                 }
                 catch (IOException e)
                 {
-                    //SwissKnife.ShowException(this, e);
+                    //TODO: Exception Handling Concept;
                 }
             }
         }
