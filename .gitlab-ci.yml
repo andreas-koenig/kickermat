@@ -1,4 +1,3 @@
-
 # ### Define variables
 #
 variables:
@@ -11,6 +10,7 @@ variables:
   SOURCE_CODE_PATH: 'kicker'
   #SOURCE_CODE_PATH: '*/*/'
   CI_DEBUG_TRACE: "true"
+  CI_REPOSITORY_URL: "git@gitlab.oth-regensburg.de:IM/ems/Kickermat/kickermat_2019.git"
 
 # ### Define stage list
 #
