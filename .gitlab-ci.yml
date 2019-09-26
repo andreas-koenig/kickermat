@@ -75,7 +75,7 @@ cache:
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
-  - 'echo "Clone Repository"'
+  - 'ssh-keyscan gitlab.oth-regensburg.de > %userprofile%/.ssh/known_hosts'
   - 'git clone git@gitlab.oth-regensburg.de:IM/ems/Kickermat/kickermat_2019.git'
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
