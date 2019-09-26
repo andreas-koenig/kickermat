@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Windows.Forms;
+    using GameProperties;
     using Calibration.Base;
-    using GlobalDataTypes;
-    using Utilities;
+    using static GameProperties.Bar;
+
 
     /// <summary>
     /// Alternative class for calibrating the image processing from fixed values.
@@ -89,7 +89,7 @@
                 maxPositions[player] = this.playerMaxPos[player];
             }
 
-            return SwissKnife.ShowQuestion(this, "Hardcoded calibration values loaded. Go on?") == DialogResult.Yes;
+            return true;
         }
 
         /// <summary>
@@ -108,49 +108,49 @@
         /// </summary>
         private void ReCalcPlayerPositions()
         {
-            this.barPos[Bar.Keeper] = this.Settings.PlayingFieldWidth - this.Settings.KeeperBarPosition + this.Settings.PlayingFieldXOffset;
-            this.barPos[Bar.Defense] = this.Settings.PlayingFieldWidth - this.Settings.DefenseBarPosition + this.Settings.PlayingFieldXOffset;
-            this.barPos[Bar.Midfield] = this.Settings.PlayingFieldWidth - this.Settings.MidfieldBarPosition + this.Settings.PlayingFieldXOffset;
-            this.barPos[Bar.Striker] = this.Settings.OpponentStrikerBarPosition + this.Settings.PlayingFieldXOffset;
+            //this.barPos[Bar.Keeper] = this.Settings.PlayingFieldWidth - this.Settings.KeeperBarPosition + this.Settings.PlayingFieldXOffset;
+            //this.barPos[Bar.Defense] = this.Settings.PlayingFieldWidth - this.Settings.DefenseBarPosition + this.Settings.PlayingFieldXOffset;
+            //this.barPos[Bar.Midfield] = this.Settings.PlayingFieldWidth - this.Settings.MidfieldBarPosition + this.Settings.PlayingFieldXOffset;
+            //this.barPos[Bar.Striker] = this.Settings.OpponentStrikerBarPosition + this.Settings.PlayingFieldXOffset;
 
             // Set the bar position as x position for each player on that bar
             foreach (Bar bar in Enum.GetValues(typeof(Bar)))
             {
-                if (bar != Bar.All)
+                if (bar.barSelection != BarType.All)
                 {
                     foreach (Player player in bar.GetPlayers())
                     {
-                        this.playerMinPos[player].XPosition = this.barPos[bar];
-                        this.playerMaxPos[player].XPosition = this.barPos[bar];
+                        //this.playerMinPos[player].XPosition = this.barPos[bar];
+                        //this.playerMaxPos[player].XPosition = this.barPos[bar];
                     }
                 }
             }
             
             // Set the min y positions from the settings
-            this.playerMinPos[Player.Keeper].YPosition = this.Settings.KeeperMin;
-            this.playerMinPos[Player.DefenseOne].YPosition = this.Settings.DefenseOneMin;
-            this.playerMinPos[Player.DefenseTwo].YPosition = this.Settings.DefenseTowMin;
-            this.playerMinPos[Player.MidfieldOne].YPosition = this.Settings.MidfieldOneMin;
-            this.playerMinPos[Player.MidfieldTwo].YPosition = this.Settings.MidfieldTwoMin;
-            this.playerMinPos[Player.MidfieldThree].YPosition = this.Settings.MidfieldThreeMin;
-            this.playerMinPos[Player.MidfieldFour].YPosition = this.Settings.MidfieldFourMin;                        
-            this.playerMinPos[Player.MidfieldFive].YPosition = this.Settings.MidfieldFiveMin;
-            this.playerMinPos[Player.StrikerOne].YPosition = this.Settings.StrikerOneMin;
-            this.playerMinPos[Player.StrikerTwo].YPosition = this.Settings.StrikerTwoMin;
-            this.playerMinPos[Player.StrikerThree].YPosition = this.Settings.StrikerThreeMin;
+            //this.playerMinPos[Player.Keeper].YPosition = this.Settings.KeeperMin;
+            //this.playerMinPos[Player.DefenseOne].YPosition = this.Settings.DefenseOneMin;
+            //this.playerMinPos[Player.DefenseTwo].YPosition = this.Settings.DefenseTowMin;
+            //this.playerMinPos[Player.MidfieldOne].YPosition = this.Settings.MidfieldOneMin;
+            //this.playerMinPos[Player.MidfieldTwo].YPosition = this.Settings.MidfieldTwoMin;
+            //this.playerMinPos[Player.MidfieldThree].YPosition = this.Settings.MidfieldThreeMin;
+            //this.playerMinPos[Player.MidfieldFour].YPosition = this.Settings.MidfieldFourMin;                        
+            //this.playerMinPos[Player.MidfieldFive].YPosition = this.Settings.MidfieldFiveMin;
+            //this.playerMinPos[Player.StrikerOne].YPosition = this.Settings.StrikerOneMin;
+            //this.playerMinPos[Player.StrikerTwo].YPosition = this.Settings.StrikerTwoMin;
+            //this.playerMinPos[Player.StrikerThree].YPosition = this.Settings.StrikerThreeMin;
 
             // Set the max y positions from the settings
-            this.playerMaxPos[Player.Keeper].YPosition = this.Settings.KeeperMax;
-            this.playerMaxPos[Player.DefenseOne].YPosition = this.Settings.DefenseOneMax;
-            this.playerMaxPos[Player.DefenseTwo].YPosition = this.Settings.DefenseTowMax;
-            this.playerMaxPos[Player.MidfieldOne].YPosition = this.Settings.MidfieldOneMax;
-            this.playerMaxPos[Player.MidfieldTwo].YPosition = this.Settings.MidfieldTwoMax;
-            this.playerMaxPos[Player.MidfieldThree].YPosition = this.Settings.MidfieldThreeMax;
-            this.playerMaxPos[Player.MidfieldFour].YPosition = this.Settings.MidfieldFourMax;
-            this.playerMaxPos[Player.MidfieldFive].YPosition = this.Settings.MidfieldFiveMax;
-            this.playerMaxPos[Player.StrikerOne].YPosition = this.Settings.StrikerOneMax;
-            this.playerMaxPos[Player.StrikerTwo].YPosition = this.Settings.StrikerTwoMax;
-            this.playerMaxPos[Player.StrikerThree].YPosition = this.Settings.StrikerThreeMax;
+            //this.playerMaxPos[Player.Keeper].YPosition = this.Settings.KeeperMax;
+            //this.playerMaxPos[Player.DefenseOne].YPosition = this.Settings.DefenseOneMax;
+            //this.playerMaxPos[Player.DefenseTwo].YPosition = this.Settings.DefenseTowMax;
+            //this.playerMaxPos[Player.MidfieldOne].YPosition = this.Settings.MidfieldOneMax;
+            //this.playerMaxPos[Player.MidfieldTwo].YPosition = this.Settings.MidfieldTwoMax;
+            //this.playerMaxPos[Player.MidfieldThree].YPosition = this.Settings.MidfieldThreeMax;
+            //this.playerMaxPos[Player.MidfieldFour].YPosition = this.Settings.MidfieldFourMax;
+            //this.playerMaxPos[Player.MidfieldFive].YPosition = this.Settings.MidfieldFiveMax;
+            //this.playerMaxPos[Player.StrikerOne].YPosition = this.Settings.StrikerOneMax;
+            //this.playerMaxPos[Player.StrikerTwo].YPosition = this.Settings.StrikerTwoMax;
+            //this.playerMaxPos[Player.StrikerThree].YPosition = this.Settings.StrikerThreeMax;
         }
     }
 }

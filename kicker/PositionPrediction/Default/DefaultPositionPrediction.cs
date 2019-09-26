@@ -1,7 +1,8 @@
-namespace PositionPrediction.Default
+ï»¿namespace PositionPrediction.Default
 {
     using System;
     using System.Drawing;
+    using GameProperties;
 
     /// <summary>
     /// Implements the default distance prediction which doesn't predict any values.
@@ -22,6 +23,16 @@ namespace PositionPrediction.Default
         /// Internal last detected position.
         /// </summary>
         private PredictedBallPosition lastDetectedPosition;
+
+        private bool PredictionEnabled { get; set; }
+
+        private int MaximumDifference { get; set; }
+
+        private int FramesToPredict { get; set; }
+
+
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultPositionPrediction"/> class.
@@ -44,18 +55,13 @@ namespace PositionPrediction.Default
         }
 
         /// <summary>
-        /// Gets the user control of the plugin.
-        /// </summary>
-        public UserControl SettingsUserControl { get; private set; }
-
-        /// <summary>
         /// Executes the position prediction
         /// </summary>
         /// <param name="ballPosition">The ball position.</param>
         /// <param name="currentFrame">The current frame.</param>
         public void Run(Position ballPosition, int currentFrame, Rectangle playingarea = new Rectangle())
         {
-            if (this.settings.PredictionEnabled == true)
+            if (this.PredictionEnabled == true)
             {
                 PredictedBallPosition operatingPosition;
                 double multiplier;
@@ -88,11 +94,11 @@ namespace PositionPrediction.Default
                 }
 
                 /* Mit welchen Wert wird gerechnet(Rechenposition)
-                 * Falls der Zeitunterschied vom aktuellen Frame zum Frame der vorletzten(also nicht der aktuellen) erkannten Ballposition größer als die Maximum Difference ist wird mit dem letzen vorhergesagten Wert gerechnet  
+                 * Falls der Zeitunterschied vom aktuellen Frame zum Frame der vorletzten(also nicht der aktuellen) erkannten Ballposition grÃ¶ÃŸer als die Maximum Difference ist wird mit dem letzen vorhergesagten Wert gerechnet  
                  * sonst mit der vorletzten erkannten Ballposition
                  */
 
-                if (currentFrame - this.lastDetectedPosition.FrameNumber > this.settings.MaximumDifference)
+                if (currentFrame - this.lastDetectedPosition.FrameNumber > this.MaximumDifference)
                 {
                     operatingPosition = (PredictedBallPosition)this.predictedPosition.Clone();
                 }
@@ -108,7 +114,7 @@ namespace PositionPrediction.Default
                     operatingPosition.FrameDifference = currentFrame - operatingPosition.FrameNumber;
 
                     // Streckung / Stauchung
-                    multiplier = (double)this.settings.FramesToPredict / operatingPosition.FrameDifference;
+                    multiplier = (double)this.FramesToPredict / operatingPosition.FrameDifference;
 
                     // Berechnung des Richtungsvektors aus Position der Ballerkennung und Rechenposition
                     operatingPosition.Direction.XPosition = ballPosition.XPosition - operatingPosition.XPosition;
@@ -123,7 +129,7 @@ namespace PositionPrediction.Default
                         var predictedY =
                             System.Convert.ToInt32(operatingPosition.Direction.YPosition * multiplier) +
                             ballPosition.YPosition;
-                        //Wenn die vorhergesagte Position den Spielbereich verlassen würde wird diese korrigiert.
+                        //Wenn die vorhergesagte Position den Spielbereich verlassen wÃ¼rde wird diese korrigiert.
                         if (!playingarea.Contains(predictedX, predictedY))
                         {
                             if (predictedY > playingarea.Bottom)
@@ -166,7 +172,7 @@ namespace PositionPrediction.Default
                 else
                 {
                     // Ball wurde nicht erkannt
-                    multiplier = ((double)this.settings.FramesToPredict + currentFrame - operatingPosition.FrameNumber) /
+                    multiplier = ((double)this.FramesToPredict + currentFrame - operatingPosition.FrameNumber) /
                                  operatingPosition.FrameDifference;
                     try
                     {
@@ -177,7 +183,7 @@ namespace PositionPrediction.Default
                         var predictedY =
                             System.Convert.ToInt32(operatingPosition.Direction.YPosition * multiplier) +
                             ballPosition.YPosition;
-                        //Wenn die vorhergesagte Position den Spielbereich verlassen würde wird diese korrigiert.
+                        //Wenn die vorhergesagte Position den Spielbereich verlassen wÃ¼rde wird diese korrigiert.
                         if (!playingarea.Contains(predictedX, predictedY))
                         {
                             if (predictedY > playingarea.Bottom)

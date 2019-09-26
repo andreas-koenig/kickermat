@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{0BD7E732-9874-43AF-BFC5-273EA30356F6}</ProjectGuid>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -38,39 +38,14 @@
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Base\PlayingFieldUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Base\PlayingFieldUserControl.Designer.cs">
-      <DependentUpon>PlayingFieldUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Base\PlayingFieldUserControl.resx">
-      <DependentUpon>PlayingFieldUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Coach\Coach.csproj" />
     <ProjectReference Include="..\Communication\Communication.csproj" />
-    <ProjectReference Include="..\GlobalDataTypes\GlobalDataTypes.csproj" />
-    <ProjectReference Include="..\ObjectDetection\ObjectDetection.csproj" />
-    <ProjectReference Include="..\PluginSystem\PluginSystem.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Game\Game.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\PlayingField.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.13.0" />
   </ItemGroup>
 </Project>

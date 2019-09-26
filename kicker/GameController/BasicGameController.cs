@@ -1,6 +1,8 @@
 ﻿namespace GameController
 {
-    using Game;
+    using GameProperties;
+    using Communication;
+    using Communication.Sets;
 
     /// <summary>
     /// Implementation of basic functionality of a game controller
@@ -31,17 +33,17 @@
         /// Executes the game controller.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        public void Run(Position ballpos)
+        public void Run(Game game)
         {
             //this.ExecutionCount++;
-            if (Game.IsGameRunning)
-                this.Play(ballpos);
+            if (game.IsRunning)
+                this.Play( game);
         }
 
         /// <summary>
         /// Must be overriden by sub classes to implement a playing algorithm.
         /// </summary>
         /// <param name="ballpos">The ball position.</param>
-        protected abstract void Play(Game.Position ballpos);
+        protected abstract void Play( Game game);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Calibration.Base
 {
-    using GlobalDataTypes;
+    using GameProperties;
 
     /// <summary>
     /// This class contains playing field parameters after offset and parallax correction.

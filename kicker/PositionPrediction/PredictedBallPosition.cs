@@ -1,7 +1,7 @@
 ﻿namespace PositionPrediction
 {
     using System;
-    using GlobalDataTypes;
+    using GameProperties;
 
     /// <summary>
     /// the predicted Ballposition
