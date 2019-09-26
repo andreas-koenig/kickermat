@@ -11,6 +11,7 @@ variables:
   #SOURCE_CODE_PATH: '*/*/'
   CI_DEBUG_TRACE: "true"
   CI_REPOSITORY_URL: "git@gitlab.oth-regensburg.de:IM/ems/Kickermat/kickermat_2019.git"
+  GIT_STRATEGY: "none"
 
 # ### Define stage list
 #
@@ -74,15 +75,14 @@ cache:
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
+  - 'ssh git@gitlab.oth-regensburg.de'
+  - 'git clone git@gitlab.oth-regensburg.de:IM/ems/Kickermat/kickermat_2019.git'
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
 build:
   stage: build
   tags:
     - build
-  before_script:
-    - 'ssh git@gitlab.oth-regensburg.de'
-    - 'git clone git@gitlab.oth-regensburg.de:IM/ems/Kickermat/kickermat_2019.git'
   script:
     - 'dotnet build --no-restore'
 
