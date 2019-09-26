@@ -11,8 +11,6 @@
         public Bars opponentBars;
         public PlayingField playingField;
 
-        public CalibrationState State { get; protected set; }
-
         private Boolean isRunning;
         public Boolean IsRunning
         {
