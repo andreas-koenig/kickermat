@@ -12,11 +12,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    <CodeAnalysisRuleSet>../StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

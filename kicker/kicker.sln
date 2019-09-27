@@ -29,6 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessingNew", "Image
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configuration\Configuration.csproj", "{7CEC4273-D715-459F-BE75-13A8DB9A43B7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeAnalysis", "CodeAnalysis", "{F0FE5E8F-70D9-4BF1-BDCB-B60E35ECEB77}"
+	ProjectSection(SolutionItems) = preProject
+		StyleCop.ruleset = StyleCop.ruleset
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
