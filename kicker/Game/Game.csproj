@@ -3,6 +3,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{E7F3AD65-55A9-439E-AFB4-3CB87E4FDC5D}</ProjectGuid>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -22,14 +23,11 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <AssemblyTitle>Game</AssemblyTitle>
-    <Company>Hochschule Regensburg</Company>
     <Product>Kickermat</Product>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Copyright>Copyright © 2010</Copyright>
     <AssemblyVersion>1.2.0.0</AssemblyVersion>
     <FileVersion>1.2.0.0</FileVersion>
     <RuntimeIdentifiers>win7-x64;win10-x64</RuntimeIdentifiers>
-    <CodeAnalysisRuleSet>../StyleCop.ruleset</CodeAnalysisRuleSet>
     <Configurations>Debug;Release;CodeAnalysis</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -56,6 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
