@@ -2,7 +2,6 @@
 {
     using GameProperties;
     using Communication;
-    using Communication.Sets;
 
     /// <summary>
     /// Implementation of basic functionality of a game controller

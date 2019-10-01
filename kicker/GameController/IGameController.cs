@@ -1,5 +1,4 @@
 ﻿using GameProperties;
-using Communication.PlayerControl;
 
 namespace GameController
 {
