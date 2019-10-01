@@ -30,6 +30,7 @@
     <FileVersion>1.2.0.0</FileVersion>
     <RuntimeIdentifiers>win7-x64;win10-x64</RuntimeIdentifiers>
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>

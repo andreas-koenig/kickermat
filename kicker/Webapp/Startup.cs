@@ -14,7 +14,7 @@ using VideoSource.Dalsa;
 using Webapp.Hubs;
 using Webapp.Settings;
 
-namespace webapp
+namespace Webapp
 {
     public class Startup
     {
