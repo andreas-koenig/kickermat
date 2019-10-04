@@ -26,4 +26,19 @@
   <Rules AnalyzerId="Microsoft.Analyzers.NativeCodeAnalysis" RuleNamespace="Microsoft.Rules.Native">
     <Rule Id="C6259" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Analyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Analyzers">
+    <Rule Id="RS1022" Action="None" />
+    <!-- https://github.com/dotnet/roslyn-analyzers/issues/1803 -->
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1305" Action="Warning" />
+    <Rule Id="SA1412" Action="Warning" />
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1609" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="DocumentationAnalyzers" RuleNamespace="DocumentationAnalyzers">
+    <Rule Id="DOC100" Action="Warning" />
+    <Rule Id="DOC101" Action="Warning" />
+    <Rule Id="DOC102" Action="Warning" />
+  </Rules>
 </RuleSet>

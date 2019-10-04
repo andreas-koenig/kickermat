@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configurat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeAnalysis", "CodeAnalysis", "{F0FE5E8F-70D9-4BF1-BDCB-B60E35ECEB77}"
 	ProjectSection(SolutionItems) = preProject
-		StyleCop.ruleset = StyleCop.ruleset
+		Rules.ruleset = Rules.ruleset
 	EndProjectSection
 EndProject
 Global
