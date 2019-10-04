@@ -3,7 +3,6 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{EB49510D-D168-429F-BA8A-255F7CB53B84}</ProjectGuid>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -28,14 +27,24 @@
     <AssemblyVersion>1.2.0.0</AssemblyVersion>
     <FileVersion>1.2.0.0</FileVersion>
     <RuntimeIdentifiers>win7-x64;win10-x64</RuntimeIdentifiers>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;CodeAnalysis</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <RunCodeAnalysis>False</RunCodeAnalysis>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <RunCodeAnalysis>False</RunCodeAnalysis>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|AnyCPU'">
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    <CodeAnalysisRuleSet>$(SolutionDir)StyleCop.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>True</RunCodeAnalysis>
+  </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
