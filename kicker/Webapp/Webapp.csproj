@@ -7,7 +7,7 @@
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
     <StartupObject>webapp.Program</StartupObject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Configurations>Debug;Release;CodeAnalysis</Configurations>
+    <Configurations>Debug;Release;Integration</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -22,10 +22,10 @@
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Integration|AnyCPU'">
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>True</RunCodeAnalysis>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
 
   <ItemGroup>

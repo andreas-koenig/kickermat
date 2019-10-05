@@ -20,7 +20,8 @@ namespace Communication.KickerControl
 
         private UdpConnection _udpConnection;
 
-        public KickerControl(ILogger<KickerControl> logger,
+        public KickerControl(
+            ILogger<KickerControl> logger,
             ILogger<TcpConnection> tcpLogger,
             ILogger<UdpConnection> udpLogger,
             IWritableOptions<KickerControlSettings> kickerControlOptions,

@@ -30,7 +30,7 @@
     <FileVersion>1.2.0.0</FileVersion>
     <RuntimeIdentifiers>win7-x64;win10-x64</RuntimeIdentifiers>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
-    <Configurations>Debug;Release;CodeAnalysis</Configurations>
+    <Configurations>Debug;Release;Integration</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <RunCodeAnalysis>False</RunCodeAnalysis>
@@ -42,7 +42,7 @@
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Integration|AnyCPU'">
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>True</RunCodeAnalysis>
