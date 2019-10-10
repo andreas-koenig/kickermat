@@ -7,6 +7,7 @@ using ImageProcessing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VideoSource;
+using Webapp.Services;
 
 namespace Webapp.Controllers
 {
@@ -15,12 +16,15 @@ namespace Webapp.Controllers
     public class ParametersController : ControllerBase
     {
         private readonly ILogger<ParametersController> _logger;
+        private readonly ParameterService _parameterService;
         private readonly IServiceProvider _services;
 
         public ParametersController(
-            ILogger<ParametersController> logger, IServiceProvider services)
+            ILogger<ParametersController> logger, ParameterService paramService,
+            IServiceProvider services)
         {
             _logger = logger;
+            _parameterService = paramService;
             _services = services;
         }
 
@@ -36,7 +40,7 @@ namespace Webapp.Controllers
             IWritableOptions options;
             try
             {
-                options = GetWritableOptions(kickerComponent);
+                options = _parameterService.KickerOptions[kickerComponent.GetType()];
             }
             catch (Exception ex)
             {
@@ -72,7 +76,7 @@ namespace Webapp.Controllers
             IWritableOptions options;
             try
             {
-                options = GetWritableOptions(kickerComponent);
+                options = _parameterService.KickerOptions[kickerComponent.GetType()];
             }
             catch (Exception ex)
             {
@@ -138,25 +142,6 @@ namespace Webapp.Controllers
                 default:
                     return null;
             }
-        }
-
-        private IWritableOptions GetWritableOptions(object component)
-        {
-            var attrs = component.GetType()
-                .GetCustomAttributes(typeof(ConfigurableOptionsAttribute), false);
-
-            if (attrs?.Length == 0)
-            {
-                var msg = string.Format(
-                    "Component {0} has no configurable options", component.GetType().FullName);
-                throw new Exception(msg);
-            }
-
-            var optionsType = ((ConfigurableOptionsAttribute)attrs[0]).OptionsType;
-            var writableOptionsType = typeof(IWritableOptions<>)
-                .MakeGenericType(new Type[] { optionsType });
-
-            return (IWritableOptions)_services.GetService(writableOptionsType);
         }
     }
 }

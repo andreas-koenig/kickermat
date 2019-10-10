@@ -35,7 +35,6 @@ namespace VideoSource.Dalsa
         }
     }
 
-    [ConfigurableOptions(typeof(DalsaSettings))]
     public class DalsaCamera : BaseVideoSource
     {
         // native DLL bindings

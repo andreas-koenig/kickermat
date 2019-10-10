@@ -5,7 +5,7 @@ using Configuration;
 
 namespace ImageProcessing
 {
-    [KickerOptions(new string[] { "ImageProcessing" })]
+    [KickerOptions(new string[] { "ImageProcessing" }, typeof(ImageProcessor))]
     public class ImageProcessorSettings
     {
         [NumberParameter("Blur Size", "The size of the WxH kernel for the gaussian blur", 3, 3, 9, 1)]

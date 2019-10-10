@@ -8,7 +8,6 @@ using VideoSource;
 
 namespace ImageProcessing
 {
-    [ConfigurableOptions(typeof(ImageProcessorSettings))]
     public class ImageProcessor : BaseVideoProcessor, IImageProcessor
     {
         private readonly IWritableOptions<ImageProcessorSettings> _options;

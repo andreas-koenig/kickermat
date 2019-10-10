@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoSource.Dalsa;
 using Webapp.Hubs;
+using Webapp.Services;
 using Webapp.Settings;
 
 namespace Webapp
@@ -40,7 +41,8 @@ namespace Webapp
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            // Kicker services
+            // Services
+            services.AddSingleton<ParameterService>();
             services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, KickerControl>();
             services.ConfigureKicker<DalsaSettings, CalibrationSettings,
                 ImageProcessorSettings, KickerControlSettings>(Configuration);
