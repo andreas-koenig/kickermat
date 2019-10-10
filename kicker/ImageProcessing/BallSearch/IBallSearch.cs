@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using VideoSource;
 
-namespace ImageProcessing.BallSearch
+namespace ImageProcessing
 {
     public interface IBallSearch : IVideoSource, IVideoConsumer
     {

@@ -22,7 +22,7 @@ namespace Webapp.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            //_barSearch.Start();
+            // _barSearch.Start();
             return Ok();
         }
     }

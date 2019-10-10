@@ -11,18 +11,24 @@ namespace ImageProcessing.Calibration
 {
     internal enum CalibrationState
     {
-        Off, Running, Finished
+        Off,
+        Running,
+        Finished,
     }
 
     public class CameraCalibration : BaseVideoProcessor, ICameraCalibration
     {
         // Constants
-        private const int BOARD_WIDTH = 9;
-        private const int BOARD_HEIGHT = 6;
-        private const int SQUARE_SIZE = 50;
-        private const int AMOUNT_FRAMES = 25;
-        private const int WAIT_FRAMES = 30;
-        private static Size _boardSize = new Size(BOARD_WIDTH, BOARD_HEIGHT);
+        private const int BoardWidth = 9;
+        private const int BoardHeight = 6;
+        private const int SquareSize = 50;
+        private const int AmountFrames = 25;
+        private const int WaitFrames = 30;
+        private static Size _boardSize = new Size(BoardWidth, BoardHeight);
+
+        // Logging & Options
+        private readonly ILogger<ICameraCalibration> _logger;
+        private readonly IWritableOptions<CalibrationSettings> _calibrationOptions;
 
         // Calibration
         private readonly object _objectLock;
@@ -34,16 +40,13 @@ namespace ImageProcessing.Calibration
         private RingBuffer<Mat> _frames;
         private uint _frameCount = 0;
 
-        // Logging & Options
-        private readonly ILogger<ICameraCalibration> _logger;
-        private readonly IWritableOptions<CalibrationSettings> _calibrationOptions;
-
         public CameraCalibration(IVideoSource camera, ILogger<ICameraCalibration> logger,
-            IWritableOptions<CalibrationSettings> calibrationOptions) : base(camera, logger)
+            IWritableOptions<CalibrationSettings> calibrationOptions)
+            : base(camera, logger)
         {
             _objectLock = new object();
             _chessboardCorners = new List<Point2f[]>();
-            _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
+            _frames = new RingBuffer<Mat>(AmountFrames);
             _calibrationOptions = calibrationOptions;
             _logger = logger;
         }
@@ -78,7 +81,7 @@ namespace ImageProcessing.Calibration
                 _state = CalibrationState.Off;
                 _calibrationDone = null;
                 _chessboardRecognized = null;
-                _frames = new RingBuffer<Mat>(AMOUNT_FRAMES);
+                _frames = new RingBuffer<Mat>(AmountFrames);
                 StopAcquisition();
             }
         }
@@ -88,13 +91,14 @@ namespace ImageProcessing.Calibration
             if (_state == CalibrationState.Running)
             {
                 _frames.Add(frame.Mat);
-                if (!_isFindingCorners && _frameCount % WAIT_FRAMES == 0)
+                if (!_isFindingCorners && _frameCount % WaitFrames == 0)
                 {
                     _ = FindChessboardCornersAsync(_frames.Take());
                 }
+
                 _frameCount += 1;
 
-                if (_chessboardCorners.Count == AMOUNT_FRAMES)
+                if (_chessboardCorners.Count == AmountFrames)
                 {
                     lock (_objectLock)
                     {
@@ -110,7 +114,6 @@ namespace ImageProcessing.Calibration
 
                 return frame;
             }
-
             else if (_state == CalibrationState.Finished)
             {
                 var cameraMatrix = _calibrationOptions.Value.GetCameraMatrixAsMat();
@@ -157,19 +160,19 @@ namespace ImageProcessing.Calibration
                     }
                 }
 
-                int progress = (int)((double)_chessboardCorners.Count / AMOUNT_FRAMES * 100);
+                int progress = (int)((double)_chessboardCorners.Count / AmountFrames * 100);
                 _isFindingCorners = false;
                 _chessboardRecognized?.Invoke(progress);
             });
         }
 
-        private IEnumerable<Point3f> calcBoardCornerPositions()
+        private static IEnumerable<Point3f> CalcBoardCornerPositions()
         {
-            for (int i = 0; i < BOARD_HEIGHT; ++i)
+            for (int i = 0; i < BoardHeight; ++i)
             {
-                for (int j = 0; j < BOARD_WIDTH; ++j)
+                for (int j = 0; j < BoardWidth; ++j)
                 {
-                    yield return new Point3f((float)j * SQUARE_SIZE, (float)i * SQUARE_SIZE, 0);
+                    yield return new Point3f((float)j * SquareSize, (float)i * SquareSize, 0);
                 }
             }
         }
@@ -181,7 +184,7 @@ namespace ImageProcessing.Calibration
             distCoeffs = new MatOfDouble();
             var objectPoints = new List<Mat>();
             var imagePoints = new List<Mat>();
-            var cornerPositions = calcBoardCornerPositions();
+            var cornerPositions = CalcBoardCornerPositions();
 
             for (int i = 0; i < _chessboardCorners.Count; i++)
             {
@@ -193,8 +196,8 @@ namespace ImageProcessing.Calibration
                 size, cameraMatrix, distCoeffs, out var rotationVectors, out var translationVectors,
                 CalibrationFlags.FixK4 | CalibrationFlags.FixK5);
 
-            _logger.LogInformation("Calculated Distortion Parameters with reprojection error: {}",
-                error);
+            _logger.LogInformation(
+                "Calculated Distortion Parameters with reprojection error: {}", error);
         }
 
         private void DoCalibration(Mat frame)

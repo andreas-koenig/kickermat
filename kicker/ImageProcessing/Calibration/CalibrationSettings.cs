@@ -10,19 +10,20 @@ namespace ImageProcessing.Calibration
     public class CalibrationSettings
     {
         public double[][] CameraMatrix { get; set; }
+
         public double[] DistortionCoefficients { get; set; }
 
         public Mat GetCameraMatrixAsMat()
         {
             return MatOfDouble.FromArray(ToMultiDimArray(CameraMatrix));
         }
-        
+
         public Mat GetDistCoeffsAsMat()
         {
             return MatOfDouble.FromArray(DistortionCoefficients);
         }
 
-        private double[,] ToMultiDimArray(double[][] matrix)
+        private static double[,] ToMultiDimArray(double[][] matrix)
         {
             double[,] multi = new double[matrix.Length, matrix[0].Length];
             for (int i = 0; i < matrix.Length; i++)

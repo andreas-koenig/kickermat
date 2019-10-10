@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Configuration;
-using Microsoft.Extensions.Logging;
 using Communication.NetworkLayer.Packets.Udp;
 using Communication.NetworkLayer.Packets.Udp.Enums;
 using Communication.NetworkLayer.Settings;
+using Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Communication.NetworkLayer
 {
@@ -22,36 +22,55 @@ namespace Communication.NetworkLayer
         /// </summary>
         private IPEndPoint _endPoint;
 
-        /// <summary>
-        /// Sequence number for positioning, is incremented for each transmission 
-        /// to get information about the order of the received packets at the gateway.
-        /// </summary>
-        public uint _SequenceNumber { get; private set; }
+        public UdpConnection(
+            ILogger<UdpConnection> logger,
+            IWritableOptions<UdpConnectionSettings> udpConnectionOptions)
+        {
+            _logger = logger;
+            _udpConnectionOptions = udpConnectionOptions;
+            SequenceNumber = 0;
+            _endPoint.Address = _udpConnectionOptions.Value.IpAddress;
+            _endPoint.Port = _udpConnectionOptions.Value.Port;
+        }
 
         /// <summary>
-        /// UDP-Datagram
+        /// Gets the sequence number for positioning, is incremented for each transmission
+        /// to get information about the order of the received packets at the gateway.
+        /// </summary>
+        public uint SequenceNumber { get; private set; }
+
+        /// <summary>
+        /// UDP-Datagram.
         /// </summary>
         public byte[] Datagram { get; private set; }
 
-        public UdpConnection(ILogger<UdpConnection> logger, IWritableOptions<UdpConnectionSettings> udpConnectionOptions)
+        public ControllerStatus InitStatus
         {
-            _logger = logger;
-            _udpConnectionOptions =  udpConnectionOptions;
-            _SequenceNumber = 0;
-            _endPoint.Address = _udpConnectionOptions.Value.IpAddress;
-            _endPoint.Port = _udpConnectionOptions.Value.Port;
+            get
+            {
+                // TODO: Exception Handling Concept
+                Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0,
+                    Datagram, 0, 2);
+                ZeroFillDatagramFromOffset(2);
+
+                Send(Datagram);
+
+                byte[] retVal = Read();
+                return (ControllerStatus)BitConverter.ToUInt16(retVal, 2);
+            }
         }
 
         /// <summary>
         /// Sends a <see cref="NetworkObject"/> to the server.
         /// </summary>
         /// <param name="networkObject">The <see cref="NetworkObject "/> to send.</param>
+        /// <returns>The number of bytes sent.</returns>
         public int Send(NetworkObject networkObject)
         {
-            networkObject.SequenceNumber = this._SequenceNumber;
+            networkObject.SequenceNumber = SequenceNumber;
             byte[] datagram = networkObject.Serialize();
-            var ret = this.Send(datagram);
-            this._SequenceNumber++;
+            var ret = Send(datagram);
+            SequenceNumber++;
             return ret;
         }
 
@@ -59,9 +78,10 @@ namespace Communication.NetworkLayer
         /// Sends a byte[] to the server.
         /// </summary>
         /// <param name="datagram">The datagram to send.</param>
+        /// <returns>The number of bytes sent.</returns>
         public int Send(byte[] datagram)
         {
-            return this.Send(datagram, datagram.Length);
+            return Send(datagram, datagram.Length);
         }
 
         /// <summary>
@@ -70,35 +90,21 @@ namespace Communication.NetworkLayer
         /// <returns>The byte[] read from the stream.</returns>
         internal byte[] Read()
         {
-            //Workaround for readTimeout because of threading issues.
+            // Workaround for readTimeout because of threading issues.
             Stopwatch sw = new Stopwatch();
             sw.Restart();
             while (sw.ElapsedMilliseconds < 1000)
             {
-                if (this.Client.Available > 0)
+                if (Client.Available > 0)
                 {
-                    //byte[] datagram = this.udpClient.ReceiveAsync().Result.Buffer;
-                    byte[] datagram = this.Receive(ref this._endPoint);
+                    // byte[] datagram = this.udpClient.ReceiveAsync().Result.Buffer;
+                    byte[] datagram = Receive(ref _endPoint);
 
                     return datagram;
                 }
             }
-            return new byte[] { };
-        }
 
-        public ControllerStatus InitStatus
-        {
-            get
-            {
-                // TODO: Exception Handling Concept
-                Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.CalibrationStatus), 0, Datagram, 0, 2);
-                ZeroFillDatagramFromOffset(2);
-                
-                this.Send(Datagram);
-        
-                byte[] retVal = this.Read();
-                return (ControllerStatus)BitConverter.ToUInt16(retVal, 2);
-            }
+            return Array.Empty<byte>();
         }
 
         /// <summary>

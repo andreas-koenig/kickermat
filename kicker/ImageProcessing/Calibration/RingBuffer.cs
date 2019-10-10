@@ -5,20 +5,20 @@ using System.Text;
 
 namespace ImageProcessing.Calibration
 {
-    class RingBuffer<T> : IEnumerable<T>
+    internal class RingBuffer<T> : IEnumerable<T>
     {
         private object _objectLock = new object();
         private T[] _buffer;
         private int _readPos = 0;
         private int _writePos = 0;
 
-        public int Capacity { get; }
-
         public RingBuffer(int capacity)
         {
             _buffer = new T[capacity];
             Capacity = capacity;
         }
+
+        public int Capacity { get; }
 
         public void Add(T element)
         {

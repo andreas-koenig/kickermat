@@ -16,46 +16,46 @@
         /// <summary>
         /// Bit of the keeper position.
         /// </summary>
-        KeeperPosition = (1 << 0),
-        
+        KeeperPosition = 1 << 0,
+
         /// <summary>
         /// Bit of the keeper angle.
         /// </summary>
-        KeeperAngle = (1 << 1),
-        
+        KeeperAngle = 1 << 1,
+
         /// <summary>
         /// Bit of the defense position.
         /// </summary>
-        DefensePosition = (1 << 2),
-        
+        DefensePosition = 1 << 2,
+
         /// <summary>
         /// Bit of the defense angle.
         /// </summary>
-        DefenseAngle = (1 << 3),
-        
+        DefenseAngle = 1 << 3,
+
         /// <summary>
         /// Bit of the midfield position.
         /// </summary>
-        MidfieldPosition = (1 << 4),
-        
+        MidfieldPosition = 1 << 4,
+
         /// <summary>
         /// Bit of the midfield angle.
         /// </summary>
-        MidfieldAngle = (1 << 5),
-        
+        MidfieldAngle = 1 << 5,
+
         /// <summary>
         /// Bit of the striker position.
         /// </summary>
-        StrikerPosition = (1 << 6),
-        
+        StrikerPosition = 1 << 6,
+
         /// <summary>
         /// Bit of the striker angle.
         /// </summary>
-        StrikerAngle = (1 << 7),
+        StrikerAngle = 1 << 7,
 
         /// <summary>
         /// All bits are selected.
         /// </summary>
-        All = 0xFF
+        All = 0xFF,
     }
 }

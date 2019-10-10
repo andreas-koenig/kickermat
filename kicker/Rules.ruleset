@@ -9,7 +9,7 @@
     <Rule Id="CA1056" Action="Warning" />
     <Rule Id="CA1062" Action="Warning" />
     <Rule Id="CA1300" Action="Warning" />
-    <Rule Id="CA1303" Action="Warning" />
+    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1709" Action="Warning" />
     <Rule Id="CA1715" Action="Warning" />
     <Rule Id="CA1801" Action="Warning" />
@@ -31,14 +31,39 @@
     <!-- https://github.com/dotnet/roslyn-analyzers/issues/1803 -->
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1305" Action="Warning" />
-    <Rule Id="SA1412" Action="Warning" />
-    <Rule Id="SA1600" Action="None" />
-    <Rule Id="SA1609" Action="Warning" />
+    <Rule Id="SA1200" Action="Hidden" />
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SX1101" Action="Error" />
+    <Rule Id="SX1309" Action="Error" />
+    <Rule Id="SA1600" Action="Hidden" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1649" Action="Hidden" />
+    <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1117" Action="Hidden" />
+    <Rule Id="SA1513" Action="Error" />
+    <Rule Id="SA1503" Action="Error" />
+    <Rule Id="SA1502" Action="Info" />
+    <Rule Id="SA1500" Action="Error" />
+    <Rule Id="SA1310" Action="Error" />
+    <Rule Id="SA1307" Action="Error" />
+    <Rule Id="SA1623" Action="Hidden" />
+    <Rule Id="SA1510" Action="Error" />
+    <Rule Id="SA1507" Action="Error" />
+    <Rule Id="SA1505" Action="Error" />
+    <Rule Id="SA1300" Action="Error" />
+    <Rule Id="SA1136" Action="Error" />
+    <Rule Id="SA1602" Action="Hidden" />
+    <Rule Id="SA1508" Action="Error" />
+    <Rule Id="SA1509" Action="Error" />
   </Rules>
   <Rules AnalyzerId="DocumentationAnalyzers" RuleNamespace="DocumentationAnalyzers">
     <Rule Id="DOC100" Action="Warning" />
     <Rule Id="DOC101" Action="Warning" />
     <Rule Id="DOC102" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <Rule Id="CA1303" Action="None" />
+    <Rule Id="CA1305" Action="None" />
+    <Rule Id="CA1307" Action="None" />
   </Rules>
 </RuleSet>

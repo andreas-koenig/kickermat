@@ -18,7 +18,7 @@ namespace Webapp.Hubs
 
         public CalibrationHub(ICameraCalibration calibration)
         {
-            this._cameraCalibration = calibration;
+            _cameraCalibration = calibration;
         }
 
         public ChannelReader<int> StartCalibration(CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace Webapp.Hubs
                 Context.ConnectionAborted.ThrowIfCancellationRequested();
                 await _channel.Writer.WriteAsync(progress);
             }
-            catch (Exception)
+            catch (OperationCanceledException)
             {
                 _cameraCalibration.AbortCalibration();
                 _channel.Writer.TryComplete();

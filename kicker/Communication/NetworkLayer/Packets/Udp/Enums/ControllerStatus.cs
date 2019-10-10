@@ -1,7 +1,7 @@
 ﻿namespace Communication.NetworkLayer.Packets.Udp.Enums
 {
     /// <summary>
-    /// Initialisationstates of the controller 
+    /// Initialisationstates of the controller
     /// </summary>
     public enum ControllerStatus
     {
@@ -9,7 +9,7 @@
         /// Initialisation finished
         /// </summary>
         Ok = 0x00,
-        
+
         /// <summary>
         /// Initialisation running
         /// </summary>
@@ -18,6 +18,6 @@
         /// <summary>
         /// Fehler bei der Initialisierung aufgetreten
         /// </summary>
-        Error = 0x02
+        Error = 0x02,
     }
 }

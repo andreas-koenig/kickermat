@@ -4,16 +4,11 @@ using System.Text;
 
 namespace Configuration
 {
-    public class NumberParameterAttribute : KickerParameterAttribute
+    public class NumberParameterAttribute : BaseParameterAttribute
     {
-        public new double Value { get => (double)base.Value; set => base.Value = value; }
-        public new double DefaultValue { get; protected set; }
-        public double Min { get; protected set; }
-        public double Max { get; protected set; }
-        public double Step { get; protected set; }
-
         public NumberParameterAttribute(string name, string description, double defaultValue,
-            double min, double max, double step) : base(name, description)
+            double min, double max, double step)
+            : base(name, description)
         {
             DefaultValue = defaultValue;
             Min = min;
@@ -21,5 +16,15 @@ namespace Configuration
             Step = step;
             Value = default;
         }
+
+        public new double Value { get => (double)base.Value; set => base.Value = value; }
+
+        public new double DefaultValue { get; protected set; }
+
+        public double Min { get; protected set; }
+
+        public double Max { get; protected set; }
+
+        public double Step { get; protected set; }
     }
 }

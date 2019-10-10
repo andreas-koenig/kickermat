@@ -14,7 +14,8 @@ namespace ImageProcessing
         private readonly IWritableOptions<ImageProcessorSettings> _options;
 
         public ImageProcessor(IVideoSource camera, ILogger<ImageProcessor> logger,
-            IWritableOptions<ImageProcessorSettings> options) : base(camera, logger)
+            IWritableOptions<ImageProcessorSettings> options)
+            : base(camera, logger)
         {
             _options = options;
         }
@@ -44,8 +45,7 @@ namespace ImageProcessing
                 foreach (var rect in rects)
                 {
                     threshImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
-                };
-
+                }
 
                 return new Frame(threshImg);
             }
@@ -63,6 +63,7 @@ namespace ImageProcessing
             {
                 rects[i] = Cv2.BoundingRect(contours[i]);
             }
+
             return rects;
         }
     }

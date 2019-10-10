@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace webapp
+namespace Webapp
 {
     public class Program
     {
@@ -21,9 +21,8 @@ namespace webapp
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                    .UseUrls(Startup.URL)
+                    .UseUrls(Startup.Url)
                     .UseStartup<Startup>();
         }
-
     }
 }

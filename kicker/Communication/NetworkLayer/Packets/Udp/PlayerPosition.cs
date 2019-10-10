@@ -1,276 +1,127 @@
-﻿namespace Communication.NetworkLayer.Packets.Udp
-{
-    using System;
-    using Enums;
-    using GameProperties;
+﻿using System;
+using Communication.NetworkLayer.Packets.Udp.Enums;
+using GameProperties;
 
+namespace Communication.NetworkLayer.Packets.Udp
+{
     /// <summary>
     /// The networkobject containing the new player positions.
     /// </summary>
     public class NetworkObject
     {
-        public UdpPacketType PacketType { get; set; }
-
         /// <summary>
-        /// Length of the UDP-datagram
+        /// Length of the UDP-datagram.
         /// </summary>
-        public const int datagramLength = 24;
-
-        /// <summary>
-        /// UDP-Datagram
-        /// </summary>
-   
-        public byte[] Datagram { get; private set; }
+        public const int DatagramLength = 24;
 
         /// <summary>
         /// The current keeper position.
         /// </summary>
-        private ushort keeperPosition;
+        private ushort _keeperPosition;
 
         /// <summary>
         /// The current keeper angle.
         /// </summary>
-        private short keeperAngle;
+        private short _keeperAngle;
 
         /// <summary>
         /// The current defense position.
         /// </summary>
-        private ushort defensePosition;
+        private ushort _defensePosition;
 
         /// <summary>
         /// The current defense angle.
         /// </summary>
-        private short defenseAngle;
+        private short _defenseAngle;
 
         /// <summary>
         /// The current midfield position.
         /// </summary>
-        private ushort midfieldPosition;
+        private ushort _midfieldPosition;
 
         /// <summary>
         /// The current midfield angle.
         /// </summary>
-        private short midfieldAngle;
+        private short _midfieldAngle;
 
         /// <summary>
         /// The current striker position.
         /// </summary>
-        private ushort strikerPosition;
+        private ushort _strikerPosition;
 
         /// <summary>
         /// The current striker angle.
         /// </summary>
-        private short strikerAngle;
+        private short _strikerAngle;
 
-        /// <summary>
-        /// Gets or sets the keeper position.
-        /// </summary>
-        public ushort KeeperPosition
-        {
-            get
-            {
-                return this.keeperPosition;
-            }
-
-            set
-            {
-                this.keeperPosition = value;
-                this.OptionsValidFor |= PositionBits.KeeperPosition;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the keeper angel.
-        /// </summary>
-        public short KeeperAngle
-        {
-            get
-            {
-                return this.keeperAngle;
-            }
-
-            set
-            {
-                this.keeperAngle = value;
-                this.OptionsValidFor |= PositionBits.KeeperAngle;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the defense position.
-        /// </summary>
-        public ushort DefensePosition
-        {
-            get
-            {
-                return this.defensePosition;
-            }
-
-            set
-            {
-                this.defensePosition = value;
-                this.OptionsValidFor |= PositionBits.DefensePosition;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the keeper angel.
-        /// </summary>
-        public short DefenseAngle
-        {
-            get
-            {
-                return this.defenseAngle;
-            }
-
-            set
-            {
-                this.defenseAngle = value;
-                this.OptionsValidFor |= PositionBits.DefenseAngle;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the midfield position.
-        /// </summary>
-        public ushort MidfieldPosition
-        {
-            get
-            {
-                return this.midfieldPosition;
-            }
-
-            set
-            {
-                this.midfieldPosition = value;
-                this.OptionsValidFor |= PositionBits.MidfieldPosition;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the keeper angel.
-        /// </summary>
-        public short MidfieldAngle
-        {
-            get
-            {
-                return this.midfieldAngle;
-            }
-
-            set
-            {
-                this.midfieldAngle = value;
-                this.OptionsValidFor |= PositionBits.MidfieldAngle;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the striker position.
-        /// </summary>
-        public ushort StrikerPosition
-        {
-            get
-            {
-                return this.strikerPosition;
-            }
-
-            set
-            {
-                this.strikerPosition = value;
-                this.OptionsValidFor |= PositionBits.StrikerPosition;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the keeper angle.
-        /// </summary>
-        public short StrikerAngle
-        {
-            get
-            {
-                return this.strikerAngle;
-            }
-
-            set
-            {
-                this.strikerAngle = value;
-                this.OptionsValidFor |= PositionBits.StrikerAngle;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the sequence number.
-        /// </summary>
-        public uint SequenceNumber { get; set; }
-
-        //TODO: Use a Factory for similar Network-Objects ?
-
+        // TODO: Use a Factory for similar Network-Objects ?
         public NetworkObject(Bar bar, ushort position, short angle, bool waitForResponse = false)
         {
-            Datagram = new byte[datagramLength];
+            Datagram = new byte[DatagramLength];
 
-            switch (bar.barSelection)
+            switch (bar?.BarSelection)
             {
-                //TODO: Is "All" needed? Otherwise use PlayerType instead of Bar?
+                // TODO: Is "All" needed? Otherwise use PlayerType instead of Bar?
                 case BarType.All:
 
-                    this.KeeperPosition = position;
-                    this.DefensePosition = position;
-                    this.MidfieldPosition = position;
-                    this.StrikerPosition = position;
+                    KeeperPosition = position;
+                    DefensePosition = position;
+                    MidfieldPosition = position;
+                    StrikerPosition = position;
 
-                    this.KeeperAngle = angle;
-                    this.DefenseAngle = angle;
-                    this.MidfieldAngle = angle;
-                    this.StrikerAngle = angle;
+                    KeeperAngle = angle;
+                    DefenseAngle = angle;
+                    MidfieldAngle = angle;
+                    StrikerAngle = angle;
 
                     if (waitForResponse)
                     {
-                        this.ReplyRequested = PositionBits.All;
+                        ReplyRequested = PositionBits.All;
                     }
 
                     break;
                 case BarType.Keeper:
 
-                    this.KeeperPosition = position;
-                    this.KeeperAngle = angle;
+                    KeeperPosition = position;
+                    KeeperAngle = angle;
 
                     if (waitForResponse)
                     {
-                        this.ReplyRequested |= PositionBits.KeeperPosition;
-                        this.ReplyRequested |= PositionBits.KeeperAngle;
+                        ReplyRequested |= PositionBits.KeeperPosition;
+                        ReplyRequested |= PositionBits.KeeperAngle;
                     }
 
                     break;
                 case BarType.Defense:
-                    this.DefensePosition = position;
-                    this.DefenseAngle = angle;
+                    DefensePosition = position;
+                    DefenseAngle = angle;
 
                     if (waitForResponse)
                     {
-                        this.ReplyRequested |= PositionBits.DefensePosition;
-                        this.ReplyRequested |= PositionBits.DefenseAngle;
+                        ReplyRequested |= PositionBits.DefensePosition;
+                        ReplyRequested |= PositionBits.DefenseAngle;
                     }
 
                     break;
                 case BarType.Midfield:
-                    this.MidfieldPosition = position;
-                    this.MidfieldAngle = angle;
+                    MidfieldPosition = position;
+                    MidfieldAngle = angle;
 
                     if (waitForResponse)
                     {
-                        this.ReplyRequested |= PositionBits.MidfieldPosition;
-                        this.ReplyRequested |= PositionBits.MidfieldAngle;
+                        ReplyRequested |= PositionBits.MidfieldPosition;
+                        ReplyRequested |= PositionBits.MidfieldAngle;
                     }
 
                     break;
                 case BarType.Striker:
-                    this.StrikerPosition = position;
+                    StrikerPosition = position;
 
                     if (waitForResponse)
                     {
-                        this.ReplyRequested |= PositionBits.StrikerPosition;
+                        ReplyRequested |= PositionBits.StrikerPosition;
                     }
+
                     break;
                 default:
                     throw new ArgumentException("playerBar");
@@ -279,33 +130,33 @@
 
         public NetworkObject(Bar bar, UdpPacketType packetType)
         {
-            Datagram = new byte[datagramLength];
+            Datagram = new byte[DatagramLength];
 
-            //TODO: Move all bars ?! if-clause from legacy-code
-            if (!bar.barSelection.Equals(BarType.All))
+            // TODO: Move all bars ?! if-clause from legacy-code
+            if (!bar.BarSelection.Equals(BarType.All))
             {
                 if (packetType.Equals(UdpPacketType.SetMinPosition))
                 {
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)packetType), 0, Datagram, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, Datagram, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.BarSelection), 0, Datagram, 2, 2);
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)0), 0, Datagram, 4, 2);
-                    this.ZeroFillDatagramFromOffset(6);
-                } 
+                    ZeroFillDatagramFromOffset(6);
+                }
                 else if (packetType.Equals(UdpPacketType.SetMaxPosition))
                 {
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)packetType), 0, Datagram, 0, 2);
-                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, Datagram, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.BarSelection), 0, Datagram, 2, 2);
                     Buffer.BlockCopy(BitConverter.GetBytes((ushort)255), 0, Datagram, 4, 2);
-                    this.ZeroFillDatagramFromOffset(6);
+                    ZeroFillDatagramFromOffset(6);
                 }
             }
         }
 
         public NetworkObject(Bar bar, ushort barLengthInPixel)
         {
-            Datagram = new byte[datagramLength];
+            Datagram = new byte[DatagramLength];
 
-            ushort udpId = (ushort)bar.barSelection;
+            ushort udpId = (ushort)bar.BarSelection;
             Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetBarLengthInPixel), 0, Datagram, 0, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(udpId), 0, Datagram, 2, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(barLengthInPixel), 0, Datagram, 4, 2);
@@ -315,7 +166,7 @@
         public NetworkObject(Bar bar, int nullAngle)
         {
             Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetNullAngle), 0, Datagram, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.barSelection), 0, Datagram, 2, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes((ushort)bar.BarSelection), 0, Datagram, 2, 2);
             Buffer.BlockCopy(BitConverter.GetBytes((short)nullAngle), 0, Datagram, 0, 4);
             ZeroFillDatagramFromOffset(6);
         }
@@ -326,6 +177,154 @@
             // NOTE: Integral values have default 0
             OptionsValidFor = PositionBits.All;
             ReplyRequested = PositionBits.None;
+        }
+
+        /// <summary>
+        /// Gets or sets the sequence number.
+        /// </summary>
+        public uint SequenceNumber { get; set; }
+
+        public UdpPacketType PacketType { get; set; }
+
+        /// <summary>
+        /// Gets the UDP-datagram.
+        /// </summary>
+        public byte[] Datagram { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the keeper position.
+        /// </summary>
+        public ushort KeeperPosition
+        {
+            get
+            {
+                return _keeperPosition;
+            }
+
+            set
+            {
+                _keeperPosition = value;
+                OptionsValidFor |= PositionBits.KeeperPosition;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the keeper angel.
+        /// </summary>
+        public short KeeperAngle
+        {
+            get
+            {
+                return _keeperAngle;
+            }
+
+            set
+            {
+                _keeperAngle = value;
+                OptionsValidFor |= PositionBits.KeeperAngle;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the defense position.
+        /// </summary>
+        public ushort DefensePosition
+        {
+            get
+            {
+                return _defensePosition;
+            }
+
+            set
+            {
+                _defensePosition = value;
+                OptionsValidFor |= PositionBits.DefensePosition;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the keeper angel.
+        /// </summary>
+        public short DefenseAngle
+        {
+            get
+            {
+                return _defenseAngle;
+            }
+
+            set
+            {
+                _defenseAngle = value;
+                OptionsValidFor |= PositionBits.DefenseAngle;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the midfield position.
+        /// </summary>
+        public ushort MidfieldPosition
+        {
+            get
+            {
+                return _midfieldPosition;
+            }
+
+            set
+            {
+                _midfieldPosition = value;
+                OptionsValidFor |= PositionBits.MidfieldPosition;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the keeper angel.
+        /// </summary>
+        public short MidfieldAngle
+        {
+            get
+            {
+                return _midfieldAngle;
+            }
+
+            set
+            {
+                _midfieldAngle = value;
+                OptionsValidFor |= PositionBits.MidfieldAngle;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the striker position.
+        /// </summary>
+        public ushort StrikerPosition
+        {
+            get
+            {
+                return _strikerPosition;
+            }
+
+            set
+            {
+                _strikerPosition = value;
+                OptionsValidFor |= PositionBits.StrikerPosition;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the keeper angle.
+        /// </summary>
+        public short StrikerAngle
+        {
+            get
+            {
+                return _strikerAngle;
+            }
+
+            set
+            {
+                _strikerAngle = value;
+                OptionsValidFor |= PositionBits.StrikerAngle;
+            }
         }
 
         /// <summary>
@@ -343,7 +342,7 @@
         /// </summary>
         public void ClearReplyRequested()
         {
-            this.ReplyRequested = 0x00;
+            ReplyRequested = 0x00;
         }
 
         /// <summary>
@@ -355,17 +354,17 @@
             byte[] datagram = new byte[24];
 
             Buffer.BlockCopy(BitConverter.GetBytes((ushort)UdpPacketType.SetPositionsAndAngles), 0, datagram, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.keeperPosition), 0, datagram, 2, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.keeperAngle), 0, datagram, 4, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.defensePosition), 0, datagram, 6, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.defenseAngle), 0, datagram, 8, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.midfieldPosition), 0, datagram, 10, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.midfieldAngle), 0, datagram, 12, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.strikerPosition), 0, datagram, 14, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.strikerAngle), 0, datagram, 16, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(this.SequenceNumber), 0, datagram, 18, 4);
-            datagram[22] = (byte)this.OptionsValidFor;
-            datagram[23] = (byte)this.ReplyRequested;
+            Buffer.BlockCopy(BitConverter.GetBytes(_keeperPosition), 0, datagram, 2, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_keeperAngle), 0, datagram, 4, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_defensePosition), 0, datagram, 6, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_defenseAngle), 0, datagram, 8, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_midfieldPosition), 0, datagram, 10, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_midfieldAngle), 0, datagram, 12, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_strikerPosition), 0, datagram, 14, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(_strikerAngle), 0, datagram, 16, 2);
+            Buffer.BlockCopy(BitConverter.GetBytes(SequenceNumber), 0, datagram, 18, 4);
+            datagram[22] = (byte)OptionsValidFor;
+            datagram[23] = (byte)ReplyRequested;
 
             return datagram;
         }

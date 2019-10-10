@@ -8,22 +8,23 @@ namespace VideoSource
 {
     public abstract class BaseVideoSource : IVideoSource
     {
-        protected ILogger Logger { get; private set; }
         private readonly object _objectLock = new object();
         private int _consumerCount = 0;
-        protected bool IsAcquisitionRunning { get; set; } = false;
-
-        private EventHandler<FrameArrivedArgs> FrameArrived { get; set; }
-        private EventHandler<CameraEventArgs> CameraConnected { get; set; }
-        private EventHandler<CameraEventArgs> CameraDisconnected { get; set; }
 
         public BaseVideoSource(ILogger logger)
         {
             Logger = logger;
         }
 
-        protected virtual void StartAcquisition() { }
-        protected virtual void StopAcquisition() { }
+        protected bool IsAcquisitionRunning { get; set; } = false;
+
+        protected ILogger Logger { get; private set; }
+
+        private EventHandler<FrameArrivedArgs> FrameArrived { get; set; }
+
+        private EventHandler<CameraEventArgs> CameraConnected { get; set; }
+
+        private EventHandler<CameraEventArgs> CameraDisconnected { get; set; }
 
         public void StartAcquisition(IVideoConsumer consumer)
         {
@@ -47,6 +48,7 @@ namespace VideoSource
                     return;
                 }
             }
+
             try
             {
                 StartAcquisition();
@@ -63,10 +65,10 @@ namespace VideoSource
                     CameraDisconnected -= consumer.OnCameraDisconnected;
                     _consumerCount -= 1;
 
-                    Logger.LogError(ex, "Failed to start camera acquisition");
+                    var msg = "Failed to start camera acquitision";
+                    Logger.LogError(ex, msg);
+                    throw new VideoSourceException(msg, ex);
                 }
-
-                throw ex;
             }
         }
 
@@ -81,7 +83,7 @@ namespace VideoSource
                 var newConsumerCount = FrameArrived?.GetInvocationList().Length;
 
                 // Return if consumer was not registered
-                if (oldConsumerCount == null && newConsumerCount == null ||
+                if ((oldConsumerCount == null && newConsumerCount == null) ||
                     (oldConsumerCount != null &&
                      newConsumerCount != null &&
                      oldConsumerCount <= newConsumerCount))
@@ -103,6 +105,10 @@ namespace VideoSource
             }
         }
 
+        protected virtual void StartAcquisition() { }
+
+        protected virtual void StopAcquisition() { }
+
         protected void HandleFrameArrived(FrameArrivedArgs args)
         {
             FrameArrived?.Invoke(this, args);
@@ -110,14 +116,16 @@ namespace VideoSource
 
         protected void HandleConnect(CameraEventArgs args)
         {
-            Logger.LogInformation("Camera ({}) connected. Notifying {} consumers",
+            Logger.LogInformation(
+                "Camera ({}) connected. Notifying {} consumers",
                 args.CameraName, _consumerCount);
             CameraConnected?.Invoke(this, args);
         }
 
         protected void HandleDisconnect(CameraEventArgs args)
         {
-            Logger.LogInformation("Camera ({}) disconnected. Notifying {} consumers",
+            Logger.LogInformation(
+                "Camera ({}) disconnected. Notifying {} consumers",
                 args.CameraName, _consumerCount);
             CameraDisconnected?.Invoke(this, args);
         }

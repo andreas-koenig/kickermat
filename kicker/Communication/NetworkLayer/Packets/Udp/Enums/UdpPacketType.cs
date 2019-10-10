@@ -10,7 +10,6 @@
         /// </summary>
         SetPositionsAndAngles = 0x00,
 
-
         /// <summary>
         /// Udp packet contains informations about the current positions.
         /// </summary>
@@ -39,6 +38,6 @@
         /// <summary>
         /// Udp packet contains informations about the null angle.
         /// </summary>
-        SetNullAngle = 0x06
+        SetNullAngle = 0x06,
     }
 }

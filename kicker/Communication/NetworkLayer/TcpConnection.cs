@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using Configuration;
 using Communication.NetworkLayer.Packets.Tcp.Enum;
 using Communication.NetworkLayer.Settings;
+using Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Communication.NetworkLayer
@@ -20,16 +19,17 @@ namespace Communication.NetworkLayer
         /// <summary>
         /// Endpoint which is used to recieve data from the gateway.
         /// </summary>
-        private IPEndPoint endPoint;
+        private IPEndPoint _endPoint;
+
         /// <summary>
         /// Thread for waiting for incomming messages from the gateway.
         /// </summary>
-        private Thread tcpReader;
+        private Thread _tcpReader;
 
         /// <summary>
-        /// Delegate for handling <see cref="TcpNetworkPacketReceived"/>
+        /// Delegate for handling <see cref="TcpNetworkPacketReceived"/>.
         /// </summary>
-        /// <param name="packetType">See <see cref="TcpPacketType"/></param>
+        /// <param name="packetType">See <see cref="TcpPacketType"/>.</param>
         /// <param name="data">The received data.</param>
         internal delegate void TcpNetworkPacketReceivedEventHandler(TcpPacketType packetType, object data);
 
@@ -42,21 +42,22 @@ namespace Communication.NetworkLayer
         {
             _logger = logger;
             _tcpConnectionOptions = tcpConnectionOptions;
-            this.NoDelay = _tcpConnectionOptions.Value.NoDelay;
-            this.ReceiveBufferSize = _tcpConnectionOptions.Value.ReceiveBufferSize;
-            this.SendBufferSize = _tcpConnectionOptions.Value.SendBufferSize;
-            this.endPoint = new IPEndPoint(_tcpConnectionOptions.Value.IpAddress, _tcpConnectionOptions.Value.TcpPort);
+            NoDelay = _tcpConnectionOptions.Value.NoDelay;
+            ReceiveBufferSize = _tcpConnectionOptions.Value.ReceiveBufferSize;
+            SendBufferSize = _tcpConnectionOptions.Value.SendBufferSize;
+            _endPoint = new IPEndPoint(_tcpConnectionOptions.Value.IpAddress, _tcpConnectionOptions.Value.TcpPort);
         }
 
         public void Connect()
         {
             try
             {
-                this.Connect(endPoint.Address, endPoint.Port);
+                Connect(_endPoint.Address, _endPoint.Port);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //TODO: Exception Handling Concept;
+                // TODO: Exception Handling Concept;
+                _logger.LogError("Failed to connect to gateway via TCP", ex);
             }
         }
 
@@ -64,12 +65,13 @@ namespace Communication.NetworkLayer
         {
             try
             {
-                this.tcpReader.Abort();
-                this.GetStream().Close();
+                _tcpReader.Abort();
+                GetStream().Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //TODO: Exception Handling Concept;
+                // TODO: Exception Handling Concept;
+                _logger.LogError("Failed to close connection to gateway (TCP)", ex);
             }
         }
 
@@ -77,14 +79,15 @@ namespace Communication.NetworkLayer
         {
             try
             {
-                this.tcpReader = new Thread(this.ReadWriteTcpStream);
-                this.tcpReader.Name = "TCP Connection";
-                this.tcpReader.IsBackground = true;
-                this.tcpReader.Start();
+                _tcpReader = new Thread(ReadWriteTcpStream);
+                _tcpReader.Name = "TCP Connection";
+                _tcpReader.IsBackground = true;
+                _tcpReader.Start();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //TODO: Exception Handling Concept;
+                // TODO: Exception Handling Concept;
+                _logger.LogError("Failed to start communication with gateway via TPC", ex);
             }
         }
 
@@ -93,20 +96,20 @@ namespace Communication.NetworkLayer
         /// </summary>
         private void ReadWriteTcpStream()
         {
-            using (NetworkStream networkStream = this.GetStream())
+            using (NetworkStream networkStream = GetStream())
             {
                 try
                 {
-                    //TODO: Establish Connection?
+                    // TODO: Establish Connection?
                     byte[] buffer = new byte[6];
-                    Buffer.BlockCopy(((IPEndPoint)this.Client.LocalEndPoint).Address.GetAddressBytes(), 0, buffer, 0, 4);
-                    Buffer.BlockCopy(BitConverter.GetBytes(((IPEndPoint)this.Client.LocalEndPoint).Port), 0, buffer, 4, 2);
+                    Buffer.BlockCopy(((IPEndPoint)Client.LocalEndPoint).Address.GetAddressBytes(), 0, buffer, 0, 4);
+                    Buffer.BlockCopy(BitConverter.GetBytes(((IPEndPoint)Client.LocalEndPoint).Port), 0, buffer, 4, 2);
                     networkStream.Write(buffer, 0, buffer.Length);
 
                     byte[] header = new byte[4];
-                    while (this.Connected)
+                    while (Connected)
                     {
-                        //TODO: Errorhandling, conversion might fail
+                        // TODO: Errorhandling, conversion might fail
                         // Read header
                         networkStream.Read(header, 0, 4);
                         TcpPacketType packetType = (TcpPacketType)BitConverter.ToUInt16(header, 0);
@@ -130,15 +133,16 @@ namespace Communication.NetworkLayer
                                 break;
                         }
 
-                        if (this.TcpNetworkPacketReceived != null)
+                        if (TcpNetworkPacketReceived != null)
                         {
-                            this.TcpNetworkPacketReceived(packetType, dataObj);
+                            TcpNetworkPacketReceived(packetType, dataObj);
                         }
                     }
                 }
-                catch (IOException e)
+                catch (IOException ex)
                 {
-                    //TODO: Exception Handling Concept;
+                    // TODO: Exception Handling Concept;
+                    _logger.LogError("Failed to read from or write to TCP connection", ex);
                 }
             }
         }

@@ -9,17 +9,17 @@ namespace VideoSource.Dalsa
     public class DalsaSettings
     {
         // Parameter constants
-        internal const int BRIGHTNESS_DEFAULT = 100;
-        internal const int BRIGHTNESS_MIN = 0;
-        internal const int BRIGHTNESS_MAX = 255;
-        internal const double EXPOSURE_TIME_DEFAULT = 15000.0;
-        internal const double EXPOSURE_TIME_MIN = 1.0;
-        internal const double EXPOSURE_TIME_MAX = 33246.0;
+        internal const int BrightnessDefault = 100;
+        internal const int BrightnessMin = 0;
+        internal const int BrightnessMax = 255;
+        internal const double ExposureTimeDefault = 15000.0;
+        internal const double ExposureTimeMin = 1.0;
+        internal const double ExposureTimeMax = 33246.0;
 
         public string CameraName { get; set; }
 
         [NumberParameter("Brightness", "The brightness of the camera",
-            BRIGHTNESS_DEFAULT, BRIGHTNESS_MIN, BRIGHTNESS_MAX, 1)]
+            BrightnessDefault, BrightnessMin, BrightnessMax, 1)]
         public double Brightness { get; set; }
     }
 }

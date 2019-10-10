@@ -10,8 +10,8 @@ namespace VideoSource
         /// <summary>
         /// This event handler is called each time the video source generates a new frame.
         /// </summary>
-        /// <param name="sender">The IVideoSource generating the frames</param>
-        /// <param name="args"></param>
+        /// <param name="sender">The IVideoSource generating the frames.</param>
+        /// <param name="args">The arguments for this event.</param>
         void OnFrameArrived(object sender, FrameArrivedArgs args);
 
         /// <summary>
@@ -20,23 +20,21 @@ namespace VideoSource
         /// intended use of this callback is to inform the user about the resulting freeze of the
         /// video stream.
         /// </summary>
-        /// <param name="sender">The IVideoSource generating the frames</param>
-        /// <param name="args"></param>
+        /// <param name="sender">The IVideoSource generating the frames.</param>
+        /// <param name="args">The arguments for this event.</param>
         void OnCameraDisconnected(object sender, CameraEventArgs args);
 
         /// <summary>
         /// This event handler is called when the camera is reconnected after a disconnect. The
         /// frame acquisition automatically continues.
         /// </summary>
-        /// <param name="sender">The IVideoSource generating the frames</param>
-        /// <param name="args"></param>
+        /// <param name="sender">The IVideoSource generating the frames.</param>
+        /// <param name="args">The arguments for this event.</param>
         void OnCameraConnected(object sender, CameraEventArgs args);
     }
 
     public class FrameArrivedArgs
     {
-        public IFrame Frame { get; set; }
-
         public FrameArrivedArgs(Mat mat)
         {
             Frame = new Frame(mat);
@@ -46,15 +44,17 @@ namespace VideoSource
         {
             Frame = frame;
         }
+
+        public IFrame Frame { get; set; }
     }
 
     public class CameraEventArgs
     {
-        public string CameraName { get; }
-
         public CameraEventArgs(string cameraName)
         {
             CameraName = cameraName;
         }
+
+        public string CameraName { get; }
     }
 }

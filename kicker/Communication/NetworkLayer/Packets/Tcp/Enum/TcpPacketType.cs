@@ -1,9 +1,9 @@
-namespace Communication.NetworkLayer.Packets.Tcp.Enum
+﻿namespace Communication.NetworkLayer.Packets.Tcp.Enum
 {
     /// <summary>
     /// The type of the received TCP packet.
     /// </summary>
-    public enum TcpPacketType : ushort 
+    public enum TcpPacketType : ushort
     {
         /// <summary>
         /// TCP packet with logging informations.

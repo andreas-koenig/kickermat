@@ -20,7 +20,7 @@ namespace Webapp.Controllers
     {
         Camera = 0,
         Calibration = 1,
-        ImageProcessing = 2
+        ImageProcessing = 2,
     }
 
     [Route("api/[controller]")]
@@ -30,14 +30,14 @@ namespace Webapp.Controllers
         private const string BOUNDARY = "camera_image";
         private readonly byte[] _imgHeaderBytes;
         private readonly Task _doneTask;
-        private IVideoSource _videoSource;
+
+        private readonly ILogger<CameraController> _logger;
 
         // VideoSources
         private readonly IVideoSource _camera;
         private readonly ICameraCalibration _calibration;
         private readonly IImageProcessor _imageProcessor;
-
-        private readonly ILogger<CameraController> _logger;
+        private IVideoSource _videoSource;
 
         public CameraController(
             IVideoSource videoSource,
@@ -49,7 +49,7 @@ namespace Webapp.Controllers
             _calibration = calibration;
             _imageProcessor = imageProcessor;
 
-            var imgHeader = String.Format("\r\n--{0}\r\nContent-Type: image/jpeg\r\n\r\n", BOUNDARY);
+            var imgHeader = string.Format("\r\n--{0}\r\nContent-Type: image/jpeg\r\n\r\n", BOUNDARY);
             _imgHeaderBytes = Encoding.ASCII.GetBytes(imgHeader);
 
             _logger = logger;
@@ -82,22 +82,6 @@ namespace Webapp.Controllers
         }
 
         [NonAction]
-        private IVideoSource GetVideoSource(VideoSource source)
-        {
-            switch (source)
-            {
-                case VideoSource.Camera:
-                    return _camera;
-                case VideoSource.Calibration:
-                    return (IVideoSource)_calibration;
-                case VideoSource.ImageProcessing:
-                    return (IVideoSource)_imageProcessor;
-                default:
-                    return _camera; // TODO: Add ImageProcessing
-            }
-        }
-
-        [NonAction]
         public void OnCameraConnected(object sender, CameraEventArgs args)
         {
             // Not needed
@@ -112,11 +96,27 @@ namespace Webapp.Controllers
         [NonAction]
         public void OnFrameArrived(object sender, FrameArrivedArgs args)
         {
-            var imgBytes = args.Frame.Mat.ImEncode(".jpg",
-                new ImageEncodingParam(ImwriteFlags.JpegQuality, 50));
+            var imgBytes = args.Frame.Mat.ImEncode(
+                ".jpg", new ImageEncodingParam(ImwriteFlags.JpegQuality, 50));
 
             Response.Body.Write(_imgHeaderBytes);
             Response.Body.Write(imgBytes, 0, imgBytes.Length);
+        }
+
+        [NonAction]
+        private IVideoSource GetVideoSource(VideoSource source)
+        {
+            switch (source)
+            {
+                case VideoSource.Camera:
+                    return _camera;
+                case VideoSource.Calibration:
+                    return (IVideoSource)_calibration;
+                case VideoSource.ImageProcessing:
+                    return (IVideoSource)_imageProcessor;
+                default:
+                    return _camera; // TODO: Add ImageProcessing
+            }
         }
 
         [NonAction]

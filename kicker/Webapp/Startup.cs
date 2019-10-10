@@ -1,7 +1,5 @@
-﻿using System.IO;
-using Configuration;
+﻿using Communication.KickerControl;
 using ImageProcessing;
-using ImageProcessing.BallSearch;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VideoSource;
 using VideoSource.Dalsa;
 using Webapp.Hubs;
 using Webapp.Settings;
@@ -18,10 +15,10 @@ namespace Webapp
 {
     public class Startup
     {
-        internal const string URL = "http://localhost:5001/";
-        internal const string PROXY_URL = "http://localhost:4200/";
-        private static readonly string[] CORS_URLS = { URL, PROXY_URL };
-        private const string SIGNALR_BASE_PATH = "/signalr";
+        internal const string Url = "http://localhost:5001/";
+        internal const string ProxyUrl = "http://localhost:4200/";
+        private const string SignalrBasePath = "/signalr";
+        private static readonly string[] CorsUrls = { Url, ProxyUrl };
 
         public Startup(IConfiguration configuration)
         {
@@ -55,7 +52,7 @@ namespace Webapp
             // Configure SignalR hubs
             app.UseSignalR(route =>
             {
-                route.MapHub<CalibrationHub>(SIGNALR_BASE_PATH + "/calibration");
+                route.MapHub<CalibrationHub>(SignalrBasePath + "/calibration");
             });
 
             app.UseStaticFiles();
@@ -92,7 +89,7 @@ namespace Webapp
                 policy.AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins(CORS_URLS);
+                    .WithOrigins(CorsUrls);
             });
         }
     }

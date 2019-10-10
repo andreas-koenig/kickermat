@@ -10,12 +10,11 @@ namespace VideoSource
     {
         private readonly IVideoSource _videoSource;
 
-        public BaseVideoProcessor(IVideoSource videoSource, ILogger logger) : base(logger)
+        public BaseVideoProcessor(IVideoSource videoSource, ILogger logger)
+            : base(logger)
         {
             _videoSource = videoSource;
         }
-
-        protected abstract IFrame ProcessFrame(IFrame frame);
 
         public void OnCameraConnected(object sender, CameraEventArgs args)
         {
@@ -32,6 +31,8 @@ namespace VideoSource
             args.Frame = ProcessFrame(args.Frame);
             HandleFrameArrived(args);
         }
+
+        protected abstract IFrame ProcessFrame(IFrame frame);
 
         protected override void StartAcquisition()
         {

@@ -6,6 +6,7 @@ using VideoSource;
 namespace ImageProcessing.Calibration
 {
     public delegate void CalibrationDoneDelegate();
+
     public delegate void ChessboardRecognizedDelegate(int progress);
 
     public interface ICameraCalibration : IVideoProcessor
@@ -17,10 +18,11 @@ namespace ImageProcessing.Calibration
         /// </summary>
         /// <param name="calibrationDone">A delegate that gets called when the calibration
         /// terminates.</param>
+        /// <param name="chessboardRecognized">A delegate that gets called when the chessboard
+        /// was recognized.</param>
         void StartCalibration(
             CalibrationDoneDelegate calibrationDone,
-            ChessboardRecognizedDelegate ChessboardRecognized
-        );
+            ChessboardRecognizedDelegate chessboardRecognized);
 
         void AbortCalibration();
     }

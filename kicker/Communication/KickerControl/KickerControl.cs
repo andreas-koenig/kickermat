@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Communication.KickerControl
 {
-    class KickerControl : IKickerControl
+    public class KickerControl : IKickerControl
     {
         private ILogger<IKickerControl> _logger;
 
-        private IWritableOptions<KickerControlSettings> kickerControlOptions;
+        private IWritableOptions<KickerControlSettings> _kickerControlOptions;
 
         private TcpConnection _tcpConnection;
 

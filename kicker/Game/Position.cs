@@ -5,33 +5,38 @@ namespace GameProperties
 {
     public class Position
     {
-        private Position position;
-
-        public int XPosition { get; set; }
-        public int YPosition { get; set; }
-        public bool Valid { get; set; }
-        public bool InPlayingArea { get; set; }
-        public Rectangle BoundingBox { get; }
+        private Position _position;
 
         public Position()
         {
-            this.XPosition = 0;
-            this.YPosition = 0;
-            this.Valid = true;
-            this.InPlayingArea = true;
+            XPosition = 0;
+            YPosition = 0;
+            Valid = true;
+            InPlayingArea = true;
         }
+
         public Position(int xpos, int ypos, bool valid, bool inPlayingArea)
         {
-            this.XPosition = xpos;
-            this.YPosition = ypos;
-            this.Valid = valid;
-            this.InPlayingArea = inPlayingArea;
+            XPosition = xpos;
+            YPosition = ypos;
+            Valid = valid;
+            InPlayingArea = inPlayingArea;
         }
 
         public Position(Position position)
         {
-            this.position = position;
+            _position = position;
         }
+
+        public int XPosition { get; set; }
+
+        public int YPosition { get; set; }
+
+        public bool Valid { get; set; }
+
+        public bool InPlayingArea { get; set; }
+
+        public Rectangle BoundingBox { get; }
 
         public Position Clone()
         {

@@ -5,7 +5,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
-    <StartupObject>webapp.Program</StartupObject>
+    <StartupObject>Webapp.Program</StartupObject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Configurations>Debug;Release;Integration</Configurations>
   </PropertyGroup>
@@ -14,18 +14,21 @@
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Integration|AnyCPU'">
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>False</RunCodeAnalysis>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -63,6 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>

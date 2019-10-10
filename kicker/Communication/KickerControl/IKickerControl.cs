@@ -5,7 +5,7 @@
     using GameProperties;
 
     /// <summary>
-    /// Interface to control the kicker with bars and players
+    /// Interface to control the kicker with bars and players.
     /// </summary>
     public interface IKickerControl
     {

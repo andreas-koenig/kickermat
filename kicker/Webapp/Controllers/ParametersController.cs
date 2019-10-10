@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VideoSource;
 
-namespace webapp.Controllers
+namespace Webapp.Controllers
 {
     [Route("api/parameters")]
     [ApiController]
@@ -17,20 +17,20 @@ namespace webapp.Controllers
         private readonly ILogger<ParametersController> _logger;
         private readonly IServiceProvider _services;
 
-        public ParametersController(ILogger<ParametersController> logger,
-            IServiceProvider services)
+        public ParametersController(
+            ILogger<ParametersController> logger, IServiceProvider services)
         {
             _logger = logger;
             _services = services;
         }
 
         [HttpGet("{component}")]
-        public ActionResult<IEnumerable<KickerParameterAttribute>> GetParameters(string component)
+        public ActionResult<IEnumerable<BaseParameterAttribute>> GetParameters(string component)
         {
             var kickerComponent = GetComponent(component);
             if (kickerComponent == null)
             {
-                return NotFound(String.Format("The component {0} was not found", component));
+                return NotFound(string.Format("The component {0} was not found", component));
             }
 
             IWritableOptions options;
@@ -45,11 +45,11 @@ namespace webapp.Controllers
             }
 
             var optionsProperties = options.ValueObject.GetType().GetProperties();
-            var attrs = new List<KickerParameterAttribute>();
+            var attrs = new List<BaseParameterAttribute>();
             foreach (var opt in optionsProperties)
             {
-                var kickerAttrs = opt.GetCustomAttributes(typeof(KickerParameterAttribute), true);
-                foreach (var attr in kickerAttrs as KickerParameterAttribute[])
+                var kickerAttrs = opt.GetCustomAttributes(typeof(BaseParameterAttribute), true);
+                foreach (var attr in kickerAttrs as BaseParameterAttribute[])
                 {
                     attr.Value = opt.GetValue(options.ValueObject);
                     attrs.Add(attr);
@@ -66,7 +66,7 @@ namespace webapp.Controllers
             var kickerComponent = GetComponent(component);
             if (kickerComponent == null)
             {
-                return NotFound(String.Format("The component {0} was not found", component));
+                return NotFound(string.Format("The component {0} was not found", component));
             }
 
             IWritableOptions options;
@@ -84,10 +84,10 @@ namespace webapp.Controllers
 
             foreach (var prop in optionsProperties)
             {
-                var kickerAttrs = prop.GetCustomAttributes(typeof(KickerParameterAttribute), true);
+                var kickerAttrs = prop.GetCustomAttributes(typeof(BaseParameterAttribute), true);
                 foreach (var attr in kickerAttrs)
                 {
-                    if (!((KickerParameterAttribute)attr).Name.Equals(parameter))
+                    if (!((BaseParameterAttribute)attr).Name.Equals(parameter))
                     {
                         continue;
                     }
@@ -101,8 +101,8 @@ namespace webapp.Controllers
                     }
                     catch (Exception ex)
                     {
-                        var msg = string.Format("Failed to set parameter {0} to {1}",
-                            parameter, value);
+                        var msg = string.Format(
+                            "Failed to set parameter {0} to {1}", parameter, value);
                         _logger.LogError(msg + ": {0}", ex);
                         return BadRequest(msg);
                     }
@@ -111,7 +111,7 @@ namespace webapp.Controllers
                 }
             }
 
-            return NotFound(String.Format("The parameter {0} was not found", parameter));
+            return NotFound(string.Format("The parameter {0} was not found", parameter));
         }
 
         [HttpPut("{component}/parameters/save")]
@@ -120,11 +120,10 @@ namespace webapp.Controllers
             var kickerComponent = GetComponent(component);
             if (kickerComponent == null)
             {
-                return NotFound(String.Format("The component {0} was not found", component));
+                return NotFound(string.Format("The component {0} was not found", component));
             }
 
             // TODO: Implement save parameters functionality
-
             return Ok();
         }
 
@@ -148,8 +147,8 @@ namespace webapp.Controllers
 
             if (attrs?.Length == 0)
             {
-                var msg = string.Format("Component {0} has no configurable options",
-                    component.GetType().FullName);
+                var msg = string.Format(
+                    "Component {0} has no configurable options", component.GetType().FullName);
                 throw new Exception(msg);
             }
 

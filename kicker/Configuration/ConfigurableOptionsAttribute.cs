@@ -7,11 +7,11 @@ namespace Configuration
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ConfigurableOptionsAttribute : Attribute
     {
-        public Type OptionsType { get; protected set; }
-
         public ConfigurableOptionsAttribute(Type optionsType)
         {
             OptionsType = optionsType;
         }
+
+        public Type OptionsType { get; protected set; }
     }
 }
