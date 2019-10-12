@@ -7,7 +7,7 @@ namespace Configuration
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public class KickerOptionsAttribute : Attribute
     {
-        public KickerOptionsAttribute(string[] path, Type kickerComponentImpl)
+        public KickerOptionsAttribute(Type kickerComponentImpl, params string[] path)
         {
             Path = path;
             KickerComponentType = kickerComponentImpl;

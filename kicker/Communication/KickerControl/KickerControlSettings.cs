@@ -2,7 +2,7 @@
 
 namespace Communication.KickerControl
 {
-    [KickerOptions(new string[] { "KickerControl" }, typeof(KickerControl))]
+    [KickerOptions(typeof(KickerControl), "KickerControl")]
     public class KickerControlSettings
     {
     }
