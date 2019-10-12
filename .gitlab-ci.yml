@@ -76,7 +76,7 @@ build:
     - build
   script:
     #- '.$VS2019TOOLS/VsDevCmd.bat'              # Open Developer cmd prompt to prepare build environment
-    - '$MSBUILD_DIR/msbuild.exe $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - '.$MSBUILD_DIR/msbuild.exe $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
     - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
