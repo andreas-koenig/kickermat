@@ -4,6 +4,7 @@ variables:
   # 2) Name of directory used for keeping restored dependencies.
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: 'kicker'
+  GIT_STRATEGY: none
 
 stages:
   - build
@@ -64,6 +65,10 @@ cache:
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 #before_script:
 #  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+
+before_script:
+  - 'cd $CI_PROJECT_DIR'
+  - 'git pull origin master'
 
 build:
   stage: build
