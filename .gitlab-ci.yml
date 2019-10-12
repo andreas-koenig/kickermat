@@ -4,6 +4,7 @@ variables:
   # 2) Name of directory used for keeping restored dependencies.
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: 'kicker'
+  GIT_STRATEGY: none
 
 stages:
   - build
@@ -65,13 +66,18 @@ cache:
 #before_script:
 #  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
+before_script:
+  - '.$VS2019TOOL/VsDevCmd.bat'              # Open Developer cmd prompt to prepare build environment
+  - 'cd $CI_PROJECT_DIR'
+  - 'git pull origin master'
+
 build:
   stage: build
   tags:
     - build
   script:
-    - 'msbuild $SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
-    - 'cd $SOURCE_CODE_PATH/Webapp/ClientApp'
+    - 'msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
     - 'cd ../../..'
@@ -81,4 +87,7 @@ tests:
   tags:
     - test
   script:
-    - 'dotnet test --no-restore'
+    - 'dotnet test --no-restore --logger "junit;LogFilePath=TestResult.xml"'
+  artifacts:
+    reports:
+      junit: $CI_PROJECT_DIR/$SOURCE_CODE_PATH/UnitTesting/TestResult.xml
