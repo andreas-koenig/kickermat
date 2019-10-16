@@ -1,4 +1,4 @@
-﻿namespace Communication.NetworkLayer.Packets.Tcp.Enum
+﻿namespace Communication.NetworkConnections.Packets.Tcp.Enum
 {
     /// <summary>
     /// The type of the received TCP packet.

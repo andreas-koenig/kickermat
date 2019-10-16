@@ -1,4 +1,4 @@
-﻿namespace Communication.NetworkLayer.Packets.Udp.Enums
+﻿namespace Communication.NetworkConnections.Packets.Udp.Enums
 {
     /// <summary>
     /// They type of the received udp packet.

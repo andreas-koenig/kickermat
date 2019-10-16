@@ -4,12 +4,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using Communication.NetworkLayer.Packets.Tcp.Enum;
-using Communication.NetworkLayer.Settings;
+using Communication.NetworkConnections.Packets.Tcp.Enum;
+using Communication.NetworkConnections.Settings;
 using Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Communication.NetworkLayer
+namespace Communication.NetworkConnections
 {
     public class TcpConnection : TcpClient
     {

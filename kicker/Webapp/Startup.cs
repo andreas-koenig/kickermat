@@ -43,9 +43,9 @@ namespace Webapp
 
             // Services
             services.AddSingleton<ParameterService>();
-            services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, KickerControl>();
+            services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.KickerControl.Communication>();
             services.ConfigureKicker<DalsaSettings, CalibrationSettings,
-                ImageProcessorSettings, KickerControlSettings>(Configuration);
+                ImageProcessorSettings, CommunicationSettings>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

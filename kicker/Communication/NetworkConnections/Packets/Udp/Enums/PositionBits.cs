@@ -1,4 +1,4 @@
-﻿namespace Communication.NetworkLayer.Packets.Udp.Enums
+﻿namespace Communication.NetworkConnections.Packets.Udp.Enums
 {
     using System;
 

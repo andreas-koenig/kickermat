@@ -1,8 +1,8 @@
 ﻿using System;
-using Communication.NetworkLayer.Packets.Udp.Enums;
+using Communication.NetworkConnections.Packets.Udp.Enums;
 using GameProperties;
 
-namespace Communication.NetworkLayer.Packets.Udp
+namespace Communication.NetworkConnections.Packets.Udp
 {
     /// <summary>
     /// The networkobject containing the new player positions.

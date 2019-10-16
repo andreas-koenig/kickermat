@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Communication.NetworkLayer.Packets.Udp;
-using Communication.NetworkLayer.Packets.Udp.Enums;
-using Communication.NetworkLayer.Settings;
+using Communication.NetworkConnections.Packets.Udp;
+using Communication.NetworkConnections.Packets.Udp.Enums;
+using Communication.NetworkConnections.Settings;
 using Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Communication.NetworkLayer
+namespace Communication.NetworkConnections
 {
     public class UdpConnection : UdpClient
     {
