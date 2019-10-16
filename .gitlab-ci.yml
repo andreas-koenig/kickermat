@@ -4,7 +4,7 @@ variables:
   # 2) Name of directory used for keeping restored dependencies.
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: 'kicker'
-  GIT_STRATEGY: none
+  #GIT_STRATEGY: none
 
 stages:
   - build
