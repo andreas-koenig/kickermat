@@ -67,7 +67,6 @@ cache:
 #  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
 before_script:
-  - '.$VS2019TOOL/VsDevCmd.bat'              # Open Developer cmd prompt to prepare build environment
   - 'cd $CI_PROJECT_DIR'
   - 'git pull origin master'
 
@@ -76,17 +75,17 @@ build:
   tags:
     - build
   script:
-    - 'msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
     - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
-    - 'cd ../../..'
+    - '.$MSBUILD_DIR/msbuild.exe $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
 tests:
   stage: test
   tags:
     - test
   script:
+    - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH'
     - 'dotnet test --no-restore --logger "junit;LogFilePath=TestResult.xml"'
   artifacts:
     reports:

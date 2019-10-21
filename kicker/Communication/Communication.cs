@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Communication.NetworkLayer;
-using Communication.NetworkLayer.Packets.Udp;
-using Communication.NetworkLayer.Settings;
+using Communication.NetworkConnections;
+using Communication.NetworkConnections.Packets.Udp;
+using Communication.NetworkConnections.Settings;
 using Configuration;
 using GameProperties;
 using Microsoft.Extensions.Logging;
 
-namespace Communication.KickerControl
+namespace Communication
 {
-    public class KickerControl : IKickerControl
+    public class Communication : ICommunication
     {
-        private ILogger<IKickerControl> _logger;
+        private ILogger<ICommunication> _logger;
 
-        private IWritableOptions<KickerControlSettings> _kickerControlOptions;
+        private IWritableOptions<CommunicationSettings> _kickerControlOptions;
 
         private TcpConnection _tcpConnection;
 
         private UdpConnection _udpConnection;
 
-        public KickerControl(
-            ILogger<KickerControl> logger,
+        public Communication(
+            ILogger<Communication> logger,
             ILogger<TcpConnection> tcpLogger,
             ILogger<UdpConnection> udpLogger,
-            IWritableOptions<KickerControlSettings> kickerControlOptions,
+            IWritableOptions<CommunicationSettings> kickerControlOptions,
             IWritableOptions<TcpConnectionSettings> tcpConnectionSettings,
             IWritableOptions<UdpConnectionSettings> udpConnectionSettings)
         {

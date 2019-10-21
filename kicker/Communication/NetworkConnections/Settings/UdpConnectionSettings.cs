@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Communication.NetworkLayer.Settings
+namespace Communication.NetworkConnections.Settings
 {
     public class UdpConnectionSettings
     {

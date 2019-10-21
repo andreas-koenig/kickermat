@@ -53,12 +53,12 @@ namespace Webapp.Settings
             where TVideoSource : class, IVideoSource
             where TCameraCalibration : class, ICameraCalibration
             where TImageProcessor : class, IImageProcessor
-            where TKickerControl : class, IKickerControl
+            where TKickerControl : class, ICommunication
         {
             services.AddSingleton<IVideoSource, TVideoSource>();
             services.AddSingleton<ICameraCalibration, TCameraCalibration>();
             services.AddSingleton<IImageProcessor, TImageProcessor>();
-            services.AddSingleton<IKickerControl, TKickerControl>();
+            services.AddSingleton<ICommunication, TKickerControl>();
 
             return services;
         }
