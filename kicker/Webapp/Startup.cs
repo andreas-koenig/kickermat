@@ -1,4 +1,4 @@
-﻿using Communication.KickerControl;
+﻿using Communication;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;
@@ -43,7 +43,7 @@ namespace Webapp
 
             // Services
             services.AddSingleton<ParameterService>();
-            services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.KickerControl.Communication>();
+            services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.Communication>();
             services.ConfigureKicker<DalsaSettings, CalibrationSettings,
                 ImageProcessorSettings, CommunicationSettings>(Configuration);
         }

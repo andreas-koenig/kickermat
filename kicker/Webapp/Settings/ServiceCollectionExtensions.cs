@@ -1,5 +1,5 @@
 ﻿using System;
-using Communication.KickerControl;
+using Communication;
 using Configuration;
 using ImageProcessing;
 using ImageProcessing.Calibration;

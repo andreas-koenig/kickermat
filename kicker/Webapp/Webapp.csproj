@@ -5,6 +5,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <StartupObject>Webapp.Program</StartupObject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Configurations>Debug;Release;Integration</Configurations>
@@ -67,6 +68,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Communication\Communication.csproj" />
+    <ProjectReference Include="..\GameController\GameController.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>

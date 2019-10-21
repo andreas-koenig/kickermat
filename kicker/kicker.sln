@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PositionPrediction", "Posit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Communication\Communication.csproj", "{EB49510D-D168-429F-BA8A-255F7CB53B84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calibration", "Calibration\Calibration.csproj", "{0BD7E732-9874-43AF-BFC5-273EA30356F6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameController", "GameController\GameController.csproj", "{768221EA-AEDD-45E5-8A42-00C2420CF60A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Game\Game.csproj", "{E7F3AD65-55A9-439E-AFB4-3CB87E4FDC5D}"
@@ -82,18 +80,6 @@ Global
 		{EB49510D-D168-429F-BA8A-255F7CB53B84}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB49510D-D168-429F-BA8A-255F7CB53B84}.Release|x64.ActiveCfg = Release|Any CPU
 		{EB49510D-D168-429F-BA8A-255F7CB53B84}.Release|x64.Build.0 = Release|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Debug|x64.Build.0 = Debug|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Integration|Any CPU.Build.0 = Integration|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Integration|x64.ActiveCfg = Integration|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Integration|x64.Build.0 = Integration|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Release|x64.ActiveCfg = Release|Any CPU
-		{0BD7E732-9874-43AF-BFC5-273EA30356F6}.Release|x64.Build.0 = Release|Any CPU
 		{768221EA-AEDD-45E5-8A42-00C2420CF60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{768221EA-AEDD-45E5-8A42-00C2420CF60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{768221EA-AEDD-45E5-8A42-00C2420CF60A}.Debug|x64.ActiveCfg = Debug|Any CPU
