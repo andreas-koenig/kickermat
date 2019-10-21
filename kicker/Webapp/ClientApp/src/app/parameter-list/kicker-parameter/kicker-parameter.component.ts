@@ -24,7 +24,11 @@ export class KickerParameterComponent implements OnInit {
     }
   }
 
-  public isNumberParameter(parameter: KickerParameter): boolean {
+  public isNumberParameter(parameter: KickerParameter | undefined): boolean {
+    if (!parameter) {
+      return false;
+    }
+
     return 'min' in parameter && 'max' in parameter && 'step' in parameter;
   }
 

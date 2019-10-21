@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutGap="0.5em" fxLayoutAlign="start center">
+<div *ngIf="parameter" fxLayout="row" fxLayoutGap="0.5em" fxLayoutAlign="start center">
   <h3>{{parameter.name}}</h3>
   <button nzShape="circle" nzType="default" nzTooltipTitle="Title" nz-button nz-tooltip>
     <i nz-icon nzType="question" nzTheme="outline"></i>
