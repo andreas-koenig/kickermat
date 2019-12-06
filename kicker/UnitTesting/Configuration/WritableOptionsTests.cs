@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Configuration;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
