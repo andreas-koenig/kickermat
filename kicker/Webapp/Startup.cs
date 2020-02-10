@@ -16,10 +16,11 @@ namespace Webapp
 {
     public class Startup
     {
-        internal const string Url = "http://localhost:5001/";
-        internal const string ProxyUrl = "http://localhost:4200/";
+        internal const string CorsPolicy = "KickermatCorsPolicy";
+        internal const string BackendUrl = "http://localhost:5001"; // No trailing slash!
+        internal const string FrontendProxyUrl = "http://localhost:4200";
         private const string SignalrBasePath = "/signalr";
-        private static readonly string[] CorsUrls = { Url, ProxyUrl };
+        private static readonly string[] CorsUrls = { BackendUrl, FrontendProxyUrl };
 
         public Startup(IConfiguration configuration)
         {
@@ -31,7 +32,17 @@ namespace Webapp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    CorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins(CorsUrls)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -51,6 +62,9 @@ namespace Webapp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Configure Cors
+            app.UseCors(CorsPolicy);
+
             // Configure SignalR hubs
             app.UseSignalR(route =>
             {
@@ -84,15 +98,6 @@ namespace Webapp
                     spa.UseAngularCliServer("start");
                 });
             }
-
-            // Configure Cors
-            app.UseCors(policy =>
-            {
-                policy.AllowCredentials()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .WithOrigins(CorsUrls);
-            });
         }
     }
 }

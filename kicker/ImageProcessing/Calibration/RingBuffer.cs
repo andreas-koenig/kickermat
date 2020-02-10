@@ -25,7 +25,7 @@ namespace ImageProcessing.Calibration
             lock (_objectLock)
             {
                 // Jump over read position if write pointer arrived there and the field not null
-                if (_readPos == _writePos && _buffer[_readPos] != default)
+                if (_readPos == _writePos && _buffer[_readPos] != null)
                 {
                     Increment(ref _writePos);
                 }

@@ -16,6 +16,6 @@ namespace GameController
         /// Executes the game controller
         /// </summary>
         /// <param name="ballPosition">The ball position.</param>
-        void Run(Game game);
+        //void Run(Game game);
     }
 }
