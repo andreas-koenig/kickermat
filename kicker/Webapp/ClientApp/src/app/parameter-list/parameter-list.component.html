@@ -1,15 +1,17 @@
-<h2>Parameters</h2>
+<ng-container *ngIf="parameters && parameters.length > 0">
+  <h2>Parameters</h2>
 
-<div fxLayout="row" fxLayoutGap="3.5em" fxLayoutGap.lt-md="1em">
-  <ng-container *ngFor="let param of parameters">
-    <app-kicker-parameter
-      [component]="component"
-      [parameter]="param"
-      fxFlex="100%">
-    </app-kicker-parameter>
-  </ng-container>
-</div>
+  <div fxLayout="row" fxLayoutGap="3.5em" fxLayoutGap.lt-md="1em">
+    <ng-container *ngFor="let param of parameters">
+      <app-kicker-parameter
+        [component]="component"
+        [parameter]="param"
+        fxFlex="100%">
+      </app-kicker-parameter>
+    </ng-container>
+  </div>
 
-<div fxLayout="row" fxLayoutAlign="right center">
-  <button nz-button nzType="primary">Save</button>
-</div>
+  <div fxLayout="row" fxLayoutAlign="right center">
+    <button nz-button nzType="primary">Save</button>
+  </div>
+</ng-container>

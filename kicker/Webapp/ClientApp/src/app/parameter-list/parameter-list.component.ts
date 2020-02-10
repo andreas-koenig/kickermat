@@ -20,7 +20,7 @@ export class ParameterListComponent implements OnInit {
           this.parameters = parameters;
         },
         error => {
-          console.log(error);
+          console.log('Failed to load parameters for %s: %o', this.component, error);
         }
       );
     }
