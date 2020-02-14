@@ -9,6 +9,7 @@ import { KickerComponent, KickerParameter } from '../../api/api.model';
 })
 export class ParameterListComponent implements OnInit {
   @Input('component') private component: KickerComponent | undefined;
+  
   public parameters: KickerParameter[] = [];
 
   constructor(private api: ApiService) { }
@@ -26,4 +27,19 @@ export class ParameterListComponent implements OnInit {
     }
   }
 
+  public isNumberParameter(parameter: KickerParameter | undefined): boolean {
+    if (!parameter) {
+      return false;
+    }
+
+    return 'min' in parameter && 'max' in parameter && 'step' in parameter;
+  }
+
+  public isColorRangeParameter(parameter: KickerParameter | undefined): boolean {
+    if (!parameter) {
+      return false;
+    }
+
+    return typeof parameter.value === 'object' && 'upper' in <any>parameter.value && 'lower' in <any>parameter.value;
+  }
 }

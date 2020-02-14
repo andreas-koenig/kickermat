@@ -1,14 +1,31 @@
-<ng-container *ngIf="parameters && parameters.length > 0">
+<ng-container *ngIf="true">
   <h2>Parameters</h2>
 
-  <div fxLayout="row" fxLayoutGap="3.5em" fxLayoutGap.lt-md="1em">
+  <div fxLayout="row wrap" fxLayoutGap="3.5em" fxLayoutGap.lt-md="1em">
     <ng-container *ngFor="let param of parameters">
-      <app-kicker-parameter
-        [component]="component"
-        [parameter]="param"
-        fxFlex="100%">
-      </app-kicker-parameter>
-    </ng-container>
+
+      <div fxLayout="column" fxFlex>
+        <!-- Title -->
+        <div *ngIf="param" fxLayout="row" fxLayoutGap="0.5em" fxLayoutAlign="start center">
+          <h3>{{param.name}}</h3>
+          <button nz-button nz-tooltip nzShape="circle" nzType="default" nzTooltipTitle="{{param.description}}" nzTooltipPlacement="right">
+            <i nz-icon nzType="question" nzTheme="outline"></i>
+          </button>
+        </div>
+
+        <!-- Number Parameter -->
+        <ng-container *ngIf="isNumberParameter(param)">
+          <app-number-parameter [parameter]="param" [component]="component"></app-number-parameter>
+        </ng-container>
+
+        <!-- Color Range Parameter -->
+        <ng-container *ngIf="isColorRangeParameter(param)">
+          <app-color-range-parameter [parameter]="param" [component]="component"></app-color-range-parameter>
+        </ng-container>
+
+      </div>
+
+    </ng-container> <!-- let param of parameters -->
   </div>
 
   <div fxLayout="row" fxLayoutAlign="right center">

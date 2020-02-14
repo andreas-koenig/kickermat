@@ -41,10 +41,10 @@ namespace VideoSource.Dalsa
         internal const string DalsaDll = @"..\DalsaVideoSource.dll";
 
         // constants
-        private const int XMin = 64;
-        private const int YMin = 184;
-        private const int Width = 1184;
-        private const int Height = 660;
+        private const int XMin = 0;
+        private const int YMin = 0;
+        private const int Width = 1280;
+        private const int Height = 1024;
 
         private readonly FrameArrived _frameArrivedDelegate;
         private readonly CameraConnected _connectedDelegate;
@@ -63,7 +63,7 @@ namespace VideoSource.Dalsa
             : base(logger)
         {
             _options = options;
-            _options.RegisterChangeListener(ApplyOptions);
+            _options?.RegisterChangeListener(ApplyOptions);
             _name = options.Value.CameraName;
 
             _frameArrivedDelegate = FrameArrived;

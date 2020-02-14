@@ -1,46 +1,34 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { KickerParameter, KickerComponent } from '../../../api/api.model';
+import { OnInit, Input } from '@angular/core';
+import { KickerParameter, KickerComponent } from '@api/api.model';
 import { ApiService } from '@api/api.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import { HttpErrorResponse } from '@angular/common/http';
 
-@Component({
-  selector: 'app-kicker-parameter',
-  templateUrl: './kicker-parameter.component.html',
-  styleUrls: ['./kicker-parameter.component.scss']
-})
-export class KickerParameterComponent implements OnInit {
+export abstract class KickerParameterComponent implements OnInit {
   @Input('parameter') public parameter: KickerParameter | undefined;
   @Input('component') public component: KickerComponent | undefined;
 
   public isUpdating = false;
-  public value: any;
   
-  constructor(private api: ApiService, private message: NzMessageService ) { }
+  constructor(private api: ApiService, private message: NzMessageService) { }
+
+  protected abstract updateModel(paramValue: any): void;
 
   ngOnInit() {
     if (this.parameter) {
-      this.value = this.parameter.value;
+      this.updateModel(this.parameter.value);
     }
   }
 
-  public isNumberParameter(parameter: KickerParameter | undefined): boolean {
-    if (!parameter) {
-      return false;
-    }
-
-    return 'min' in parameter && 'max' in parameter && 'step' in parameter;
-  }
-
-  public setParameter() {
+  public setParameter(updatedValue: any) {
     if (this.component && this.parameter) {
       this.isUpdating = true;
 
-      this.api.setParameter(this.component, this.parameter.name, this.value).subscribe(
+      this.api.setParameter(this.component, this.parameter.name, updatedValue).subscribe(
         () => {
           this.isUpdating = false;
           if (this.parameter) {
-            this.parameter.value = this.value;
+            this.parameter.value = updatedValue;
             let msg = this.parameter.name + ' was set to ' + this.parameter.value;
             this.message.success(msg);
           }
@@ -49,7 +37,7 @@ export class KickerParameterComponent implements OnInit {
           this.isUpdating = false;
           console.log(error);
           if (this.parameter) {
-            this.value = this.parameter.value;
+            this.updateModel(this.parameter.value);
             this.message.error(error.error);
           }
         }

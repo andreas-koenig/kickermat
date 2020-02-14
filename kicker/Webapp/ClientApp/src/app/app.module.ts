@@ -16,10 +16,11 @@ import { GameComponent } from './game/game.component';
 import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
 import { ParameterListComponent } from './parameter-list/parameter-list.component';
-import { KickerParameterComponent } from './parameter-list/kicker-parameter/kicker-parameter.component';
 import { KickerComponent } from './kicker/kicker.component';
 import { ImageProcessingComponent } from './image-processing/image-processing.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
+import { NumberParameterComponent } from './parameter-list/number-parameter/number-parameter.component';
+import { ColorRangeParameterComponent } from './parameter-list/color-range-parameter/color-range-parameter.component';
 
 const routes: Route[] = [
   {
@@ -56,10 +57,11 @@ registerLocaleData(en);
     CameraComponent,
     CalibrationComponent,
     ParameterListComponent,
-    KickerParameterComponent,
     KickerComponent,
     ImageProcessingComponent,
     VideoPlayerComponent,
+    NumberParameterComponent,
+    ColorRangeParameterComponent,
   ],
   imports: [
     BrowserModule,

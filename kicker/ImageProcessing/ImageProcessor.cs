@@ -26,25 +26,32 @@ namespace ImageProcessing
             try
             {
                 // Mask white lines (includes bars)
-                var lower = new Scalar(0, 0, 220);
-                var upper = new Scalar(255, 120, 255);
+                var markings = _options.Value.FieldMarkings;
+                var lower = HsvToScalar(markings.Lower);
+                var upper = HsvToScalar(markings.Upper);
                 var threshImg = img.CvtColor(ColorConversionCodes.BGR2HSV)
-                    .InRange(lower, upper)
+                    .InRange(lower, upper);
+                    /*
                     .GaussianBlur(new Size(_options.Value.BlurSize, _options.Value.BlurSize), 0)
                     .Dilate(0, null, (int)_options.Value.DilationIterations)
-                    .Erode(0);
+                    .Erode(0);*/
+
+                var cannyImg = threshImg.Canny(1, 3);
 
                 // Find and draw contours
-                threshImg.FindContours(out Point[][] contours, out HierarchyIndex[] hierarchy,
+                cannyImg.FindContours(out Point[][] contours, out HierarchyIndex[] hierarchy,
                     RetrievalModes.External, ContourApproximationModes.ApproxTC89L1);
 
-                threshImg = threshImg.CvtColor(ColorConversionCodes.GRAY2BGR);
-                threshImg.DrawContours(contours, -1, new Scalar(0, 255, 255), 2);
+                cannyImg = cannyImg.CvtColor(ColorConversionCodes.GRAY2BGR);
+                cannyImg.DrawContours(contours, -1, new Scalar(0, 255, 255), 1);
+
+                /*
                 var rects = GetBoundingRects(contours);
                 foreach (var rect in rects)
                 {
-                    threshImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
+                    cannyImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
                 }
+                */
 
                 return new Frame(threshImg);
             }
@@ -64,6 +71,16 @@ namespace ImageProcessing
             }
 
             return rects;
+        }
+
+        private Scalar HsvToScalar(HsvColor hsv)
+        {
+            return new Scalar()
+            {
+                Val0 = (int)(hsv.Hue / 360.0 * 179),
+                Val1 = (int)(hsv.Saturation / 100.0 * 255),
+                Val2 = (int)(hsv.Value / 100.0 * 255),
+            };
         }
     }
 }

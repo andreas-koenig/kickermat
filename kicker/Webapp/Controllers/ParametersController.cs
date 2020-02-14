@@ -6,6 +6,7 @@ using Configuration;
 using ImageProcessing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using VideoSource;
 using Webapp.Services;
 
@@ -98,9 +99,10 @@ namespace Webapp.Controllers
 
                     try
                     {
+                        var newVal = JsonConvert.DeserializeObject(value.ToString(), prop.PropertyType);
                         options.Update(changes =>
                         {
-                            prop.SetValue(changes, Convert.ChangeType(value, prop.PropertyType));
+                            prop.SetValue(changes, newVal);
                         });
                     }
                     catch (Exception ex)
