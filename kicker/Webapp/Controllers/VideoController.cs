@@ -16,7 +16,7 @@ using VideoSource;
 
 namespace Webapp.Controllers
 {
-    public enum VideoSource
+    public enum VideoSourceType
     {
         Camera = 0,
         Calibration = 1,
@@ -25,13 +25,13 @@ namespace Webapp.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class CameraController : ControllerBase, IVideoConsumer
+    public class VideoController : ControllerBase, IVideoConsumer
     {
         private const string BOUNDARY = "camera_image";
         private readonly byte[] _imgHeaderBytes;
         private readonly Task _doneTask;
 
-        private readonly ILogger<CameraController> _logger;
+        private readonly ILogger<VideoController> _logger;
 
         // VideoSources
         private readonly IVideoSource _camera;
@@ -39,11 +39,11 @@ namespace Webapp.Controllers
         private readonly IImageProcessor _imageProcessor;
         private IVideoSource _videoSource;
 
-        public CameraController(
+        public VideoController(
             IVideoSource videoSource,
             ICameraCalibration calibration,
             IImageProcessor imageProcessor,
-            ILogger<CameraController> logger)
+            ILogger<VideoController> logger)
         {
             _camera = videoSource;
             _calibration = calibration;
@@ -57,17 +57,23 @@ namespace Webapp.Controllers
         }
 
         // GET: api/camera
-        [HttpGet]
-        public Task Get([FromQuery(Name = "videoSource")] VideoSource source)
+        [HttpGet("{sourceStr:videoSourceType}")]
+        public Task Get([FromRoute] string sourceStr)
         {
             HttpContext.RequestAborted.Register(AbortConnection);
             HttpContext.Response.Headers.Add("Cache-Control", "no-store");
             HttpContext.Response.ContentType = "multipart/x-mixed-replace;boundary=camera_image";
             HttpContext.Response.StatusCode = 400;
 
+            if (!Enum.TryParse<VideoSourceType>(sourceStr, true, out VideoSourceType sourceType))
+            {
+                return new Task(() => BadRequest($"{sourceStr} is no valid video source!"));
+            }
+
+            _videoSource = GetVideoSource(sourceType);
+
             try
             {
-                _videoSource = GetVideoSource(source);
                 _videoSource.StartAcquisition(this);
             }
             catch (Exception ex)
@@ -79,6 +85,25 @@ namespace Webapp.Controllers
             }
 
             return _doneTask;
+        }
+
+        [HttpGet("{sourceStr:videoSourceType}/channels")]
+        public IActionResult GetChannels([FromRoute] string sourceStr)
+        {
+            if (!Enum.TryParse<VideoSourceType>(sourceStr, true, out VideoSourceType sourceType))
+            {
+                return BadRequest($"{sourceStr} is no valid video source!");
+            }
+
+            var videoSource = GetVideoSource(sourceType);
+            var attrs = videoSource.GetType().GetCustomAttributes(typeof(VideoSourceAttribute), true);
+
+            if (attrs.Length == 0)
+            {
+                return Ok(Array.Empty<string>());
+            }
+
+            return Ok(((VideoSourceAttribute)attrs[0]).Channels);
         }
 
         [NonAction]
@@ -104,15 +129,15 @@ namespace Webapp.Controllers
         }
 
         [NonAction]
-        private IVideoSource GetVideoSource(VideoSource source)
+        private IVideoSource GetVideoSource(VideoSourceType videoSource)
         {
-            switch (source)
+            switch (videoSource)
             {
-                case VideoSource.Camera:
+                case VideoSourceType.Camera:
                     return _camera;
-                case VideoSource.Calibration:
+                case VideoSourceType.Calibration:
                     return (IVideoSource)_calibration;
-                case VideoSource.ImageProcessing:
+                case VideoSourceType.ImageProcessing:
                     return (IVideoSource)_imageProcessor;
                 default:
                     return _camera; // TODO: Add ImageProcessing

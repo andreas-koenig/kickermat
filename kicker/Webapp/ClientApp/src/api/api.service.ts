@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { KickerParameter, KickerComponent } from './api.model';
+import { KickerParameter, KickerComponent, VideoSource } from './api.model';
 import { REST_BASE } from './api';
 
 @Injectable({
@@ -28,5 +28,11 @@ export class ApiService {
   public startBallSearch() {
     const url = REST_BASE + '/imageprocessing';
     this.http.get(url).subscribe();
+  }
+
+  public getChannels(videoSource: VideoSource): Observable<string[]> {
+    const url = REST_BASE + '/camera';
+
+    return this.http.get()
   }
 }

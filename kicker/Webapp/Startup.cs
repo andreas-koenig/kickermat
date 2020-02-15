@@ -4,10 +4,12 @@ using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoSource.Dalsa;
+using Webapp.Controllers;
 using Webapp.Hubs;
 using Webapp.Services;
 using Webapp.Settings;
@@ -57,6 +59,12 @@ namespace Webapp
             services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.Communication>();
             services.ConfigureKicker<DalsaSettings, CalibrationSettings,
                 ImageProcessorSettings, CommunicationSettings>(Configuration);
+
+            // RouteConstraints
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap.Add("videoSourceType", typeof(VideoSourceTypeRouteConstraint));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Configuration;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using VideoSource;
 
 namespace ImageProcessing
 {
+    [VideoSource("imageprocessor", "Threshhold", "Edge Filter", "Edge Filter with Boxes")]
     public class ImageProcessor : BaseVideoProcessor, IImageProcessor
     {
         private readonly IWritableOptions<ImageProcessorSettings> _options;
@@ -25,33 +27,35 @@ namespace ImageProcessing
 
             try
             {
+                var close_kernel = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(_options.Value.DilationIterations, _options.Value.DilationIterations));
+
                 // Mask white lines (includes bars)
                 var markings = _options.Value.FieldMarkings;
                 var lower = HsvToScalar(markings.Lower);
                 var upper = HsvToScalar(markings.Upper);
                 var threshImg = img.CvtColor(ColorConversionCodes.BGR2HSV)
-                    .InRange(lower, upper);
-                    /*
+                    .InRange(lower, upper);/*
                     .GaussianBlur(new Size(_options.Value.BlurSize, _options.Value.BlurSize), 0)
-                    .Dilate(0, null, (int)_options.Value.DilationIterations)
-                    .Erode(0);*/
-
-                var cannyImg = threshImg.Canny(1, 3);
+                    .MorphologyEx(MorphTypes.Close, close_kernel);*/
 
                 // Find and draw contours
-                cannyImg.FindContours(out Point[][] contours, out HierarchyIndex[] hierarchy,
+                //var edgeImg = threshImg.Sobel(threshImg.Type(), 1, 0);
+                var edgeImg = threshImg.Canny(1, 3);
+                
+                edgeImg.FindContours(out Point[][] contours, out HierarchyIndex[] hierarchy,
                     RetrievalModes.External, ContourApproximationModes.ApproxTC89L1);
+                edgeImg = edgeImg.CvtColor(ColorConversionCodes.GRAY2BGR);
+                //edgeImg.DrawContours(contours, -1, new Scalar(0, 255, 255), 1);
 
-                cannyImg = cannyImg.CvtColor(ColorConversionCodes.GRAY2BGR);
-                cannyImg.DrawContours(contours, -1, new Scalar(0, 255, 255), 1);
-
-                /*
                 var rects = GetBoundingRects(contours);
-                foreach (var rect in rects)
+                var avgArea = rects.Sum(rect => Area(rect)) / rects.Count();
+                var avgAspectRatio = rects.Sum(rect => AspectRatio(rect)) / rects.Count();
+                var longRects = rects.Where(rect => AspectRatio(rect) >= avgAspectRatio);
+                var bigRects = rects.Where(rect => Area(rect) >= avgArea);
+                foreach (var rect in longRects)
                 {
-                    cannyImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
+                    edgeImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
                 }
-                */
 
                 return new Frame(threshImg);
             }
@@ -81,6 +85,16 @@ namespace ImageProcessing
                 Val1 = (int)(hsv.Saturation / 100.0 * 255),
                 Val2 = (int)(hsv.Value / 100.0 * 255),
             };
+        }
+
+        private int Area(Rect rect)
+        {
+            return rect.Width * rect.Height;
+        }
+
+        private float AspectRatio(Rect rect)
+        {
+            return ((float)rect.Width) / rect.Height;
         }
     }
 }

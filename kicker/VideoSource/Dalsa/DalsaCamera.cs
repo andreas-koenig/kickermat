@@ -35,16 +35,17 @@ namespace VideoSource.Dalsa
         }
     }
 
+    [VideoSource("Dalsa")]
     public class DalsaCamera : BaseVideoSource
     {
         // native DLL bindings
         internal const string DalsaDll = @"..\DalsaVideoSource.dll";
 
         // constants
-        private const int XMin = 0;
-        private const int YMin = 0;
-        private const int Width = 1280;
-        private const int Height = 1024;
+        private const int XMin = 64;
+        private const int YMin = 150;
+        private const int Width = 1168;
+        private const int Height = 646;
 
         private readonly FrameArrived _frameArrivedDelegate;
         private readonly CameraConnected _connectedDelegate;
