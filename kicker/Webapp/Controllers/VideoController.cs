@@ -96,14 +96,41 @@ namespace Webapp.Controllers
             }
 
             var videoSource = GetVideoSource(sourceType);
-            var attrs = videoSource.GetType().GetCustomAttributes(typeof(VideoSourceAttribute), true);
+            var channels = videoSource.GetChannels();
 
-            if (attrs.Length == 0)
+            return Ok(channels);
+        }
+
+        [HttpGet("{sourceStr:videoSourceType}/channel")]
+        public IActionResult GetChannel([FromRoute] string sourceStr)
+        {
+            if (!Enum.TryParse<VideoSourceType>(sourceStr, true, out VideoSourceType sourceType))
             {
-                return Ok(Array.Empty<string>());
+                return BadRequest($"{sourceStr} is no valid video source!");
             }
 
-            return Ok(((VideoSourceAttribute)attrs[0]).Channels);
+            var videoSource = GetVideoSource(sourceType);
+            var channel = videoSource.Channel;
+
+            return Ok(channel);
+        }
+
+        [HttpPut("{sourceStr:videoSourceType}/channel")]
+        public IActionResult SwitchChannel([FromRoute] string sourceStr, [FromBody] Channel channel)
+        {
+            if (!Enum.TryParse<VideoSourceType>(sourceStr, true, out VideoSourceType sourceType))
+            {
+                return BadRequest($"{sourceStr} is no valid video source!");
+            }
+
+            var videoSource = GetVideoSource(sourceType);
+            if (videoSource.GetChannels().Contains(channel))
+            {
+                videoSource.Channel = channel;
+                return Ok(channel);
+            }
+
+            return BadRequest("Invalid channel!");
         }
 
         [NonAction]
@@ -123,6 +150,8 @@ namespace Webapp.Controllers
         {
             var imgBytes = args.Frame.Mat.ImEncode(
                 ".jpg", new ImageEncodingParam(ImwriteFlags.JpegQuality, 50));
+
+            args.Frame.Release();
 
             Response.Body.Write(_imgHeaderBytes);
             Response.Body.Write(imgBytes, 0, imgBytes.Length);

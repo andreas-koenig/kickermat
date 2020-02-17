@@ -1,7 +1,13 @@
 export enum VideoSource {
-  Camera = 0,
-  Calibration = 1,
-  ImageProcessing = 2
+  Camera = "Camera",
+  Calibration = "Calibration",
+  ImageProcessing = "ImageProcessing",
+}
+
+export interface Channel {
+  id: string;
+  name: string;
+  description: string;
 }
 
 export enum KickerComponent {

@@ -9,9 +9,12 @@ using VideoSource;
 
 namespace ImageProcessing
 {
-    [VideoSource("imageprocessor", "Threshhold", "Edge Filter", "Edge Filter with Boxes")]
     public class ImageProcessor : BaseVideoProcessor, IImageProcessor
     {
+        private const string ChannelThreshold = "threshold";
+        private const string ChannelEdges = "edges";
+        private const string ChannelBoxes = "boxes";
+
         private readonly IWritableOptions<ImageProcessorSettings> _options;
 
         public ImageProcessor(IVideoSource camera, ILogger<ImageProcessor> logger,
@@ -19,6 +22,17 @@ namespace ImageProcessing
             : base(camera, logger)
         {
             _options = options;
+            Channel = GetChannels().First();
+        }
+
+        public override IEnumerable<Channel> GetChannels()
+        {
+            return new Channel[]
+            {
+                new Channel(ChannelThreshold, "Threshold Image", "The binarized image"),
+                new Channel(ChannelEdges, "Edges", "The edge detection algorithm applied to the threshold image"),
+                new Channel(ChannelBoxes, "Bounding Boxes", "The edge image with bounding boxes displayed"),
+            };
         }
 
         protected override IFrame ProcessFrame(IFrame frame)
@@ -38,10 +52,12 @@ namespace ImageProcessing
                     .GaussianBlur(new Size(_options.Value.BlurSize, _options.Value.BlurSize), 0)
                     .MorphologyEx(MorphTypes.Close, close_kernel);*/
 
+                frame.Release();
+
                 // Find and draw contours
                 //var edgeImg = threshImg.Sobel(threshImg.Type(), 1, 0);
                 var edgeImg = threshImg.Canny(1, 3);
-                
+
                 edgeImg.FindContours(out Point[][] contours, out HierarchyIndex[] hierarchy,
                     RetrievalModes.External, ContourApproximationModes.ApproxTC89L1);
                 edgeImg = edgeImg.CvtColor(ColorConversionCodes.GRAY2BGR);
@@ -52,12 +68,23 @@ namespace ImageProcessing
                 var avgAspectRatio = rects.Sum(rect => AspectRatio(rect)) / rects.Count();
                 var longRects = rects.Where(rect => AspectRatio(rect) >= avgAspectRatio);
                 var bigRects = rects.Where(rect => Area(rect) >= avgArea);
-                foreach (var rect in longRects)
-                {
-                    edgeImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
-                }
 
-                return new Frame(threshImg);
+                switch (Channel?.Id)
+                {
+                    case ChannelThreshold:
+                        return new Frame(threshImg);
+                    case ChannelEdges:
+                        return new Frame(edgeImg);
+                    case ChannelBoxes:
+                        foreach (var rect in longRects)
+                        {
+                            edgeImg.Rectangle(rect, new Scalar(0, 0, 255), 2);
+                        }
+
+                        return new Frame(edgeImg);
+                    default:
+                        return new Frame(threshImg);
+                }
             }
             catch (Exception ex)
             {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { KickerParameter, KickerComponent, VideoSource } from './api.model';
+import { KickerParameter, KickerComponent, VideoSource, Channel } from './api.model';
 import { REST_BASE } from './api';
 
 @Injectable({
@@ -30,9 +30,21 @@ export class ApiService {
     this.http.get(url).subscribe();
   }
 
-  public getChannels(videoSource: VideoSource): Observable<string[]> {
-    const url = REST_BASE + '/camera';
+  public getChannels(videoSource: VideoSource): Observable<Channel[]> {
+    const url = REST_BASE + '/video/' + videoSource + '/channels';
 
-    return this.http.get()
+    return this.http.get<Channel[]>(url);
+  }
+
+  public getChannel(videoSource: VideoSource): Observable<Channel> {
+    const url = REST_BASE + '/video/' + videoSource + '/channel';
+
+    return this.http.get<Channel>(url);
+  }
+
+  public switchChannel(videoSource: VideoSource, channel: Channel): Observable<Channel> {
+    const url = REST_BASE + '/video/' + videoSource + '/channel';
+
+    return this.http.put<Channel>(url, channel);
   }
 }

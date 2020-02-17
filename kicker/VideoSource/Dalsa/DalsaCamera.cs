@@ -35,7 +35,6 @@ namespace VideoSource.Dalsa
         }
     }
 
-    [VideoSource("Dalsa")]
     public class DalsaCamera : BaseVideoSource
     {
         // native DLL bindings
@@ -80,6 +79,11 @@ namespace VideoSource.Dalsa
             {
                 DLL_DestroyCamera(_cameraPtr);
             }
+        }
+
+        public override IEnumerable<Channel> GetChannels()
+        {
+            return new Channel[] { new Channel("default", "Default", "The camera image") };
         }
 
         protected override void StartAcquisition()
@@ -190,7 +194,7 @@ namespace VideoSource.Dalsa
                 bayerMat.Dispose();
                 DLL_ReleaseBuffer(_cameraPtr, bufferIndex);
 
-                var frame = new Frame(bgrMat);
+                var frame = new Frame(bgrMat, ConsumerCount);
                 HandleFrameArrived(new FrameArrivedArgs(frame));
             }
         }

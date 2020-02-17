@@ -12,7 +12,7 @@ namespace ImageProcessing
             0, 0, 220, 255, 120, 255)]
         public ColorRange FieldMarkings { get; set; } = new ColorRange(0, 0, 0, 0, 0, 0);
 
-        [NumberParameter("Blur Size", "The size of the WxH kernel for the gaussian blur.", 3, 3, 9, 2)]
+        [NumberParameter("Blur Size", "The size of the WxH kernel for the gaussian blur.", 3, 0, 9, 2)]
         public double BlurSize { get; set; } = 3;
 
         [NumberParameter("Dilation Iterations", "The amount of iterations that the dilation operation is executed.",
