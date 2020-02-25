@@ -14,5 +14,9 @@ namespace ImageProcessing
 
         [NumberParameter("Minimal BBox Area", "The minimal area a bounding box can have", 10, 1, 1000, 1)]
         public double MinimalBboxArea { get; set; } = 10;
+
+        [ColorRangeParameter("Ball Color", "A color range for the ball.",
+            32, 45, 60, 44, 60, 100)]
+        public ColorRange BallColor { get; set; } = new ColorRange(0, 0, 0, 0, 0, 0);
     }
 }

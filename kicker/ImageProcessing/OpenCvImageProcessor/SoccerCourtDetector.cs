@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Configuration;
-using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using VideoSource;
 
 namespace ImageProcessing
 {
-    public class ImageProcessor : BaseVideoProcessor, IImageProcessor
+    internal class SoccerCourtDetector
     {
         private const string ChannelThreshold = "threshold";
         private const string ChannelBoxes = "boxes";
@@ -26,15 +25,12 @@ namespace ImageProcessing
 
         private readonly IWritableOptions<ImageProcessorSettings> _options;
 
-        public ImageProcessor(IVideoSource camera, ILogger<ImageProcessor> logger,
-            IWritableOptions<ImageProcessorSettings> options)
-            : base(camera, logger)
+        public SoccerCourtDetector(IWritableOptions<ImageProcessorSettings> options)
         {
             _options = options;
-            Channel = GetChannels().First();
         }
 
-        public override IEnumerable<Channel> GetChannels()
+        public IEnumerable<Channel> GetChannels()
         {
             return new Channel[]
             {
@@ -45,27 +41,23 @@ namespace ImageProcessing
             };
         }
 
-        protected override IFrame ProcessFrame(IFrame frame)
+        public (Mat, int) DetectSoccerCourt(Mat img, string channel)
         {
-            var img = frame.Mat;
-
             try
             {
                 // Mask white lines (includes bars)
                 var markings = _options.Value.FieldMarkings;
-                var lower = HsvToScalar(markings.Lower);
-                var upper = HsvToScalar(markings.Upper);
+                var lower = ImageProcessor.HsvToScalar(markings.Lower);
+                var upper = ImageProcessor.HsvToScalar(markings.Upper);
                 var threshImg = img.CvtColor(ColorConversionCodes.BGR2HSV)
                     .InRange(lower, upper);
-
-                frame.Release();
 
                 // Find contours
                 threshImg.FindContours(out Point[][] contours, out HierarchyIndex[] hierarchy,
                     RetrievalModes.External, ContourApproximationModes.ApproxTC89L1);
 
                 // Get bboxes and filter out the small ones that are irrelevant
-                var boundingBoxes = GetBoundingRects(contours)
+                var boundingBoxes = ImageProcessor.GetBoundingRects(contours)
                     .Where(rect => Area(rect) > _options.Value.MinimalBboxArea);
 
                 // Get soccer court elements
@@ -76,18 +68,18 @@ namespace ImageProcessing
 
                 threshImg = threshImg.CvtColor(ColorConversionCodes.GRAY2BGR);
 
-                switch (Channel?.Id)
+                switch (channel)
                 {
                     case ChannelThreshold:
-                        return new Frame(threshImg);
+                        return (threshImg, 0);
 
                     case ChannelBoxes:
                         boundingBoxes.ToList().ForEach(rect => threshImg.Rectangle(rect, _red, 2));
-                        return new Frame(threshImg);
+                        return (threshImg, 0);
 
                     case ChannelDetections:
-                        touchlines.Item1.ForEach(rect => threshImg.Rectangle(rect, _yellow, 2));
-                        touchlines.Item2.ForEach(rect => threshImg.Rectangle(rect, _yellow, 2));
+                        touchlines.Item1.ForEach(rect => threshImg.Rectangle(rect, _red, 2));
+                        touchlines.Item2.ForEach(rect => threshImg.Rectangle(rect, _red, 2));
                         new List<Point> { corners.Item1, corners.Item2, corners.Item3, corners.Item4 }
                             .ForEach(p => threshImg.Rectangle(new Rect(p.X - 3, p.Y - 3, 6, 6), _red, 2));
                         new List<Rect> { goals.Item1, goals.Item2 }
@@ -95,53 +87,23 @@ namespace ImageProcessing
                         new List<Rect> { halfWayLines.Item1, halfWayLines.Item2 }
                             .ForEach(rect => threshImg.Rectangle(rect, _blue, 2));
 
-                        return new Frame(threshImg);
+                        return (threshImg, 0);
 
                     case ChannelField:
                         var transform = GetPerspectiveTransform(halfWayLines, corners);
-                        Cv2.WarpPerspective(threshImg, threshImg, transform, threshImg.Size());
-                        return new Frame(threshImg);
+                        var transformedImg = new Mat();
+                        Cv2.WarpPerspective(threshImg, transformedImg, transform, threshImg.Size());// new Size(120 * 5, 689 * 5));//threshImg.Size());
+                        return (transformedImg, 0);
 
                     default:
-                        return new Frame(threshImg);
+                        return (null, 0);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return new Frame(frame.Mat);
+                return (null, 0);
             }
-        }
-
-        private Rect[] GetBoundingRects(Point[][] contours)
-        {
-            var rects = new Rect[contours.Length];
-            for (var i = 0; i < contours.Length; i++)
-            {
-                rects[i] = Cv2.BoundingRect(contours[i]);
-            }
-
-            return rects;
-        }
-
-        private Scalar HsvToScalar(HsvColor hsv)
-        {
-            return new Scalar()
-            {
-                Val0 = (int)(hsv.Hue / 360.0 * 179),
-                Val1 = (int)(hsv.Saturation / 100.0 * 255),
-                Val2 = (int)(hsv.Value / 100.0 * 255),
-            };
-        }
-
-        private int GetMiddle(Point p1, Point p2, Func<Point, int> f)
-        {
-            if (f(p1) > f(p2))
-            {
-                return f(p2) + (f(p1) - f(p2));
-            }
-
-            return f(p1) + (f(p2) - f(p1));
         }
 
         private (Point, Point, Point, Point) GetCorners(IEnumerable<Rect> boxes)
@@ -201,14 +163,36 @@ namespace ImageProcessing
             var xCenter = imgSize.Width / 2;
             var yCenter = imgSize.Height / 2;
 
+            // Sort boxes by their distance from the horizontal center and take the three closest.
+            // Then search for the boxes that are farthest from the vertical center and take two.
             boxes = boxes
-                .OrderBy(rect => Math.Abs(xCenter - (rect.Right - rect.Left)))
+                .OrderBy(rect => Math.Abs(xCenter - (rect.Left + (rect.Width / 2))))
                 .Take(3)
-                .OrderBy(rect => Math.Abs(yCenter - (rect.Top - rect.Bottom)))
+                .OrderBy(rect => Math.Abs(yCenter - (rect.Top + (rect.Height / 2))))
                 .TakeLast(2)
                 .OrderBy(rect => rect.Y);
 
-            return (boxes.ElementAt(0), boxes.ElementAt(1));
+            var upperBox = boxes.ElementAt(0);
+            var lowerBox = boxes.ElementAt(1);
+
+            var areaUpper = (float)Area(upperBox);
+            var areaLower = (float)Area(lowerBox);
+            var areaDev = areaUpper < areaLower ? areaUpper / areaLower : areaLower / areaUpper;
+
+            var arUpper = AspectRatio(upperBox);
+            var arLower = AspectRatio(lowerBox);
+            var aspectRatioDev = arUpper < arLower ? arUpper / arLower : arLower / arUpper;
+
+            var xCenterDiff = Math.Abs(upperBox.Left + (upperBox.Width / 2)
+                - (lowerBox.Left + (lowerBox.Width / 2)));
+
+            // Validate detected boxes: Must have similar area, aspect ratio and be at same X-coord.
+            if (areaDev > 0.9 && aspectRatioDev > 0.9 && xCenterDiff < 20)
+            {
+                return (boxes.ElementAt(0), boxes.ElementAt(1));
+            }
+
+            return (new Rect(), new Rect());
         }
 
         private int Area(Rect rect)
@@ -223,19 +207,40 @@ namespace ImageProcessing
 
         private Mat GetPerspectiveTransform((Rect, Rect) halfWayLines, (Point, Point, Point, Point) corners)
         {
+            var factor = 9;
+
             (var topHalfWay, var bottomHalfWay) = halfWayLines;
             (var topLeft, var topRight, var bottomRight, var bottomLeft) = corners;
 
             int yTop = topHalfWay.Top;
             int yBottom = bottomHalfWay.Bottom;
 
-            var origPoints = new Point2f[] { topLeft, topRight, bottomRight, bottomLeft };
+            var middleTop = new Point(topHalfWay.Left + (topHalfWay.Width / 2), yTop);
+            var middleBottom = new Point(bottomHalfWay.Left + (bottomHalfWay.Width / 2), yBottom);
+
+            var origPoints = new Point2f[]
+            {
+                topLeft,
+                middleTop,
+                topRight,
+                bottomRight,
+                middleBottom,
+                bottomLeft,
+            };
             var newPoints = new Point2f[]
             {
+                /*
                 new Point(topLeft.X, yTop),
                 new Point(topRight.X, yTop),
                 new Point(bottomRight.X, yBottom),
                 new Point(bottomLeft.X, yBottom),
+                */
+                new Point(0, 0),
+                new Point(60 * factor, 0),
+                new Point(120 * factor, 0),
+                new Point(120 * factor, 68 * factor),
+                new Point(60 * factor, 68 * factor),
+                new Point(0, 68 * factor),
             };
 
             return Cv2.GetPerspectiveTransform(origPoints, newPoints);

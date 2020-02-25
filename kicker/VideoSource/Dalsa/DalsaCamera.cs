@@ -71,6 +71,7 @@ namespace VideoSource.Dalsa
             _disconnectedDelegate = CameraDisconnected;
 
             CreateCamera();
+            ApplyOptions();
         }
 
         ~DalsaCamera()
