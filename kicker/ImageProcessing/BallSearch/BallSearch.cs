@@ -26,6 +26,11 @@ namespace ImageProcessing
             _camera = camera;
         }
 
+        public override IEnumerable<Channel> GetChannels()
+        {
+            return Array.Empty<Channel>();
+        }
+
         public void Start()
         {
             StartAcquisition();

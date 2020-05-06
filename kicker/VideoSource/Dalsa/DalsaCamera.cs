@@ -42,9 +42,9 @@ namespace VideoSource.Dalsa
 
         // constants
         private const int XMin = 64;
-        private const int YMin = 184;
-        private const int Width = 1184;
-        private const int Height = 660;
+        private const int YMin = 150;
+        private const int Width = 1168;
+        private const int Height = 646;
 
         private readonly FrameArrived _frameArrivedDelegate;
         private readonly CameraConnected _connectedDelegate;
@@ -63,7 +63,6 @@ namespace VideoSource.Dalsa
             : base(logger)
         {
             _options = options;
-            _options.RegisterChangeListener(ApplyOptions);
             _name = options.Value.CameraName;
 
             _frameArrivedDelegate = FrameArrived;
@@ -71,6 +70,9 @@ namespace VideoSource.Dalsa
             _disconnectedDelegate = CameraDisconnected;
 
             CreateCamera();
+            ApplyOptions();
+
+            _options?.RegisterChangeListener(ApplyOptions);
         }
 
         ~DalsaCamera()
@@ -79,6 +81,11 @@ namespace VideoSource.Dalsa
             {
                 DLL_DestroyCamera(_cameraPtr);
             }
+        }
+
+        public override IEnumerable<Channel> GetChannels()
+        {
+            return new Channel[] { new Channel("default", "Default", "The camera image") };
         }
 
         protected override void StartAcquisition()
@@ -189,7 +196,7 @@ namespace VideoSource.Dalsa
                 bayerMat.Dispose();
                 DLL_ReleaseBuffer(_cameraPtr, bufferIndex);
 
-                var frame = new Frame(bgrMat);
+                var frame = new Frame(bgrMat, ConsumerCount);
                 HandleFrameArrived(new FrameArrivedArgs(frame));
             }
         }

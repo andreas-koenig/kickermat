@@ -231,5 +231,10 @@ namespace ImageProcessing.Calibration
                 changes.DistortionCoefficients = distCoeffsArray;
             });
         }
+
+        public override IEnumerable<Channel> GetChannels()
+        {
+            return Array.Empty<Channel>();
+        }
     }
 }

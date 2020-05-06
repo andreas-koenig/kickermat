@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { KickerParameter, KickerComponent } from './api.model';
+import { KickerParameter, KickerComponent, VideoSource, Channel, MotorDiagnostics } from './api.model';
 import { REST_BASE } from './api';
 
 @Injectable({
@@ -28,5 +28,29 @@ export class ApiService {
   public startBallSearch() {
     const url = REST_BASE + '/imageprocessing';
     this.http.get(url).subscribe();
+  }
+
+  public getChannels(videoSource: VideoSource): Observable<Channel[]> {
+    const url = REST_BASE + '/video/' + videoSource + '/channels';
+
+    return this.http.get<Channel[]>(url);
+  }
+
+  public getChannel(videoSource: VideoSource): Observable<Channel> {
+    const url = REST_BASE + '/video/' + videoSource + '/channel';
+
+    return this.http.get<Channel>(url);
+  }
+
+  public switchChannel(videoSource: VideoSource, channel: Channel): Observable<Channel> {
+    const url = REST_BASE + '/video/' + videoSource + '/channel';
+
+    return this.http.put<Channel>(url, channel);
+  }
+
+  public getMotorDiagnostics(): Observable<MotorDiagnostics[]> {
+    const url = REST_BASE + '/motor';
+
+    return this.http.get<MotorDiagnostics[]>(url);
   }
 }

@@ -9,14 +9,35 @@ namespace VideoSource
     public abstract class BaseVideoSource : IVideoSource
     {
         private readonly object _objectLock = new object();
-        private int _consumerCount = 0;
+        private Channel _channel;
 
         public BaseVideoSource(ILogger logger)
         {
             Logger = logger;
         }
 
+        public Channel Channel
+        {
+            get
+            {
+                lock (_objectLock)
+                {
+                    return _channel;
+                }
+            }
+
+            set
+            {
+                lock (_objectLock)
+                {
+                    _channel = value;
+                }
+            }
+        }
+
         protected bool IsAcquisitionRunning { get; set; } = false;
+
+        protected int ConsumerCount { get; private set; } = 0;
 
         protected ILogger Logger { get; private set; }
 
@@ -40,11 +61,11 @@ namespace VideoSource
                 CameraDisconnected += consumer.OnCameraDisconnected;
 
                 var newConsumerCount = FrameArrived?.GetInvocationList().Length;
-                _consumerCount = newConsumerCount == null ? 0 : (int)newConsumerCount;
+                ConsumerCount = newConsumerCount == null ? 0 : (int)newConsumerCount;
 
-                if (_consumerCount > 1)
+                if (ConsumerCount > 1)
                 {
-                    Logger.LogInformation("Added consumer ({} in total)", _consumerCount);
+                    Logger.LogInformation("Added consumer ({} in total)", ConsumerCount);
                     return;
                 }
             }
@@ -54,7 +75,7 @@ namespace VideoSource
                 StartAcquisition();
                 IsAcquisitionRunning = true;
 
-                Logger.LogInformation("Acquisition started ({} consumers)", _consumerCount);
+                Logger.LogInformation("Acquisition started ({} consumers)", ConsumerCount);
             }
             catch (VideoSourceException ex)
             {
@@ -63,7 +84,7 @@ namespace VideoSource
                     FrameArrived -= consumer.OnFrameArrived;
                     CameraConnected -= consumer.OnCameraConnected;
                     CameraDisconnected -= consumer.OnCameraDisconnected;
-                    _consumerCount -= 1;
+                    ConsumerCount -= 1;
 
                     var msg = "Failed to start camera acquitision";
                     Logger.LogError(ex, msg);
@@ -91,9 +112,9 @@ namespace VideoSource
                     return;
                 }
 
-                _consumerCount -= 1;
+                ConsumerCount -= 1;
 
-                if (IsAcquisitionRunning && _consumerCount == 0)
+                if (IsAcquisitionRunning && ConsumerCount == 0)
                 {
                     StopAcquisition();
                     IsAcquisitionRunning = false;
@@ -101,9 +122,11 @@ namespace VideoSource
                     return;
                 }
 
-                Logger.LogInformation("Consumer unsubscribed ({} remaining)", _consumerCount);
+                Logger.LogInformation("Consumer unsubscribed ({} remaining)", ConsumerCount);
             }
         }
+
+        public abstract IEnumerable<Channel> GetChannels();
 
         protected virtual void StartAcquisition() { }
 
@@ -118,7 +141,7 @@ namespace VideoSource
         {
             Logger.LogInformation(
                 "Camera ({}) connected. Notifying {} consumers",
-                args.CameraName, _consumerCount);
+                args.CameraName, ConsumerCount);
             CameraConnected?.Invoke(this, args);
         }
 
@@ -126,7 +149,7 @@ namespace VideoSource
         {
             Logger.LogInformation(
                 "Camera ({}) disconnected. Notifying {} consumers",
-                args.CameraName, _consumerCount);
+                args.CameraName, ConsumerCount);
             CameraDisconnected?.Invoke(this, args);
         }
     }

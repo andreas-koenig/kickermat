@@ -10,7 +10,10 @@
           nzMatchRouterExact
           routerLink="{{parentPath + '/' + menu.path}}">
         <span title>
-          <i nz-icon [type]="menu.icon" *ngIf="menu.icon"></i>
+          <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon"></i>
+          <i nz-icon *ngIf="menu.svgIcon">
+            <img [src]="menu.svgIcon">
+          </i>
           <span>{{ menu.title }}</span>
         </span>
       </li>
@@ -21,7 +24,7 @@
           [nzDisabled]="menu.disabled"
           nzMatchRouterExact>
         <span title>
-          <i nz-icon [type]="menu.icon" *ngIf="menu.icon"></i>
+          <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon"></i>
           <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
         </span>
         <ul>
@@ -33,5 +36,5 @@
 </ul>
 
 <button id="collapse-button" nz-button [nzType]="'primary'" (click)="toggleCollapsed()" style="margin-bottom: 10px;">
-  <i nz-icon [type]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+  <i nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
 </button>

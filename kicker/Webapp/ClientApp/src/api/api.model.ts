@@ -1,7 +1,13 @@
 export enum VideoSource {
-  Camera = 0,
-  Calibration = 1,
-  ImageProcessing = 2
+  Camera = "Camera",
+  Calibration = "Calibration",
+  ImageProcessing = "ImageProcessing",
+}
+
+export interface Channel {
+  id: string;
+  name: string;
+  description: string;
 }
 
 export enum KickerComponent {
@@ -19,4 +25,31 @@ export interface NumberParameter extends KickerParameter {
   min: number;
   max: number;
   step: number;
+}
+
+export interface ColorRangeParameter extends KickerParameter {
+  defaultValue: ColorRange;
+  value: ColorRange;
+}
+
+export interface ColorRange {
+  lower: HsvColor;
+  upper: HsvColor;
+}
+
+export interface HsvColor {
+  hue: number; // [0, 360]
+  saturation: number; // [0, 100]
+  value: number; // [0, 100]
+}
+
+export interface MotorDiagnostics {
+  modell: string;
+  function: string;
+  bar: string;
+  canOpenId: number;
+  nmtState: string;
+  error: string;
+  operatingState: string;
+  operatingMode: string;
 }

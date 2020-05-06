@@ -8,10 +8,17 @@ namespace VideoSource
     public class Frame : IFrame
     {
         private Mat _mat;
+        private int _numSubscribers = 1;
 
         public Frame(Mat mat)
         {
             Mat = mat;
+        }
+
+        internal Frame(Mat mat, int numSubscribers)
+            : this(mat)
+        {
+            _numSubscribers = numSubscribers;
         }
 
         public Mat Mat
@@ -30,7 +37,11 @@ namespace VideoSource
 
         public void Release()
         {
-            Mat.Dispose();
+            _numSubscribers--;
+            if (_numSubscribers == 0)
+            {
+                Mat.Release();
+            }
         }
     }
 }
