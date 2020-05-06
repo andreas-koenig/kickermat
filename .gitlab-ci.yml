@@ -71,7 +71,7 @@ before_script:
   - 'if ($CI_COMMIT_BRANCH -AND $CI_COMMIT_BRANCH -ne "") { $BRANCH=$CI_COMMIT_BRANCH } else { $BRANCH=$CI_DEFAULT_BRANCH }'
   - 'git fetch --all'
   - 'git checkout $BRANCH'
-  - 'git pull'
+  - 'git pull origin $BRANCH'
 
 build:
   stage: build
