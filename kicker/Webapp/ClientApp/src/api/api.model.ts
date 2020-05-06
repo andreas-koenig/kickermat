@@ -42,3 +42,14 @@ export interface HsvColor {
   saturation: number; // [0, 100]
   value: number; // [0, 100]
 }
+
+export interface MotorDiagnostics {
+  modell: string;
+  function: string;
+  bar: string;
+  canOpenId: number;
+  nmtState: string;
+  error: string;
+  operatingState: string;
+  operatingMode: string;
+}

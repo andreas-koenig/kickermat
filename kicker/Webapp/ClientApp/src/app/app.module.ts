@@ -21,6 +21,7 @@ import { ImageProcessingComponent } from './image-processing/image-processing.co
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { NumberParameterComponent } from './parameter-list/number-parameter/number-parameter.component';
 import { ColorRangeParameterComponent } from './parameter-list/color-range-parameter/color-range-parameter.component';
+import { MotorComponent } from './motor/motor.component';
 
 const routes: Route[] = [
   {
@@ -31,6 +32,10 @@ const routes: Route[] = [
   {
     path: 'kicker',
     component: KickerComponent
+  },
+  {
+    path: 'motor',
+    component: MotorComponent
   },
   {
     path: 'camera/settings',
@@ -62,6 +67,7 @@ registerLocaleData(en);
     VideoPlayerComponent,
     NumberParameterComponent,
     ColorRangeParameterComponent,
+    MotorComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,4 +81,4 @@ registerLocaleData(en);
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

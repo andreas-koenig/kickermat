@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { KickerParameter, KickerComponent, VideoSource, Channel } from './api.model';
+import { KickerParameter, KickerComponent, VideoSource, Channel, MotorDiagnostics } from './api.model';
 import { REST_BASE } from './api';
 
 @Injectable({
@@ -46,5 +46,11 @@ export class ApiService {
     const url = REST_BASE + '/video/' + videoSource + '/channel';
 
     return this.http.put<Channel>(url, channel);
+  }
+
+  public getMotorDiagnostics(): Observable<MotorDiagnostics[]> {
+    const url = REST_BASE + '/motor';
+
+    return this.http.get<MotorDiagnostics[]>(url);
   }
 }

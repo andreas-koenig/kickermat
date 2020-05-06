@@ -63,7 +63,6 @@ namespace VideoSource.Dalsa
             : base(logger)
         {
             _options = options;
-            _options?.RegisterChangeListener(ApplyOptions);
             _name = options.Value.CameraName;
 
             _frameArrivedDelegate = FrameArrived;
@@ -72,6 +71,8 @@ namespace VideoSource.Dalsa
 
             CreateCamera();
             ApplyOptions();
+
+            _options?.RegisterChangeListener(ApplyOptions);
         }
 
         ~DalsaCamera()

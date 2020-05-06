@@ -5,7 +5,8 @@ export interface NavItem {
   disabled: boolean;
   level: number;
   path: string;
-  icon?: string;
+  icon?: string;        // Either add a predefined icon
+  svgIcon?: string;     // or create your own svg icon.
   children?: NavItem[]
 }
 
@@ -15,6 +16,15 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
     level: 1,
     title: 'Kicker',
     icon: 'play-square',
+    open: false,
+    selected: false,
+    disabled: false
+  },
+  {
+    path: 'motor',
+    level: 1,
+    title: 'Motors',
+    icon: 'icon:motor',
     open: false,
     selected: false,
     disabled: false

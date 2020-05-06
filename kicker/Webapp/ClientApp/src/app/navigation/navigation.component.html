@@ -11,6 +11,9 @@
           routerLink="{{parentPath + '/' + menu.path}}">
         <span title>
           <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon"></i>
+          <i nz-icon *ngIf="menu.svgIcon">
+            <img [src]="menu.svgIcon">
+          </i>
           <span>{{ menu.title }}</span>
         </span>
       </li>
