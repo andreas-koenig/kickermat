@@ -4,8 +4,8 @@ import { ApiService } from '@api/api.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import { HttpErrorResponse } from '@angular/common/http';
 
-export abstract class KickerParameterComponent implements OnInit {
-  @Input('parameter') public parameter: KickerParameter | undefined;
+export abstract class KickerParameterComponent<T extends KickerParameter> implements OnInit {
+  @Input('parameter') public parameter: T | undefined;
   @Input('component') public component: KickerComponent | undefined;
 
   public isUpdating = false;

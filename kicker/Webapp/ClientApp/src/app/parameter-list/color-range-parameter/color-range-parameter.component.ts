@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HsvColor, ColorRange } from '@api/api.model';
+import { HsvColor, ColorRange, ColorRangeParameter } from '@api/api.model';
 import { KickerParameterComponent } from '../kicker-parameter';
 import { NzMarks, NzMessageService } from 'ng-zorro-antd';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
@@ -16,7 +16,7 @@ interface RgbColor {
   templateUrl: './color-range-parameter.component.html',
   styleUrls: ['./color-range-parameter.component.scss']
 })
-export class ColorRangeParameterComponent extends KickerParameterComponent {
+export class ColorRangeParameterComponent extends KickerParameterComponent<ColorRangeParameter> {
   public hueRange: number[] = []
   public satRange: number[] = []
   public valRange: number[] = []

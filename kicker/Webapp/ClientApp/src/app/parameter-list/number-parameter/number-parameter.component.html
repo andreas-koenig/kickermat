@@ -1,6 +1,7 @@
 <div fxLayout="row">
   <!-- NgZorro has a bug for step size 2 with odd numbers, so we cannot use 'parameter.step' -->
-  <nz-slider fxFlex="100%"
+  <nz-slider *ngIf="parameter"
+             fxFlex="100%"
              [nzMin]="parameter.min"
              [nzMax]="parameter.max"
              [(ngModel)]="num"
@@ -9,7 +10,8 @@
              [nzDisabled]="isUpdating">
   </nz-slider>
 
-  <nz-input-number [nzMin]="parameter.min"
+  <nz-input-number *ngIf="parameter"
+                   [nzMin]="parameter.min"
                    [nzMax]="parameter.max"
                    [(ngModel)]="num"
                    (ngModelChange)="setParameter(num)"
