@@ -1,40 +1,44 @@
-<!-- Cards Slider-->
-  <div id="cards-slider" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" (wheel)="mouseScroll($event)">
+<h1>Motors</h1>
 
-    <!-- Left arrow -->
-    <div class="arrow" (click)="scrollLeft()">
-      <i nz-icon nzType="left" nzTheme="outline"></i>
-    </div>
+<h3>Here you can check the health state of the motors.</h3>
 
-    <!-- Cards -->
-    <div id="cards" #cards fxFlexLayout="row" fxLayoutGap="1em">
-      <nz-card #motorcard fxFlex="1 1" *ngFor="let diag of (diagnostics | async)">
-        <nz-card-meta *ngIf="diag.function === 'Rotation'"
-                      [nzTitle]="diag.modell"
-                      nzDescription="This is the description"
-                      [nzAvatar]="iconRotation">
-        </nz-card-meta>
+<nz-divider></nz-divider>
 
-        <nz-card-meta *ngIf="diag.function === 'Shift'"
-                      [nzTitle]="diag.modell"
-                      nzDescription="This is the description"
-                      [nzAvatar]="iconShift">
-        </nz-card-meta>
+<app-motor-overview (onChange)="changeMotor($event)"></app-motor-overview>
 
-        <p>Some content within the card. Status of the motor and so on.</p>
-      </nz-card>
-    </div>
-
-    <!-- Right Arrow -->
-    <div class="arrow" (click)="scrollRight()">
-      <i nz-icon nzType="right" nzTheme="outline"></i>
-    </div>
+<div id="content">
+  <h2>Information</h2>
+</div>
+<div class="motor-information" fxLayout="row" fxLayoutGap="3em" *ngIf="selectedMotor">
+  <div class="left" fxFlex="30%">
+    <app-info-table [motor]="selectedMotor" (onChange)="changeItem($event)"></app-info-table>
   </div>
 
-<ng-template #iconRotation>
-  <i nz-icon nzType="reload"></i>
+  <div class="right" fxFlex="70%">
+    <ng-container *ngTemplateOutlet="getInfoTemplate(selectedItem); context: selectedMotor"></ng-container>
+  </div>
+</div>
+
+<ng-template #bar>
+  <app-kickermat></app-kickermat>
 </ng-template>
 
-<ng-template #iconShift>
-  <i nz-icon nzType="arrows-alt" style="transform: rotate(-45deg)"></i>
+<ng-template #canOpenId>
+  <h3>CAN Identifier</h3>
+  <p>On the CAN bus each node has a unique identifier ranging from 0 to 127 that serves as an address.</p>
+  <p>
+    The CAN ID for the <i>{{selectedMotor.model}}</i> motor on the <i>{{selectedMotor.bar}}</i> bar is <span style="font-weight: bold">{{selectedMotor.canOpenId}}</span>.
+  </p>
+</ng-template>
+<ng-template #nmtState>
+  <app-nmt-state [nmtState]="selectedMotor.nmtState"></app-nmt-state>
+</ng-template>
+<ng-template #operatingMode>
+  Operating Mode
+</ng-template>
+<ng-template #operatingState>
+  <app-operating-state></app-operating-state>
+</ng-template>
+<ng-template #error>
+  Error
 </ng-template>

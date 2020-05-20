@@ -1,0 +1,31 @@
+<div id="info-table" *ngIf="motor" fxLayout="column">
+  <div [ngClass]="{'selected': selection === 'bar'}"
+       (click)="selectItem('bar')">
+    <span class="item">Bar: </span>{{motor.bar}}
+  </div>
+
+  <div [ngClass]="{'selected': selection === 'canOpenId'}"
+       (click)="selectItem('canOpenId')">
+    <span class="item">CAN Identifier: </span>{{motor.canOpenId}}
+  </div>
+
+  <div [ngClass]="{'selected': selection === 'nmtState'}"
+       (click)="selectItem('nmtState')">
+    <span class="item">NMT State: </span>{{motor.nmtState}}
+  </div>
+
+  <div [ngClass]="{'selected': selection === 'operatingState'}"
+       (click)="selectItem('operatingState')">
+    <span class="item">Operating State: </span>{{motor.operatingState}}
+  </div>
+
+  <div [ngClass]="{'selected': selection === 'operatingMode'}"
+       (click)="selectItem('operatingMode')">
+    <span class="item">Operating Mode: </span>{{motor.operatingMode}}
+  </div>
+
+  <div *ngIf="motor.error"  [ngClass]="{'selected': selection === 'error'}"
+       (click)="selectItem('error')">
+    <span class="item">Error: </span>{{motor.error}}
+  </div>
+</div>

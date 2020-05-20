@@ -43,13 +43,41 @@ export interface HsvColor {
   value: number; // [0, 100]
 }
 
-export interface MotorDiagnostics {
-  modell: string;
+enum NmtState {
+  Initialization = 0,
+  PreOperational = 1,
+  Operational = 2,
+  Stopped = 3
+}
+
+enum OperatingState {
+  NotReadyToSwitchOn = 0,
+  SwitchOnDisabled = 1,
+  ReadyToSwitchOn = 2,
+  SwitchedOn = 3,
+  OperationEnable = 4,
+  QuickStopActive = 5,
+  FaultReactionActive = 6,
+  Fault = 7
+}
+
+enum OperatingMode {
+  HomingMode = 0,
+  ProfilePositionMode = 1,
+  ProfileVelocityMode = 2,
+  CurrentControl = 3,
+  RotationSpeedControl = 4,
+  ElectricTransmission = 5,
+  Manual = 6
+}
+
+export interface Motor {
+  model: string;
   function: string;
   bar: string;
   canOpenId: number;
-  nmtState: string;
+  nmtState: NmtState;
   error: string;
-  operatingState: string;
-  operatingMode: string;
+  operatingState: OperatingState;
+  operatingMode: OperatingMode;
 }

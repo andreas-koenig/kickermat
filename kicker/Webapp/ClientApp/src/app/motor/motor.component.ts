@@ -1,55 +1,39 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { ApiService } from '@api/api.service';
-import { MotorDiagnostics } from '@api/api.model';
-import { Observable } from 'rxjs';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Motor } from '@api/api.model';
+import { Selection } from './info-table/info-table.component';
 
 @Component({
   selector: 'app-motor',
   templateUrl: './motor.component.html',
   styleUrls: ['./motor.component.scss']
 })
-export class MotorComponent implements OnInit {
-  public diagnostics: Observable<MotorDiagnostics[]> | undefined;
+export class MotorComponent {
+  public selectedMotor: Motor | undefined;
+  public selectedItem: Selection | undefined;
 
-  private currentCard = 0;
+  @ViewChild('bar', { static: true }) public barTemplate!: ElementRef<HTMLElement>;
+  @ViewChild('canOpenId', { static: true }) public canOpenIdTemplate!: ElementRef<HTMLElement>;
+  @ViewChild('nmtState', { static: true }) public nmtStateTemplate!: ElementRef<HTMLElement>;
+  @ViewChild('operatingState', { static: true }) public operatingStateTemplate!: ElementRef<HTMLElement>;
+  @ViewChild('operatingMode', { static: true }) public operatingModeTemplate!: ElementRef<HTMLElement>;
+  @ViewChild('error', { static: true }) public errorTemplate!: ElementRef<HTMLElement>;
 
-  @ViewChild('cards', { static: true })
-  public cards!: ElementRef<HTMLElement>;
-
-  @ViewChildren('motorcard')
-  public motorCards!: QueryList<ElementRef<HTMLElement>>;
-
-  constructor(private api: ApiService) { }
-
-  ngOnInit() {
-    this.diagnostics = this.api.getMotorDiagnostics();
+  public changeMotor(motor: Motor) {
+    this.selectedMotor = motor;
   }
 
-  public mouseScroll(event: WheelEvent) {
-    event.preventDefault();
-    event.deltaY > 0 ? this.scrollRight() : this.scrollLeft();
+  public changeItem(item: Selection) {
+    this.selectedItem = item;
   }
 
-  public scrollLeft() {
-    if (this.currentCard > 0) {
-      this.currentCard--;
-      this.scroll('end');
+  public getInfoTemplate(item: Selection): ElementRef {
+    switch (item) {
+      case "bar": return this.barTemplate;
+      case "canOpenId": return this.canOpenIdTemplate;
+      case "nmtState": return this.nmtStateTemplate;
+      case "operatingState": return this.operatingStateTemplate;
+      case "operatingMode": return this.operatingModeTemplate;
+      case "error": return this.errorTemplate;
     }
-  }
-
-  public scrollRight() {
-    if (this.currentCard < this.motorCards.length - 1) {
-      this.currentCard++;
-      this.scroll('start');
-    }
-  }
-
-  public scroll(inline: 'start' | 'center' | 'end' | 'nearest' | undefined) {
-    const card = this.cards.nativeElement.children.item(this.currentCard);
-
-    card && card.scrollIntoView({
-      behavior: 'smooth',
-      inline: inline,
-    });
   }
 }

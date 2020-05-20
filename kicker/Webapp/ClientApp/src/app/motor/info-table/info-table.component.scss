@@ -1,0 +1,17 @@
+#info-table {
+  & > div {
+    padding: 1em 1em;
+    cursor: pointer;
+    font-style: italic;
+      
+    &.selected, &:hover {
+      background: #e6f7ff;
+      color: #1890ff;
+    }
+
+    span.item {
+        font-weight: 600;
+        font-style: normal;
+    }
+  }
+}

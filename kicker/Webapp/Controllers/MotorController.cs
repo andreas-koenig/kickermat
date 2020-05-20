@@ -23,8 +23,8 @@ namespace Webapp.Controllers
                 new MotorDiagnostics("Telemecanique", "Shift", "Striker", 4, "Operational", "", "", "Point-to-Point"),
                 new MotorDiagnostics("Faulhaber", "Rotation", "Keeper", 10, "Operational", "", "", "Profile Position Mode"),
                 new MotorDiagnostics("Faulhaber", "Rotation", "Defense", 11, "Initialization", "", "", "Profile Position Mode"),
-                new MotorDiagnostics("Faulhaber", "Rotation", "Midfield", 12, "Stopped", "", "", "Profile Position Mode"),
-                new MotorDiagnostics("Faulhaber", "Rotation", "Striker", 12, "Operational", "", "", "Profile Position Mode"),
+                new MotorDiagnostics("Faulhaber", "Rotation", "Midfield", 12, "Stopped", "Overheated", "", "Profile Position Mode"),
+                new MotorDiagnostics("Faulhaber", "Rotation", "Striker", 13, "Operational", "", "", "Profile Position Mode"),
             };
 
             return Ok(diagnostics);
@@ -35,10 +35,10 @@ namespace Webapp.Controllers
     {
         public MotorDiagnostics() { }
 
-        public MotorDiagnostics(string modell, string function, string bar, byte canOpenId,
+        public MotorDiagnostics(string model, string function, string bar, byte canOpenId,
             string nmtState, string error, string operatingState, string operatingMode)
         {
-            Modell = modell;
+            Model = model;
             Function = function;
             Bar = bar;
             CanOpenId = canOpenId;
@@ -48,7 +48,7 @@ namespace Webapp.Controllers
             OperatingMode = operatingMode;
         }
 
-        public string Modell { get; set; }
+        public string Model { get; set; }
 
         public string Function { get; set; }
 

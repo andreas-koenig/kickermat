@@ -22,6 +22,11 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { NumberParameterComponent } from './parameter-list/number-parameter/number-parameter.component';
 import { ColorRangeParameterComponent } from './parameter-list/color-range-parameter/color-range-parameter.component';
 import { MotorComponent } from './motor/motor.component';
+import { NmtStateComponent } from './motor/nmt-state/nmt-state.component';
+import { MotorOverviewComponent } from './motor/motor-overview/motor-overview.component';
+import { InfoTableComponent } from './motor/info-table/info-table.component';
+import { OperatingStateComponent } from './motor/operating-state/operating-state.component';
+import { KickermatComponent } from './motor/kickermat/kickermat.component';
 
 const routes: Route[] = [
   {
@@ -68,6 +73,11 @@ registerLocaleData(en);
     NumberParameterComponent,
     ColorRangeParameterComponent,
     MotorComponent,
+    NmtStateComponent,
+    MotorOverviewComponent,
+    InfoTableComponent,
+    OperatingStateComponent,
+    KickermatComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,52 @@
+<!-- Cards Slider-->
+<div id="overview" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" (wheel)="mouseWheel($event)">
+
+  <!-- Left arrow -->
+  <div class="arrow left" (click)="scrollLeft()">
+    <i nz-icon nzType="left" nzTheme="outline"></i>
+  </div>
+
+  <!-- Cards -->
+  <div id="cards" #cards fxLayout="row" fxLayoutGap="1em">
+
+    <div *ngFor="let motor of (motors$ | async); index as i"
+         class="card"
+         fxLayout="column"
+         fxFlex
+         [ngClass]="{'selected': motor.canOpenId === selectedMotor?.canOpenId}"
+         (click)="selectMotor(motor, i)">
+
+      <div class="content"
+           fxFlex
+           fxLayout="row"
+           fxLayoutAlign="center center">
+        <div class="icon" fxFlex>
+          <i nz-icon [nzType]="(motor.function === 'Rotation') ? 'reload' : 'arrows-alt'"></i>
+        </div>
+
+        <div class="heading" fxFlex>
+          <div>{{motor.bar}}</div>
+          <div class="model">{{motor.model}}</div>
+        </div>
+
+        <div class="status"
+             fxFlex
+             [ngClass]="{'error': motor.error}">
+          <i nz-icon [nzType]="motor.error ? 'exclamation-circle' : 'check-circle'"></i>
+        </div>
+      </div>
+
+      <div class="extra" fxFlex>
+        CAN ID: {{motor.canOpenId}}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Right arrow -->
+  <div class="arrow right" (click)="scrollRight()">
+    <i nz-icon nzType="right" nzTheme="outline"></i>
+  </div>
+
+</div>
