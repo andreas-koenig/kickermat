@@ -1,0 +1,34 @@
+<div id="motors" fxLayout="row" fxLayoutAlign="space-evenly">
+  <div fxLayout="column"
+       fxLayoutAlign="center center"
+       class="motor"
+       *ngFor="let motor of motors">
+
+    <div [ngClass]="{'item': true, 'selected': motor.canId === selected.canId}"
+         (click)="selectMotor(motor)">
+      <!-- Status -->
+      <div [ngClass]="{'status': true, 'error': motor.error}">
+        <i nz-icon
+           [nzType]="motor.error ? 'exclamation-circle' : 'check-circle'"
+           nzTheme="fill">
+        </i>
+      </div>
+
+      <!-- Function -->
+      <div class="function">
+        <i nz-icon
+           [nzType]="(motor.function === functionEnum.Rotation) ? 'reload' : 'arrows-alt'"
+           nzTheme="outline">
+        </i>
+      </div>
+
+      <!-- Bar -->
+      <div class="bar">
+        {{barToString(motor.bar)}}
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div [ngClass]="{'arrow': true, 'selected': motor.canId === selected.canId}"></div>
+  </div>
+</div>

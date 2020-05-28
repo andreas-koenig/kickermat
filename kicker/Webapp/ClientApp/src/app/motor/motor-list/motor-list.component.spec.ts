@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MotorOverviewComponent } from './motor-overview.component';
+import { MotorListComponent } from './motor-list.component';
 
-describe('MotorOverviewComponent', () => {
-  let component: MotorOverviewComponent;
-  let fixture: ComponentFixture<MotorOverviewComponent>;
+describe('MotorListComponent', () => {
+  let component: MotorListComponent;
+  let fixture: ComponentFixture<MotorListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MotorOverviewComponent ]
+      declarations: [ MotorListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MotorOverviewComponent);
+    fixture = TestBed.createComponent(MotorListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

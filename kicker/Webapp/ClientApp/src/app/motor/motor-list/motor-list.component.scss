@@ -1,0 +1,58 @@
+#motors {
+  background: rgb(0, 21, 41);
+  color: white;
+  padding-top: 2em;
+
+  .motor {
+    position: relative;
+
+    .item {
+      padding: 1em;
+      border-radius: .5em;
+      margin-bottom: .75em;
+      cursor: pointer;
+
+      &.selected, &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .status {
+        position: absolute;
+        top: -.5em;
+        right: -.5em;
+        line-height: 1em;
+        background: black;
+        border-radius: 50%;
+        color: rgb(82, 196, 26);
+
+        &.error {
+          color: #ff4d4f;
+        }
+      }
+
+      .function {
+        font-size: 3em;
+        padding: 0 .5em;
+        line-height: 1.5em;
+      }
+
+      .bar {
+        text-align: center;
+      }
+    }
+
+    .arrow {
+      width: 0px;
+      height: 0px;
+      transform: rotate(360deg);
+      border-style: solid;
+      border-width: 0 1em 1em 1em;
+      border-color: transparent transparent transparent transparent;
+      bottom: 0;
+
+      &.selected {
+        border-color: transparent transparent #ffffff transparent;
+      }
+    }
+  }
+}

@@ -45,6 +45,7 @@
   <ItemGroup>
     <None Remove="ClientApp\src\api\api.model.ts" />
     <None Remove="ClientApp\src\api\api.ts" />
+    <None Remove="ClientApp\src\app\motor\names.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,12 +71,18 @@
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\GameController\GameController.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
+    <ProjectReference Include="..\MotorController\MotorController.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\api\api.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\api\api.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\motor\names.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\assets\icon\" />
   </ItemGroup>
 
 </Project>

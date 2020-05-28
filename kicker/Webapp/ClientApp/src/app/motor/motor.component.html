@@ -1,44 +1,54 @@
-<h1>Motors</h1>
+<ng-container *ngIf="!loading">
+  <app-motor-list [motors]="motors" [(selected)]="selectedMotor"></app-motor-list>
 
-<h3>Here you can check the health state of the motors.</h3>
+  <div class="motor-information" fxLayout="row" fxLayoutGap="3em">
+    <div class="left" fxFlex="20%">
+      <app-info-table [motor]="selectedMotor" (onChange)="changeItem($event)"></app-info-table>
+    </div>
 
-<nz-divider></nz-divider>
-
-<app-motor-overview (onChange)="changeMotor($event)"></app-motor-overview>
-
-<div id="content">
-  <h2>Information</h2>
-</div>
-<div class="motor-information" fxLayout="row" fxLayoutGap="3em" *ngIf="selectedMotor">
-  <div class="left" fxFlex="30%">
-    <app-info-table [motor]="selectedMotor" (onChange)="changeItem($event)"></app-info-table>
+    <div class="right" fxFlex="80%">
+      <ng-container *ngTemplateOutlet="getInfoTemplate(selectedItem); context: selectedMotor"></ng-container>
+    </div>
   </div>
+</ng-container>
 
-  <div class="right" fxFlex="70%">
-    <ng-container *ngTemplateOutlet="getInfoTemplate(selectedItem); context: selectedMotor"></ng-container>
+<ng-container *ngIf="loading">
+  <div id="loading" fxLayout="column" fxLayoutAlign="center center">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    <p>Loading motor diagnostics...</p>
   </div>
-</div>
+</ng-container>
 
+<!-- Kickermat (Bar)-->
 <ng-template #bar>
-  <app-kickermat></app-kickermat>
+  <app-kickermat [motors]="motors" [(selected)]="selectedMotor"></app-kickermat>
 </ng-template>
 
-<ng-template #canOpenId>
-  <h3>CAN Identifier</h3>
+<!-- CanId -->
+<ng-template #canId>
+  <h2>CAN Identifier</h2>
   <p>On the CAN bus each node has a unique identifier ranging from 0 to 127 that serves as an address.</p>
   <p>
-    The CAN ID for the <i>{{selectedMotor.model}}</i> motor on the <i>{{selectedMotor.bar}}</i> bar is <span style="font-weight: bold">{{selectedMotor.canOpenId}}</span>.
+    The CAN ID for the <i>{{selectedMotor.model}}</i> motor on the {{barToString(selectedMotor.bar)}} bar is: <nz-tag>{{selectedMotor.canId}}</nz-tag>
   </p>
 </ng-template>
+
+<!-- NMT State -->
 <ng-template #nmtState>
   <app-nmt-state [nmtState]="selectedMotor.nmtState"></app-nmt-state>
 </ng-template>
+
+<!-- Operating Mode -->
 <ng-template #operatingMode>
-  Operating Mode
+  <app-operating-mode [motor]="selectedMotor"></app-operating-mode>
 </ng-template>
+
+<!-- Operating State -->
 <ng-template #operatingState>
-  <app-operating-state></app-operating-state>
+  <app-operating-state [motor]="selectedMotor"></app-operating-state>
 </ng-template>
+
+<!-- Error -->
 <ng-template #error>
-  Error
+  <h2>Error</h2>
 </ng-template>

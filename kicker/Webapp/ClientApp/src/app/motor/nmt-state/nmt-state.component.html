@@ -1,4 +1,4 @@
-<h3>Network Management (NMT) state</h3>
+<h2>Network Management (NMT) state</h2>
 
 <p>
   Within the CANopen network the motors are considered slaves, whereas the Kickermat computer
@@ -16,13 +16,13 @@
     <path d="M 59 383.88 L 57.33 378.88 L 60.67 378.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
     <path d="M 59 225 L 59 111.12" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
     <path d="M 59 106.12 L 60.67 111.12 L 57.33 111.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.PreOperational}" transform="translate(-0.5 -0.5)">
       <rect x="29" y="225" width="120" height="40" rx="6" ry="6" />
       <text x="89" y="249">Pre-Operational</text>
     </g>
     <path d="M 119 105 L 119 218.88" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
     <path d="M 119 223.88 L 117.33 218.88 L 120.67 218.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.Initialization}" transform="translate(-0.5 -0.5)">
       <rect x="29" y="65" width="120" height="40" rx="6" ry="6" />
       <text x="89" y="89">Initialization</text>
     </g>
@@ -32,7 +32,7 @@
     <path d="M 299 346.12 L 300.66 351.12 L 297.33 351.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
     <path d="M 29 405 L 18.94 405.03 Q 8.94 405.06 8.94 395.06 L 8.94 95.06 Q 8.94 85.06 15.91 85.04 L 22.88 85.02" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
     <path d="M 27.88 85 L 22.89 86.68 L 22.88 83.35 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.Operational}" transform="translate(-0.5 -0.5)">
       <rect x="29" y="385" width="120" height="40" rx="6" ry="6" />
       <text x="89" y="409">Operational</text>
     </g>
@@ -42,7 +42,7 @@
     <path d="M 119 383.88 L 117.33 378.88 L 120.66 378.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
     <path d="M 329 305 L 328.94 95.06 Q 328.94 85.06 318.94 85.06 L 155.12 85" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
     <path d="M 150.12 85 L 155.12 83.34 L 155.12 86.67 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.Stopped}" transform="translate(-0.5 -0.5)">
       <rect x="269" y="305" width="120" height="40" rx="6" ry="6" />
       <text x="329" y="329">Stopped</text>
     </g>

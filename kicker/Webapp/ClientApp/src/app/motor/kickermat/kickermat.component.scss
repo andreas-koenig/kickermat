@@ -1,6 +1,7 @@
 svg {
   width: 100%;
   margin: 0 auto;
+  margin-top: 1.5em;
 
   #playingfield {
     rect {
@@ -55,7 +56,7 @@ svg {
         stroke: #adadad;
       }
 
-      &:hover, .selected {
+      &:hover, &.selected {
         path, ellipse {
           stroke: #1890ff;
         }
@@ -68,7 +69,7 @@ svg {
         stroke: #adadad;
       }
 
-      &:hover, .selected {
+      &:hover, &.selected {
         rect {
           stroke: #1890ff;
           stroke-width: 2;

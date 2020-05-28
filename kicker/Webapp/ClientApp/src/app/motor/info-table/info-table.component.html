@@ -1,31 +1,33 @@
+<h2>Information</h2>
+
 <div id="info-table" *ngIf="motor" fxLayout="column">
   <div [ngClass]="{'selected': selection === 'bar'}"
        (click)="selectItem('bar')">
-    <span class="item">Bar: </span>{{motor.bar}}
+    <span class="item">Bar: </span><span class="value">{{barToString(motor.bar)}}</span>
   </div>
 
-  <div [ngClass]="{'selected': selection === 'canOpenId'}"
-       (click)="selectItem('canOpenId')">
-    <span class="item">CAN Identifier: </span>{{motor.canOpenId}}
+  <div [ngClass]="{'selected': selection === 'canId'}"
+       (click)="selectItem('canId')">
+    <span class="item">CAN Identifier: </span><span class="value">{{motor.canId}}</span>
   </div>
 
   <div [ngClass]="{'selected': selection === 'nmtState'}"
        (click)="selectItem('nmtState')">
-    <span class="item">NMT State: </span>{{motor.nmtState}}
+    <span class="item">NMT State: </span><span class="value">{{nmtStateToString(motor.nmtState)}}</span>
   </div>
 
   <div [ngClass]="{'selected': selection === 'operatingState'}"
        (click)="selectItem('operatingState')">
-    <span class="item">Operating State: </span>{{motor.operatingState}}
+    <span class="item">Operating State: </span><span class="value">{{opStateToString(motor.operatingState)}}</span>
   </div>
 
   <div [ngClass]="{'selected': selection === 'operatingMode'}"
        (click)="selectItem('operatingMode')">
-    <span class="item">Operating Mode: </span>{{motor.operatingMode}}
+    <span class="item">Operating Mode: </span><span class="value">{{opModeToString(motor.operatingMode)}}</span>
   </div>
 
   <div *ngIf="motor.error"  [ngClass]="{'selected': selection === 'error'}"
        (click)="selectItem('error')">
-    <span class="item">Error: </span>{{motor.error}}
+    <span class="item">Error: </span><span class="value">{{motor.error}}</span>
   </div>
 </div>

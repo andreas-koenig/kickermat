@@ -23,10 +23,11 @@ import { NumberParameterComponent } from './parameter-list/number-parameter/numb
 import { ColorRangeParameterComponent } from './parameter-list/color-range-parameter/color-range-parameter.component';
 import { MotorComponent } from './motor/motor.component';
 import { NmtStateComponent } from './motor/nmt-state/nmt-state.component';
-import { MotorOverviewComponent } from './motor/motor-overview/motor-overview.component';
 import { InfoTableComponent } from './motor/info-table/info-table.component';
 import { OperatingStateComponent } from './motor/operating-state/operating-state.component';
 import { KickermatComponent } from './motor/kickermat/kickermat.component';
+import { OperatingModeComponent } from './motor/operating-mode/operating-mode.component';
+import { MotorListComponent } from './motor/motor-list/motor-list.component';
 
 const routes: Route[] = [
   {
@@ -74,10 +75,11 @@ registerLocaleData(en);
     ColorRangeParameterComponent,
     MotorComponent,
     NmtStateComponent,
-    MotorOverviewComponent,
     InfoTableComponent,
     OperatingStateComponent,
     KickermatComponent,
+    OperatingModeComponent,
+    MotorListComponent,
   ],
   imports: [
     BrowserModule,

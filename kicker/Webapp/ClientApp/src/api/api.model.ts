@@ -43,14 +43,26 @@ export interface HsvColor {
   value: number; // [0, 100]
 }
 
-enum NmtState {
+export enum Function {
+  Rotation = 0,
+  Shift = 1
+}
+
+export enum Bar {
+  Keeper = 0,
+  Defense = 1,
+  Midfield = 2,
+  Striker = 3
+}
+
+export enum NmtState {
   Initialization = 0,
   PreOperational = 1,
   Operational = 2,
   Stopped = 3
 }
 
-enum OperatingState {
+export enum OperatingState {
   NotReadyToSwitchOn = 0,
   SwitchOnDisabled = 1,
   ReadyToSwitchOn = 2,
@@ -61,23 +73,22 @@ enum OperatingState {
   Fault = 7
 }
 
-enum OperatingMode {
-  HomingMode = 0,
-  ProfilePositionMode = 1,
-  ProfileVelocityMode = 2,
-  CurrentControl = 3,
-  RotationSpeedControl = 4,
-  ElectricTransmission = 5,
-  Manual = 6
+export enum OperatingMode {
+  ProfilePositionMode = 0,  // Punkt zu Punkt
+  ProfileVelocityMode = 1,  // Geschwindigkeitsprofil
+  HomingMode = 2,           // Referenzierung
+  OscillatorMode = 3,       // Drehzahlregelung
+  GearingMode = 4,          // Elektronisches Getriebe
+  JogMode = 5               // Manuellfahrt
 }
 
 export interface Motor {
   model: string;
-  function: string;
-  bar: string;
-  canOpenId: number;
+  function: Function;
+  bar: Bar;
+  canId: number;
   nmtState: NmtState;
-  error: string;
   operatingState: OperatingState;
   operatingMode: OperatingMode;
+  error: string | undefined;
 }

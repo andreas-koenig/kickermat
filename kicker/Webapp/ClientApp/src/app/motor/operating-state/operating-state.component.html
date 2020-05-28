@@ -1,8 +1,13 @@
-<h3>Operating State</h3>
+<h2>Operating State</h2>
 
 <p>
-  Lorem ipsum...
+  The <i>Telemecanique</i> and <i>Faulhaber</i> motors implement CiA DSP402, a device profile for drives and motion control that defines a state machine controlling the operating state of a motor. On startup a motor automatically enters <i>Not ready to switch on</i> and transitions to <i>Switch on disabled</i> once it is initialized. From then on the operating state can be controlled by commands that are sent as CANopen messages. In case of errors a fault reaction is triggered and upon its completion the motors enters the <i>Fault</i> state.
 </p>
+
+<p>
+  The operating state of this <i>{{motor.model}}</i> motor is: <nz-tag>{{opStateToString(motor.operatingState)}}</nz-tag>
+</p>
+
 
 <svg xmlns="http://www.w3.org/2000/svg" style="background-color: rgb(255, 255, 255);"
      xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="509px" height="693px" viewBox="-0.5 -0.5 509 693">
@@ -15,18 +20,18 @@
     <path d="M 178 326.12 L 179.67 331.12 L 176.33 331.12 Z" fill="#adadad" stroke="#adadad" />
     <path d="M 118 165 L 118 278.88" fill="none" stroke="#adadad" />
     <path d="M 118 283.88 L 116.33 278.88 L 119.67 278.88 Z" fill="#adadad" stroke="#adadad" />
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.SwitchOnDisabled}" transform="translate(-0.5 -0.5)">
       <rect x="88" y="125" width="120" height="40" rx="6" ry="6" />
       <text x="148" y="149">Switch on disabled</text>
     </g>
     <path d="M 148 85 L 148 118.88" fill="none" stroke="#adadad" />
     <path d="M 148 123.88 L 146.33 118.88 L 149.67 118.88 Z" fill="#adadad" stroke="#adadad" />
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.NotReadyToSwitchOn}" transform="translate(-0.5 -0.5)">
       <rect x="88" y="45" width="120" height="40" rx="6" ry="6" />
       <text x="148" y="62">Not ready to</text>
       <text x="148" y="77">switch on</text>
     </g>
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.ReadyToSwitchOn}" transform="translate(-0.5 -0.5)">
       <rect x="88" y="285" width="120" height="40" rx="6" ry="6" />
       <text x="148" y="309">Ready to switch on</text>
     </g>
@@ -44,23 +49,23 @@
       <rect x="408" y="377" width="78" height="14" rx="1.26" ry="1.26" />
       <text x="447" y="388">DisableVoltage</text>
     </g>
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.SwitchedOn}" transform="translate(-0.5 -0.5)">
       <rect x="88" y="445" width="120" height="40" rx="6" ry="6" />
       <text x="148" y="469">Switched on</text>
     </g>
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.QuickStopActive}" transform="translate(-0.5 -0.5)">
       <rect x="387" y="605" width="120" height="40" rx="6" ry="6" />
       <text x="447" y="629">Quick-Stop active</text>
     </g>
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.OperationEnable}" transform="translate(-0.5 -0.5)">
       <rect x="88" y="605" width="120" height="40" rx="6" ry="6" />
       <text x="148" y="629">Operation enable</text>
     </g>
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.Fault}" transform="translate(-0.5 -0.5)">
       <rect x="288" y="245" width="120" height="40" rx="6" ry="6" />
       <text x="348" y="269">Fault</text>
     </g>
-    <g class="state" transform="translate(-0.5 -0.5)">
+    <g [ngClass]="{'state': true, 'selected': motor.operatingState === operatingStateEnum.FaultReactionActive}" transform="translate(-0.5 -0.5)">
       <rect x="288" y="325" width="120" height="40" rx="6" ry="6" />
       <text x="348" y="343">Fault Reaction</text>
       <text x="348" y="358">active</text>

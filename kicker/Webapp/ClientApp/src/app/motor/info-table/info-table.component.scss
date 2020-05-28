@@ -2,7 +2,6 @@
   & > div {
     padding: 1em 1em;
     cursor: pointer;
-    font-style: italic;
       
     &.selected, &:hover {
       background: #e6f7ff;
@@ -12,6 +11,10 @@
     span.item {
         font-weight: 600;
         font-style: normal;
+    }
+
+    span.value {
+        font-style: italic;
     }
   }
 }

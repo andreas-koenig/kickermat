@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Motor } from '@api/api.model';
+import { barToString, opStateToString, nmtStateToString, opModeToString } from '../names';
 
-export type Selection = "bar" | "nmtState" | "canOpenId"
+export type Selection = "bar" | "nmtState" | "canId"
   | "operatingState" | "operatingMode" | "error";
 
 @Component({
@@ -14,6 +15,11 @@ export class InfoTableComponent implements OnInit {
   @Output('onChange') public itemChanged: EventEmitter<Selection> = new EventEmitter();
 
   public selection: Selection = "bar";
+
+  public barToString = barToString;
+  public opStateToString = opStateToString;
+  public nmtStateToString = nmtStateToString;
+  public opModeToString = opModeToString;
 
   constructor() { }
 

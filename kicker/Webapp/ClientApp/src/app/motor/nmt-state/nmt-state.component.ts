@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { NmtState } from '@api/api.model';
 
 @Component({
   selector: 'app-nmt-state',
@@ -14,6 +15,8 @@ export class NmtStateComponent implements OnInit {
   public tooltipOperational = "The motor is fully operational and all communication objects\
     defined by CANopen are enabled.";
   public tooltipStopped = "The motor stopped due to a failure.";
+
+  public nmtStateEnum = NmtState;
 
   constructor() { }
 
