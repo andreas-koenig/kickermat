@@ -3,13 +3,15 @@
 
 #include "api.h"
 
-#define KEEPER (char)0
-#define DEFENSE (char)1
-#define MIDFIELD (char)2
-#define STRIKER (char)3
+#define KEEPER (uint8_t)0
+#define DEFENSE (uint8_t)1
+#define MIDFIELD (uint8_t)2
+#define STRIKER (uint8_t)3
 
 CAN_API void* init() {
     auto api = new ApiHandle{
+        new std::mutex(),
+
         new Faulhaber(ID_FH_GOALKEEPER),
         new Faulhaber(ID_FH_DEFENSE),
         new Faulhaber(ID_FH_MIDFIELD),
@@ -17,7 +19,9 @@ CAN_API void* init() {
         new Telemecanique(ID_TM_GOALKEEPER),
         new Telemecanique(ID_TM_DEFENSE),
         new Telemecanique(ID_TM_MIDFIELD),
-        new Telemecanique(ID_TM_STRIKER)
+        new Telemecanique(ID_TM_STRIKER),
+
+        CalibrationState::NotCalibrated,
     };
 
     api->TelemecaniqueKeeper->EnableOperation();
@@ -30,7 +34,12 @@ CAN_API void* init() {
 
 CAN_API void destroy(void* apiHandle) {
     auto api = (ApiHandle*)apiHandle;
+    if (api == nullptr) {
+        return;
+    }
 
+    delete api->Mutex;
+    
     delete api->FaulhaberKeeper;
     delete api->FaulhaberDefense;
     delete api->FaulhaberMidfield;
@@ -45,6 +54,14 @@ CAN_API void destroy(void* apiHandle) {
 
 CAN_API void start_calibration(void* apiHandle, void __stdcall done_callback(void)) {
     auto api = (ApiHandle*)apiHandle;
+    if (api == nullptr) {
+        return;
+    }
+
+    api->Mutex->lock();
+    api->CalibrationState == CalibrationState::Running;
+    api->Mutex->unlock();
+
     auto calibrate = [](BaseMotor* motor) { motor->Calibrate(); };
 
     std::thread threadTmKeeper(calibrate, api->TelemecaniqueKeeper);
@@ -67,11 +84,32 @@ CAN_API void start_calibration(void* apiHandle, void __stdcall done_callback(voi
     threadFhMidfield.join();
     threadFhStriker.join();
 
+    api->Mutex->lock();
+    api->CalibrationState == CalibrationState::Finished;
+    api->Mutex->unlock();
+
     done_callback();
 }
 
-CAN_API void move_bar(void* apiHandle, char bar, char position, char angle, char rot_direction) {
+CAN_API CalibrationState get_calibration_state(void* apiHandle) {
     auto api = (ApiHandle*)apiHandle;
+    if (api == nullptr) {
+        return CalibrationState::NotCalibrated;
+    }
+
+    CalibrationState state;
+    api->Mutex->lock();
+    state = api->CalibrationState;
+    api->Mutex->unlock();
+
+    return state;
+}
+
+CAN_API void move_bar(void* apiHandle, uint8_t bar, uint8_t position, char angle, char rot_direction) {
+    auto api = (ApiHandle*)apiHandle;
+    if (api == nullptr) {
+        return;
+    }
 
     Faulhaber* faulhaber = nullptr;
     Telemecanique* telemecanique = nullptr;
@@ -105,10 +143,10 @@ CAN_API void move_bar(void* apiHandle, char bar, char position, char angle, char
     }
 }
 
-CAN_API void shift_bar(void* api, char bar, char position) {
+CAN_API void shift_bar(void* api, uint8_t bar, uint8_t position) {
     move_bar(api, bar, position, -1, 0);
 }
 
-CAN_API void rotate_bar(void* api, char bar, char angle, char rot_direction) {
+CAN_API void rotate_bar(void* api, uint8_t bar, char angle, char rot_direction) {
     move_bar(api, bar, -1, angle, rot_direction);
 }
