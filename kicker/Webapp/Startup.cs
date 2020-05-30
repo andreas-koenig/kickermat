@@ -55,6 +55,8 @@ namespace Webapp
             });
 
             // Services
+            services.RegisterKickermatPlayers();
+            services.AddSingleton<KickermatService>();
             services.AddSingleton<ParameterService>();
             services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.Communication>();
             services.ConfigureKicker<DalsaSettings, CalibrationSettings,

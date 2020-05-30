@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Communication;
 using Configuration;
 using ImageProcessing;
@@ -8,11 +11,49 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VideoSource;
+using Webapp.Player.Api;
 
 namespace Webapp.Settings
 {
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection RegisterKickermatPlayers(this IServiceCollection services)
+        {
+            var players = new Dictionary<string, Type>();
+
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                if (type.GetInterfaces().Contains(typeof(IKickermatPlayer)))
+                {
+                    var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
+                    if (playerAttr == null)
+                    {
+                        throw new KickermatException(
+                            $@"Please register the IKickermatPlayer implementation '{type.FullName}'
+                            by using annotating it with {typeof(KickermatPlayerAttribute).FullName}");
+                    }
+
+                    string playerName = playerAttr.Name;
+                    if (players.ContainsKey(playerName))
+                    {
+                        throw new KickermatException(
+                            $@"The IKickermatPlayer implementations {type.FullName} and
+                            {players[playerName].FullName} are both registered under the name
+                            {playerName}. Please choose distinct names!");
+                    }
+
+                    players.Add(playerAttr.Name, type);
+                }
+            }
+
+            foreach (var playerType in players.Values)
+            {
+                services.AddSingleton(playerType);
+            }
+
+            return services;
+        }
+
         /// <summary>
         /// Add an OptionsMonitor whose updates are written back to its underlying JSON file.
         /// </summary>
