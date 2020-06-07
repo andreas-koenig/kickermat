@@ -69,7 +69,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\GameController\GameController.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
     <ProjectReference Include="..\MotorController\MotorController.csproj" />
