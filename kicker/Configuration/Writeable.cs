@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Configuration
 {
-    public class WritableOptions<T> : IWritableOptions<T>
+    public class Writable<T> : IWriteable<T>
         where T : class, new()
     {
         private static Action _onChange;
@@ -16,7 +16,7 @@ namespace Configuration
         private readonly string _section;
         private readonly string _file;
 
-        public WritableOptions(
+        public Writable(
             IHostingEnvironment environment,
             IOptionsMonitor<T> options,
             string sectionPath,
@@ -26,6 +26,11 @@ namespace Configuration
             _options = options;
             _section = sectionPath;
             _file = file;
+
+            _options.OnChange((settings, path) =>
+            {
+                Console.WriteLine(path);
+            });
         }
 
         public object ValueObject => _options.CurrentValue;

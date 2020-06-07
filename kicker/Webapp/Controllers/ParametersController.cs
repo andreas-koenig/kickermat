@@ -38,7 +38,7 @@ namespace Webapp.Controllers
                 return NotFound(string.Format("The component {0} was not found", component));
             }
 
-            IWritableOptions options;
+            IWriteable options;
             try
             {
                 options = _parameterService.KickerOptions[kickerComponent.GetType()];
@@ -74,7 +74,7 @@ namespace Webapp.Controllers
                 return NotFound(string.Format("The component {0} was not found", component));
             }
 
-            IWritableOptions options;
+            IWriteable options;
             try
             {
                 options = _parameterService.KickerOptions[kickerComponent.GetType()];
@@ -102,6 +102,7 @@ namespace Webapp.Controllers
                         var newVal = JsonConvert.DeserializeObject(value.ToString(), prop.PropertyType);
                         options.Update(changes =>
                         {
+                            // TODO: Check for changes
                             prop.SetValue(changes, newVal);
                         });
                     }

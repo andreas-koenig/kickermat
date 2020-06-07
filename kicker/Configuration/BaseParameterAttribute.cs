@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Configuration
 {
@@ -14,12 +15,17 @@ namespace Configuration
             Description = description;
         }
 
+        [JsonIgnore]
+        public override object TypeId => base.TypeId;
+
         public string Name { get; protected set; }
 
         public string Description { get; protected set; }
 
+        [JsonIgnore]
         public object Value { get; set; }
 
+        [JsonIgnore]
         public object DefaultValue { get; protected set; }
     }
 }

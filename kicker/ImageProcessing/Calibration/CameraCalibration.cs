@@ -28,7 +28,7 @@ namespace ImageProcessing.Calibration
 
         // Logging & Options
         private readonly ILogger<ICameraCalibration> _logger;
-        private readonly IWritableOptions<CalibrationSettings> _calibrationOptions;
+        private readonly IWriteable<CalibrationSettings> _calibrationOptions;
 
         // Calibration
         private readonly object _objectLock;
@@ -41,7 +41,7 @@ namespace ImageProcessing.Calibration
         private uint _frameCount = 0;
 
         public CameraCalibration(IVideoSource camera, ILogger<ICameraCalibration> logger,
-            IWritableOptions<CalibrationSettings> calibrationOptions)
+            IWriteable<CalibrationSettings> calibrationOptions)
             : base(camera, logger)
         {
             _objectLock = new object();

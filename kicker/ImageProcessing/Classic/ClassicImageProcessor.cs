@@ -10,9 +10,9 @@ using VideoSource;
 
 namespace ImageProcessing
 {
-    public class ImageProcessor : BaseVideoProcessor, IImageProcessor
+    public class ClassicImageProcessor : BaseVideoProcessor, IImageProcessor
     {
-        private readonly IWritableOptions<ImageProcessorSettings> _options;
+        private readonly IWriteable<ClassicImageProcessorSettings> _options;
         private readonly SoccerCourtDetector _courtDetector;
         private readonly BallDetector _ballDetector;
 
@@ -20,8 +20,8 @@ namespace ImageProcessing
         private DateTime _lastFrameTime = DateTime.Now;
         private int _framesProcessed = 0;
 
-        public ImageProcessor(IVideoSource camera, ILogger<ImageProcessor> logger,
-            IWritableOptions<ImageProcessorSettings> options)
+        public ClassicImageProcessor(IVideoSource camera, ILogger<ClassicImageProcessor> logger,
+            IWriteable<ClassicImageProcessorSettings> options)
             : base(camera, logger)
         {
             _options = options;

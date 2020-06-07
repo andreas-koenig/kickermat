@@ -1,3 +1,4 @@
+// VideoSource
 export enum VideoSource {
   Camera = "Camera",
   Calibration = "Calibration",
@@ -14,6 +15,7 @@ export enum KickerComponent {
   Camera = "Camera",
 }
 
+// Parameter System
 export interface KickerParameter {
   name: string;
   description: string;
@@ -43,6 +45,15 @@ export interface HsvColor {
   value: number; // [0, 100]
 }
 
+// Players
+export interface KickermatPlayer {
+  name: string;
+  description: string;
+  authors: string[];
+  emoji: string;
+}
+
+// Motor Diagnostics
 export enum Function {
   Rotation = 0,
   Shift = 1

@@ -23,9 +23,9 @@ namespace ImageProcessing
         private readonly Scalar _green = new Scalar(0, 255, 0);
         private readonly Scalar _blue = new Scalar(255, 0, 0);
 
-        private readonly IWritableOptions<ImageProcessorSettings> _options;
+        private readonly IWriteable<ClassicImageProcessorSettings> _options;
 
-        public SoccerCourtDetector(IWritableOptions<ImageProcessorSettings> options)
+        public SoccerCourtDetector(IWriteable<ClassicImageProcessorSettings> options)
         {
             _options = options;
         }
@@ -47,8 +47,8 @@ namespace ImageProcessing
             {
                 // Mask white lines (includes bars)
                 var markings = _options.Value.FieldMarkings;
-                var lower = ImageProcessor.HsvToScalar(markings.Lower);
-                var upper = ImageProcessor.HsvToScalar(markings.Upper);
+                var lower = ClassicImageProcessor.HsvToScalar(markings.Lower);
+                var upper = ClassicImageProcessor.HsvToScalar(markings.Upper);
                 var threshImg = img.CvtColor(ColorConversionCodes.BGR2HSV)
                     .InRange(lower, upper);
 
@@ -57,7 +57,7 @@ namespace ImageProcessing
                     RetrievalModes.External, ContourApproximationModes.ApproxTC89L1);
 
                 // Get bboxes and filter out the small ones that are irrelevant
-                var boundingBoxes = ImageProcessor.GetBoundingRects(contours)
+                var boundingBoxes = ClassicImageProcessor.GetBoundingRects(contours)
                     .Where(rect => Area(rect) > _options.Value.MinimalBboxArea);
 
                 // Get soccer court elements

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Configuration
 {
-    public interface IWritableOptions
+    public interface IWriteable
     {
         object ValueObject { get; }
 
@@ -15,8 +15,8 @@ namespace Configuration
         void RegisterChangeListener(Action onChange);
     }
 
-    public interface IWritableOptions<out T>
-        : IWritableOptions, IOptionsSnapshot<T>
+    public interface IWriteable<out T>
+        : IWriteable, IOptionsSnapshot<T>
         where T : class, new()
     {
         new T Value { get; }

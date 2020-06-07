@@ -1,4 +1,6 @@
-﻿using Communication;
+﻿using System;
+using System.Text.Json;
+using Configuration;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;
@@ -46,7 +48,7 @@ namespace Webapp
                     });
             });
             services.AddSignalR();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(setup => setup.EnableEndpointRouting = false);
 
             // Add Angular frontend
             services.AddSpaStaticFiles(configuration =>
@@ -55,12 +57,14 @@ namespace Webapp
             });
 
             // Services
+            services.ConfigureKickermatSettings(Configuration);
             services.RegisterKickermatPlayers();
             services.AddSingleton<KickermatService>();
             services.AddSingleton<ParameterService>();
-            services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.Communication>();
+            services.AddSingleton<SettingsService>();
+            services.AddKickerServices<DalsaCamera, CameraCalibration, ClassicImageProcessor>();
             services.ConfigureKicker<DalsaSettings, CalibrationSettings,
-                ImageProcessorSettings, CommunicationSettings>(Configuration);
+                ClassicImageProcessorSettings>(Configuration);
 
             // RouteConstraints
             services.Configure<RouteOptions>(options =>

@@ -16,26 +16,26 @@ namespace Webapp.Services
             KickerOptions = CollectKickerOptions();
         }
 
-        public Dictionary<Type, IWritableOptions> KickerOptions { get; private set; }
+        public Dictionary<Type, IWriteable> KickerOptions { get; private set; }
 
-        private Dictionary<Type, IWritableOptions> CollectKickerOptions()
+        private Dictionary<Type, IWriteable> CollectKickerOptions()
         {
             // Collect all KickerOptionsAttributes and their annotated settings classes
-            var kickerOptionsAttrs = new Dictionary<KickerOptionsAttribute, Type>();
+            var kickerOptionsAttrs = new Dictionary<KickermatSettingsAttribute, Type>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    var attrs = type.GetCustomAttributes(typeof(KickerOptionsAttribute), false);
+                    var attrs = type.GetCustomAttributes(typeof(KickermatSettingsAttribute), false);
                     if (attrs.Length == 1)
                     {
-                        kickerOptionsAttrs.Add(attrs[0] as KickerOptionsAttribute, type);
+                        kickerOptionsAttrs.Add(attrs[0] as KickermatSettingsAttribute, type);
                     }
                 }
             }
 
             // Add the WritableOptions instance to every kickerComponentType
-            var kickerOptions = new Dictionary<Type, IWritableOptions>();
+            var kickerOptions = new Dictionary<Type, IWriteable>();
             foreach (var attr in kickerOptionsAttrs.Keys)
             {
                 var kickerComponentType = attr.KickerComponentType;
@@ -54,9 +54,9 @@ namespace Webapp.Services
 
                 // Get WritableOptions instance
                 var settingsType = kickerOptionsAttrs[attr];
-                var writableOptionsType = typeof(IWritableOptions<>)
+                var writableOptionsType = typeof(IWriteable<>)
                     .MakeGenericType(new Type[] { settingsType });
-                var writableOptions = (IWritableOptions)_services.GetService(writableOptionsType);
+                var writableOptions = (IWriteable)_services.GetService(writableOptionsType);
 
                 kickerOptions[attr.KickerComponentType] = writableOptions;
             }

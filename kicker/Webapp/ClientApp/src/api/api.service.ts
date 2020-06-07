@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { KickerParameter, KickerComponent, VideoSource, Channel, Motor } from './api.model';
+import {
+  KickerParameter, KickerComponent, VideoSource,
+  Channel, Motor, KickermatPlayer
+} from './api.model';
 import { REST_BASE } from './api';
 
 @Injectable({
@@ -12,6 +15,14 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  // Game & Players
+  public getKickermatPlayers(): Observable<KickermatPlayer[]> {
+    const url = REST_BASE + '/kickermat/players';
+
+    return this.http.get<KickermatPlayer[]>(url);
+  }
+
+  // Parameters
   public getParameters(component: KickerComponent): Observable<KickerParameter[]> {
     const url = REST_BASE + '/parameters/' + component;
 
@@ -25,11 +36,13 @@ export class ApiService {
     return this.http.put(url, value);
   }
 
+  // ImageProcessing
   public startBallSearch() {
     const url = REST_BASE + '/imageprocessing';
     this.http.get(url).subscribe();
   }
 
+  // VideoSource
   public getChannels(videoSource: VideoSource): Observable<Channel[]> {
     const url = REST_BASE + '/video/' + videoSource + '/channels';
 
@@ -48,6 +61,7 @@ export class ApiService {
     return this.http.put<Channel>(url, channel);
   }
 
+  // Motor Diagnostics
   public getMotorDiagnostics(): Observable<Motor[]> {
     const url = REST_BASE + '/motor';
 

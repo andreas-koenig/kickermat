@@ -5,8 +5,8 @@ using Configuration;
 
 namespace ImageProcessing
 {
-    [KickerOptions(typeof(ImageProcessor), "ImageProcessing")]
-    public class ImageProcessorSettings
+    [KickermatSettings(typeof(ClassicImageProcessorSettings), "ImageProcessing")]
+    public class ClassicImageProcessorSettings
     {
         [ColorRangeParameter("Field Markings", "A color range for the field markings.",
             0, 0, 220, 255, 120, 255)]

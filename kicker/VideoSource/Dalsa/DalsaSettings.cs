@@ -5,8 +5,8 @@ using Configuration;
 
 namespace VideoSource.Dalsa
 {
-    [KickerOptions(typeof(DalsaCamera), "Camera", "Dalsa")]
-    public class DalsaSettings
+    [KickermatSettings(typeof(DalsaCamera), "Camera", "Dalsa")]
+    public class DalsaSettings : ISettings
     {
         // Parameter constants
         internal const int BrightnessDefault = 100;
@@ -15,6 +15,8 @@ namespace VideoSource.Dalsa
         internal const double ExposureTimeDefault = 15000.0;
         internal const double ExposureTimeMin = 1.0;
         internal const double ExposureTimeMax = 33246.0;
+
+        public string Name => "Dalsa Settings";
 
         public string CameraName { get; set; }
 

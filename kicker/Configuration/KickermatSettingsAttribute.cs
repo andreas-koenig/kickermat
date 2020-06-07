@@ -5,9 +5,9 @@ using System.Text;
 namespace Configuration
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public class KickerOptionsAttribute : Attribute
+    public class KickermatSettingsAttribute : Attribute
     {
-        public KickerOptionsAttribute(Type kickerComponentImpl, params string[] path)
+        public KickermatSettingsAttribute(Type kickerComponentImpl, params string[] path)
         {
             Path = path;
             KickerComponentType = kickerComponentImpl;

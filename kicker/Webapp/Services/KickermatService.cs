@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Configuration;
+using Webapp.Player;
 using Webapp.Player.Api;
 
 namespace Webapp.Services
@@ -11,11 +13,13 @@ namespace Webapp.Services
     {
         private readonly object _lock = new object();
         private readonly IServiceProvider _services;
+        private readonly IWriteable<ClassicPlayerSettings> _settings;
 
-        public KickermatService(IServiceProvider services)
+        public KickermatService(IServiceProvider services, IWriteable<ClassicPlayerSettings> settings)
         {
             _services = services;
             Players = CollectPlayers();
+            _settings = settings;
         }
 
         public enum GameState
@@ -25,7 +29,7 @@ namespace Webapp.Services
             IsPaused,
         }
 
-        public Dictionary<string, Type> Players { get; private set; }
+        public Dictionary<string, Type> Players { get; set; }
 
         public GameState State { get; private set; }
 

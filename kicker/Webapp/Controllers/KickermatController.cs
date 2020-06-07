@@ -14,14 +14,18 @@ namespace Webapp.Controllers
     [ApiController]
     public class KickermatController : ControllerBase
     {
-        private KickermatService _kickermatService;
+        private readonly KickermatService _kickermatService;
+        private readonly SettingsService _settingsService;
 
-        public KickermatController(KickermatService kickermatService)
+        public KickermatController(
+            KickermatService kickermatService,
+            SettingsService settingsService)
         {
             _kickermatService = kickermatService;
+            _settingsService = settingsService;
         }
 
-        [HttpGet]
+        [HttpGet("players")]
         public ActionResult<IEnumerable<object>> GetKickermatPlayers()
         {
             var playerAttrs = new List<KickermatPlayerAttribute>();
@@ -35,7 +39,10 @@ namespace Webapp.Controllers
                 attr.Name,
                 attr.Description,
                 attr.Authors,
+                attr.Emoji,
             });
+
+            Console.WriteLine(_settingsService.PlayerSettings);
 
             return Ok(players);
         }

@@ -28,6 +28,7 @@ import { OperatingStateComponent } from './motor/operating-state/operating-state
 import { KickermatComponent } from './motor/kickermat/kickermat.component';
 import { OperatingModeComponent } from './motor/operating-mode/operating-mode.component';
 import { MotorListComponent } from './motor/motor-list/motor-list.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Route[] = [
   {
@@ -80,6 +81,7 @@ registerLocaleData(en);
     KickermatComponent,
     OperatingModeComponent,
     MotorListComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,5 +94,6 @@ registerLocaleData(en);
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
+  entryComponents: [SettingsComponent],
 })
 export class AppModule {}

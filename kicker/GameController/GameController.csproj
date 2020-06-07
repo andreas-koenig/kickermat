@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{768221EA-AEDD-45E5-8A42-00C2420CF60A}</ProjectGuid>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />

@@ -11,9 +11,9 @@ namespace ImageProcessing.OpenCvImageProcessor
     {
         private const string Threshold = "ballThreshold";
 
-        private IWritableOptions<ImageProcessorSettings> _options;
+        private IWriteable<ClassicImageProcessorSettings> _options;
 
-        public BallDetector(IWritableOptions<ImageProcessorSettings> options)
+        public BallDetector(IWriteable<ClassicImageProcessorSettings> options)
         {
             _options = options;
         }
@@ -29,8 +29,8 @@ namespace ImageProcessing.OpenCvImageProcessor
         internal (Mat, Rect) DetectBall(Mat img, string channel)
         {
             var ballColor = _options.Value.BallColor;
-            var lower = ImageProcessor.HsvToScalar(ballColor.Lower);
-            var upper = ImageProcessor.HsvToScalar(ballColor.Upper);
+            var lower = ClassicImageProcessor.HsvToScalar(ballColor.Lower);
+            var upper = ClassicImageProcessor.HsvToScalar(ballColor.Upper);
             var threshImg = img
                 .CvtColor(ColorConversionCodes.BGR2HSV)
                 .InRange(lower, upper);
@@ -40,7 +40,7 @@ namespace ImageProcessing.OpenCvImageProcessor
 
             try
             {
-                var ballRect = ImageProcessor.GetBoundingRects(contours)
+                var ballRect = ClassicImageProcessor.GetBoundingRects(contours)
                     .OrderBy(rect => rect.Width * rect.Height)
                     .Last();
 

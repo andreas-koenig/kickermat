@@ -6,7 +6,7 @@ using OpenCvSharp;
 
 namespace ImageProcessing.Calibration
 {
-    [KickerOptions(typeof(CameraCalibration), "Camera", "Calibration")]
+    [KickermatSettings(typeof(CameraCalibration), "Camera", "Calibration")]
     public class CalibrationSettings
     {
         public double[][] CameraMatrix { get; set; }

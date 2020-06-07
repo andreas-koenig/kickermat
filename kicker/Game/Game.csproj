@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{E7F3AD65-55A9-439E-AFB4-3CB87E4FDC5D}</ProjectGuid>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
