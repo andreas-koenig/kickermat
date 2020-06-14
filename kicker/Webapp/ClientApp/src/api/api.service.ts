@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, Subscription } from 'rxjs';
 
 import {
   KickerParameter, KickerComponent, VideoSource,
-  Channel, Motor, KickermatPlayer
+  Channel, Motor, KickermatPlayer, Settings, UpdateSettingsResponse, ParameterUpdate
 } from './api.model';
 import { REST_BASE } from './api';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private msg: NzMessageService) { }
 
   // Game & Players
   public getKickermatPlayers(): Observable<KickermatPlayer[]> {
@@ -22,11 +22,48 @@ export class ApiService {
     return this.http.get<KickermatPlayer[]>(url);
   }
 
+  // Settings
+  public getPlayerSettings(playerName: string): Observable<Settings[]> {
+    const url = REST_BASE + '/settings';
+
+    const params = new HttpParams()
+      .append("player", playerName);
+
+    return this.http.get<Settings[]>(url, { params });
+  }
+
+  public updateParam<T extends KickerParameter<any>>(
+    settingsName: string,
+    paramName: string,
+    value: T["value"],
+    onSuccess: (newVal: T["value"]) => void,
+    onError: (oldVal: T["value"]) => void
+  ): Subscription {
+    const url = REST_BASE + '/settings';
+
+    const body: ParameterUpdate = {
+      settings: settingsName,
+      parameter: paramName,
+      value
+    };
+
+    return this.http.post<UpdateSettingsResponse<T>>(url, body)
+      .subscribe(
+        resp => {
+          this.msg.create("success", resp.message as string);
+          onSuccess(resp.value);
+        },
+        error => {
+          this.msg.create("error", error.error.message);
+          onError(error.error.value);
+        });
+  }
+
   // Parameters
-  public getParameters(component: KickerComponent): Observable<KickerParameter[]> {
+  public getParameters(component: KickerComponent): Observable<KickerParameter<any>[]> {
     const url = REST_BASE + '/parameters/' + component;
 
-    return this.http.get<KickerParameter[]>(url);
+    return this.http.get<KickerParameter<any>[]>(url);
   }
 
   public setParameter(component: KickerComponent, parameter: string, value: any):

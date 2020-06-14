@@ -1,7 +1,6 @@
 ﻿namespace GameController
 {
     using GameProperties;
-    using Communication;
 
     /// <summary>
     /// Implementation of basic functionality of a game controller

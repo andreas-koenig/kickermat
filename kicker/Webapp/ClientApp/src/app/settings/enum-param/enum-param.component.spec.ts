@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ParameterListComponent } from './parameter-list.component';
+import { EnumParamComponent } from './enum-param.component';
 
-describe('ParameterListComponent', () => {
-  let component: ParameterListComponent;
-  let fixture: ComponentFixture<ParameterListComponent>;
+describe('EnumParamComponent', () => {
+  let component: EnumParamComponent;
+  let fixture: ComponentFixture<EnumParamComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ParameterListComponent ]
+      declarations: [ EnumParamComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ParameterListComponent);
+    fixture = TestBed.createComponent(EnumParamComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

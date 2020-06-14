@@ -15,12 +15,9 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { GameComponent } from './game/game.component';
 import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
-import { ParameterListComponent } from './parameter-list/parameter-list.component';
 import { KickerComponent } from './kicker/kicker.component';
 import { ImageProcessingComponent } from './image-processing/image-processing.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
-import { NumberParameterComponent } from './parameter-list/number-parameter/number-parameter.component';
-import { ColorRangeParameterComponent } from './parameter-list/color-range-parameter/color-range-parameter.component';
 import { MotorComponent } from './motor/motor.component';
 import { NmtStateComponent } from './motor/nmt-state/nmt-state.component';
 import { InfoTableComponent } from './motor/info-table/info-table.component';
@@ -28,7 +25,13 @@ import { OperatingStateComponent } from './motor/operating-state/operating-state
 import { KickermatComponent } from './motor/kickermat/kickermat.component';
 import { OperatingModeComponent } from './motor/operating-mode/operating-mode.component';
 import { MotorListComponent } from './motor/motor-list/motor-list.component';
+
 import { SettingsComponent } from './settings/settings.component';
+import { NumberParamComponent } from './settings/number-param/number-param.component';
+import { ColorRangeParamComponent } from './settings/color-range-param/color-range-param.component';
+import { BooleanParameterComponent } from './settings/boolean-param/boolean-param.component';
+import { EnumParamComponent } from './settings/enum-param/enum-param.component';
+
 
 const routes: Route[] = [
   {
@@ -55,6 +58,10 @@ const routes: Route[] = [
   {
     path: 'imgproc',
     component: ImageProcessingComponent
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent
   }
 ]
 
@@ -68,12 +75,9 @@ registerLocaleData(en);
     VideoPlayerComponent,
     CameraComponent,
     CalibrationComponent,
-    ParameterListComponent,
     KickerComponent,
     ImageProcessingComponent,
     VideoPlayerComponent,
-    NumberParameterComponent,
-    ColorRangeParameterComponent,
     MotorComponent,
     NmtStateComponent,
     InfoTableComponent,
@@ -82,6 +86,10 @@ registerLocaleData(en);
     OperatingModeComponent,
     MotorListComponent,
     SettingsComponent,
+    NumberParamComponent,
+    ColorRangeParamComponent,
+    BooleanParameterComponent,
+    EnumParamComponent
   ],
   imports: [
     BrowserModule,

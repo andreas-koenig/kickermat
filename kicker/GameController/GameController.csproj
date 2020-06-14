@@ -65,7 +65,6 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
   </ItemGroup>
   <ItemGroup>

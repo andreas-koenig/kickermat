@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NumberParameterComponent } from './number-parameter.component';
+import { BooleanParameterComponent } from './boolean-param.component';
 
-describe('NumberParameterComponent', () => {
-  let component: NumberParameterComponent;
-  let fixture: ComponentFixture<NumberParameterComponent>;
+describe('BooleanParameterComponent', () => {
+  let component: BooleanParameterComponent;
+  let fixture: ComponentFixture<BooleanParameterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumberParameterComponent ]
+      declarations: [ BooleanParameterComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NumberParameterComponent);
+    fixture = TestBed.createComponent(BooleanParameterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

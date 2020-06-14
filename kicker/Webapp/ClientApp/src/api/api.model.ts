@@ -16,23 +16,20 @@ export enum KickerComponent {
 }
 
 // Parameter System
-export interface KickerParameter {
+export interface KickerParameter<T> {
   name: string;
   description: string;
-  value: object | number;
+  value: T;
+  defaultValue: T;
 }
 
-export interface NumberParameter extends KickerParameter {
-  defaultValue: number;
+export interface NumberParameter extends KickerParameter<number> {
   min: number;
   max: number;
   step: number;
 }
 
-export interface ColorRangeParameter extends KickerParameter {
-  defaultValue: ColorRange;
-  value: ColorRange;
-}
+export interface ColorRangeParameter extends KickerParameter<ColorRange> {}
 
 export interface ColorRange {
   lower: HsvColor;
@@ -45,12 +42,34 @@ export interface HsvColor {
   value: number; // [0, 100]
 }
 
+export interface BooleanParameter extends KickerParameter<boolean> {}
+
+export interface EnumParameter extends KickerParameter<number> {
+  options: { key: number, value: string }[];
+}
+
+export interface UpdateSettingsResponse<T extends KickerParameter<T>> {
+  message: string;
+  value: T;
+}
+
+export interface ParameterUpdate {
+  settings: string;
+  parameter: string;
+  value: any;
+}
+
 // Players
 export interface KickermatPlayer {
   name: string;
   description: string;
   authors: string[];
   emoji: string;
+}
+
+export interface Settings {
+  name: string;
+  parameters: KickerParameter<any>[];
 }
 
 // Motor Diagnostics

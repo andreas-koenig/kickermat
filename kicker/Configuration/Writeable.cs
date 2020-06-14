@@ -27,7 +27,7 @@ namespace Configuration
             _section = sectionPath;
             _file = file;
 
-            _options.OnChange((settings, path) =>
+            _options?.OnChange((settings, path) =>
             {
                 Console.WriteLine(path);
             });

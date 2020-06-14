@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../../api/api.service';
 import { Subscription } from 'rxjs';
 import { KickermatPlayer } from '../../api/api.model';
-import { NzModalService } from 'ng-zorro-antd';
-import { SettingsComponent } from '../settings/settings.component';
+import { Router } from '@angular/router';
 
 enum KickermatState {
   Loading,
@@ -23,7 +22,7 @@ export class KickerComponent implements OnInit, OnDestroy {
   public playerSub: Subscription | undefined;
   public players: KickermatPlayer[] = [];
 
-  constructor(private api: ApiService, private modal: NzModalService) { }
+  constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit() {
     this.playerSub = this.api.getKickermatPlayers().subscribe(
@@ -43,14 +42,9 @@ export class KickerComponent implements OnInit, OnDestroy {
     return authors.join(", ");
   }
 
-  public openSettingsModal(playerName: string) {
-    const modalRef = this.modal.create({
-      nzTitle: `${playerName} - Settings`,
-      nzContent: SettingsComponent,
-      nzGetContainer: () => document.body,
-      
+  public openSettingsModal(player: KickermatPlayer) {
+    this.router.navigate(["/settings"], {
+      queryParams: { player: player.name }
     });
-
-    console.log(modalRef.getContentComponent());
   }
 }

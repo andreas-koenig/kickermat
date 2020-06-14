@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HsvColor, ColorRange, ColorRangeParameter } from '@api/api.model';
-import { KickerParameterComponent } from '../kicker-parameter';
-import { NzMarks, NzMessageService } from 'ng-zorro-antd';
+import { NzMarks } from 'ng-zorro-antd';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { ApiService } from '@api/api.service';
+import { ApiService } from '../../../api/api.service';
+import { Subscription } from 'rxjs';
 
 interface RgbColor {
   red: number;
@@ -12,11 +12,17 @@ interface RgbColor {
 }
 
 @Component({
-  selector: 'app-color-range-parameter',
-  templateUrl: './color-range-parameter.component.html',
-  styleUrls: ['./color-range-parameter.component.scss']
+  selector: 'app-color-range-param',
+  templateUrl: './color-range-param.component.html',
+  styleUrls: ['./color-range-param.component.scss']
 })
-export class ColorRangeParameterComponent extends KickerParameterComponent<ColorRangeParameter> {
+export class ColorRangeParamComponent implements OnInit {
+  @Input("param") public param!: ColorRangeParameter;
+  @Input("settings") public settings!: string;
+
+  private subs: Subscription[] = [];
+  public isUpdating = false;
+
   public hueRange: number[] = []
   public satRange: number[] = []
   public valRange: number[] = []
@@ -31,8 +37,16 @@ export class ColorRangeParameterComponent extends KickerParameterComponent<Color
     100: '100%'
   }
 
-  constructor(api: ApiService, message: NzMessageService, private domSanitizer: DomSanitizer) {
-    super(api, message);
+  constructor(
+    private domSanitizer: DomSanitizer,
+    private api: ApiService) {}
+
+  ngOnInit() {
+    this.updateModel(this.param.value);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   protected updateModel(value: ColorRange) {
@@ -42,6 +56,8 @@ export class ColorRangeParameterComponent extends KickerParameterComponent<Color
     this.hueRange = [l.hue, u.hue];
     this.satRange = [l.saturation, u.saturation];
     this.valRange = [l.value, u.value];
+
+    this.isUpdating = false;
   }
 
   private getColorRange(): ColorRange {
@@ -60,8 +76,16 @@ export class ColorRangeParameterComponent extends KickerParameterComponent<Color
   }
 
   public updateColorRange() {
-    const newColorRange = this.getColorRange();
-    super.setParameter(newColorRange);
+    this.isUpdating = true;
+
+    const sub = this.api.updateParam<ColorRangeParameter>(
+      this.settings,
+      this.param.name,
+      this.getColorRange(),
+      this.updateModel.bind(this),
+      this.updateModel.bind(this));
+
+    this.subs.push(sub);
   }
 
   public getGradient(): SafeStyle {

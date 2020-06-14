@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Configuration;
+using Configuration.Parameter;
 
 namespace Webapp.Services
 {
@@ -13,15 +15,65 @@ namespace Webapp.Services
         private readonly KickermatService _kickermatService;
         private readonly IServiceProvider _services;
 
+        private readonly Dictionary<string, Type> _settingsDict;
+        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions();
+
         public SettingsService(KickermatService kickermatService, IServiceProvider services)
         {
             _kickermatService = kickermatService;
             _services = services;
 
             PlayerSettings = CollectPlayerSettings();
+            _settingsDict = CollectSettings();
+            _jsonOptions.PropertyNameCaseInsensitive = true;
         }
 
         public Dictionary<string, IEnumerable<IWriteable>> PlayerSettings { get; private set; }
+
+        public object UpdateParameter(string settingsName, string paramName, object value)
+        {
+            if (!_settingsDict.TryGetValue(settingsName, out var writeableType))
+            {
+                throw new KickermatException($"There are no settings with the name {settingsName}");
+            }
+
+            var writeable = _services.GetService(writeableType) as IWriteable;
+            var properties = writeable.ValueObject
+                .GetType()
+                .GetProperties()
+                .ToList();
+
+            foreach (var prop in properties)
+            {
+                var attr = prop.GetCustomAttributes<BaseParameterAttribute>(true)
+                        .Where(attr => attr.Name.Equals(paramName))
+                        .FirstOrDefault();
+
+                if (attr == null)
+                {
+                    continue; // Not the right parameter
+                }
+
+                try
+                {
+                    var val = JsonSerializer.Deserialize(
+                        ((JsonElement)value).GetRawText(), prop.PropertyType, _jsonOptions);
+                    writeable.Update(changes => prop.SetValue(changes, val));
+                    return value;
+                }
+                catch (Exception ex)
+                {
+                    // TODO: Log exception
+
+                    var oldValue = prop.GetValue(writeable.ValueObject);
+                    throw new UpdateSettingsException(
+                        @$"Failed to update {settingsName}.{paramName}", oldValue);
+                }
+            }
+
+            throw new UpdateSettingsException(
+                $"There is no parameter {settingsName}.{paramName}", null);
+        }
 
         public IEnumerable<IWriteable> GetSettings(Type type)
         {
@@ -77,6 +129,32 @@ namespace Webapp.Services
             }
 
             return settingsDict;
+        }
+
+        private Dictionary<string, Type> CollectSettings()
+        {
+            var settingsDict = new Dictionary<string, Type>();
+
+            AppDomain.CurrentDomain.GetAssemblies()
+                .ToList()
+                .ForEach(asm => asm.GetTypes()
+                    .ToList()
+                    .ForEach(type =>
+                    {
+                        if (type.GetInterfaces().Contains(typeof(ISettings)))
+                        {
+                            var name = (Activator.CreateInstance(type) as ISettings).Name;
+                            var iWriteableType = typeof(IWriteable<>).MakeGenericType(type);
+                            settingsDict.Add(name, iWriteableType);
+                        }
+                    }));
+
+            return settingsDict;
+        }
+
+        private IWriteable FindSettings(string settingsName)
+        {
+            return _services.GetService(_settingsDict[settingsName]) as IWriteable;
         }
     }
 }

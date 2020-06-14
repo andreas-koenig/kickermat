@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Configuration
+namespace Configuration.Parameter
 {
     public class ColorRangeParameterAttribute : BaseParameterAttribute
     {
@@ -44,6 +44,8 @@ namespace Configuration
 
     public class HsvColor
     {
+        public HsvColor() { }
+
         public HsvColor(int hue, int saturation, int value)
         {
             Hue = hue;

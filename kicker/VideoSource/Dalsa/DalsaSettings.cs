@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Configuration;
+using Configuration.Parameter;
 
 namespace VideoSource.Dalsa
 {
@@ -18,7 +20,7 @@ namespace VideoSource.Dalsa
 
         public string Name => "Dalsa Settings";
 
-        public string CameraName { get; set; }
+        public string CameraName { get; set; } = "Genie Nano C1280";
 
         [NumberParameter("Brightness", "The brightness of the camera",
             BrightnessDefault, BrightnessMin, BrightnessMax, 1)]

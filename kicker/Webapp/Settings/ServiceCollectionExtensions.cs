@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Configuration;
+using Configuration.Parameter;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.Extensions.Configuration;
@@ -81,6 +82,8 @@ namespace Webapp.Settings
                 .GetMethods()
                 .First(m => m.Name.Equals(nameof(OptionsConfigurationServiceCollectionExtensions.Configure)));
 
+            var tmpSettingsDict = new Dictionary<string, Type>();
+
             AppDomain.CurrentDomain.GetAssemblies()
                 .ToList()
                 .ForEach(asm => asm.GetTypes()
@@ -89,11 +92,30 @@ namespace Webapp.Settings
                         {
                             if (type.GetInterfaces().Contains(typeof(ISettings)))
                             {
+                                CheckDefaultValues(services, type);
                                 ConfigureSettingsType(services, type, config, configureMethod);
                             }
                         }));
 
             return services;
+        }
+
+        private static void CheckDefaultValues(this IServiceCollection services, Type settingsType)
+        {
+            var settings = Activator.CreateInstance(settingsType);
+
+            settingsType.GetProperties()
+                .ToList()
+                .ForEach(prop =>
+                {
+                    var value = prop.GetValue(settings);
+                    if (value == default || value == null)
+                    {
+                        throw new KickermatException(@$"Please define a default value for the
+                            property '{prop.Name}' of the 'ISettings' implementation
+                            '{settingsType.FullName}'");
+                    }
+                });
         }
 
         private static void ConfigureSettingsType(

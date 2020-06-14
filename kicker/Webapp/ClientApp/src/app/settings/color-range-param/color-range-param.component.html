@@ -1,13 +1,13 @@
-<div style="width: 100%; height: 30px;"
-     [style.background]="getGradient()">
+<div class="gradient" [style.background]="getGradient()">
 </div>
 
-<div fxLayout="row" fxLayoutGap="1em" fxLayoutAlign="center center">
+<div fxLayout="row" fxLayoutAlign="space-between center">
   <div fxFlex="10%">Hue</div>
-  <div fxFlex="90%">
+  <div fxFlex="80%">
     <nz-slider nzRange
                nzMin="0"
                nzMax="360"
+               nzStep="1"
                [(ngModel)]="hueRange"
                [nzDisabled]="isUpdating"
                [nzMarks]="degreeMarks"
@@ -16,26 +16,28 @@
   </div>
 </div>
 
-<div fxLayout="row" fxLayoutGap="1em" fxLayoutAlign="center center">
+<div fxLayout="row" fxLayoutAlign="space-between center">
   <div fxFlex="10%">Saturation</div>
-  <div fxFlex="90%">
+  <div fxFlex="80%">
     <nz-slider nzRange
                nzMin="0"
                nzMax="100"
+               nzStep="1"
                [(ngModel)]="satRange"
                [nzDisabled]="isUpdating"
                [nzMarks]="percentMarks"
                (nzOnAfterChange)="updateColorRange()">
-    </nz-slider>
+    </nz-slider> 
   </div>
 </div>
 
-<div fxLayout="row" fxLayoutGap="1em" fxLayoutAlign="center center">
+<div fxLayout="row" fxLayoutAlign="space-between center">
   <div fxFlex="10%">Value</div>
-  <div fxFlex="90%">
+  <div fxFlex="80%">
     <nz-slider nzRange
                nzMin="0"
                nzMax="100"
+               nzStep="1"
                [(ngModel)]="valRange"
                [nzDisabled]="isUpdating"
                [nzMarks]="percentMarks"

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
 namespace Webapp
 {
@@ -14,15 +14,18 @@ namespace Webapp
     {
         public static void Main(string[] args)
         {
-            var host = CreateWebHostBuilder(args).Build();
+            var host = CreateHostBuilder(args).Build();
             host.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                    .UseUrls(Startup.BackendUrl)
-                    .UseStartup<Startup>();
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseUrls(Startup.BackendUrl)
+                        .UseStartup<Startup>();
+                });
         }
     }
 }
