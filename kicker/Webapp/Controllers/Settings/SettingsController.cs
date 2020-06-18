@@ -11,23 +11,23 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Webapp.Services;
 
-namespace Webapp.Controllers
+namespace Webapp.Controllers.Settings
 {
     [Route("api/settings")]
     [ApiController]
     public class SettingsController : ControllerBase
     {
         private readonly SettingsService _settingsService;
-        private readonly KickermatService _kickermatService;
+        private readonly PlayerService _playerService;
 
         private readonly JsonSerializerOptions _jsonOptions;
 
         public SettingsController(
             SettingsService settingsService,
-            KickermatService kickermatService)
+            PlayerService playerService)
         {
             _settingsService = settingsService;
-            _kickermatService = kickermatService;
+            _playerService = playerService;
 
             _jsonOptions = new JsonSerializerOptions();
             _jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
@@ -81,7 +81,7 @@ namespace Webapp.Controllers
                 return BadRequest("No player name was provided!");
             }
 
-            if (!_kickermatService.Players.TryGetValue(playerName, out Type playerType))
+            if (!_playerService.Players.TryGetValue(playerName, out Type playerType))
             {
                 return BadRequest($"Could not load settings: player {playerName} not found");
             }
@@ -89,7 +89,7 @@ namespace Webapp.Controllers
             var settings = _settingsService.GetSettings(playerType);
             var response = CreateResponse(settings);
 
-            return Ok(response); // new JsonResult(response, _jsonOptions);
+            return Ok(response);
         }
 
         private IEnumerable<SettingsResponse> CreateResponse(IEnumerable<IWriteable> settings)
@@ -124,43 +124,5 @@ namespace Webapp.Controllers
 
             return settingsList;
         }
-    }
-
-    public class SettingsResponse
-    {
-        public string Name { get; set; }
-
-        // Use "object" as type param to enable polymorphic JSON serialization with System.Text.Json
-        // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to#serialize-properties-of-derived-classes
-        public IEnumerable<object> Parameters
-        { get; set; }
-
-        public SettingsResponse(string name, IEnumerable<BaseParameterAttribute> parameters)
-        {
-            Name = name;
-            Parameters = parameters;
-        }
-    }
-
-    public class ParameterUpdate
-    {
-        public string Settings { get; set; }
-        
-        public string Parameter { get; set; }
-
-        public object Value { get; set; }
-    }
-
-    public class UpdateResponse
-    {
-        public UpdateResponse(string message, object value)
-        {
-            Message = message;
-            Value = value;
-        }
-
-        public string Message { get; set; }
-        
-        public object Value { get; set; }
     }
 }

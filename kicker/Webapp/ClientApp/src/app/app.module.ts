@@ -12,19 +12,19 @@ import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { GameComponent } from './game/game.component';
 import { CameraComponent } from './camera/camera.component';
 import { CalibrationComponent } from './calibration/calibration.component';
-import { KickerComponent } from './kicker/kicker.component';
+import { PlayerComponent } from './player/player.component';
 import { ImageProcessingComponent } from './image-processing/image-processing.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { MotorComponent } from './motor/motor.component';
 import { NmtStateComponent } from './motor/nmt-state/nmt-state.component';
 import { InfoTableComponent } from './motor/info-table/info-table.component';
 import { OperatingStateComponent } from './motor/operating-state/operating-state.component';
-import { KickermatComponent } from './motor/kickermat/kickermat.component';
+import { KickerComponent } from './motor/kicker/kicker.component';
 import { OperatingModeComponent } from './motor/operating-mode/operating-mode.component';
 import { MotorListComponent } from './motor/motor-list/motor-list.component';
+import { KickermatComponent } from './kickermat/kickermat.component';
 
 import { SettingsComponent } from './settings/settings.component';
 import { NumberParamComponent } from './settings/number-param/number-param.component';
@@ -41,7 +41,7 @@ const routes: Route[] = [
   },
   {
     path: 'kicker',
-    component: KickerComponent
+    component: KickermatComponent
   },
   {
     path: 'motor',
@@ -71,11 +71,10 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
     NavigationComponent,
-    GameComponent,
     VideoPlayerComponent,
     CameraComponent,
     CalibrationComponent,
-    KickerComponent,
+    PlayerComponent,
     ImageProcessingComponent,
     VideoPlayerComponent,
     MotorComponent,
@@ -83,6 +82,7 @@ registerLocaleData(en);
     InfoTableComponent,
     OperatingStateComponent,
     KickermatComponent,
+    KickerComponent,
     OperatingModeComponent,
     MotorListComponent,
     SettingsComponent,

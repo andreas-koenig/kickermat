@@ -16,6 +16,7 @@ using VideoSource.Dalsa;
 using Webapp.Controllers;
 using Webapp.Hubs;
 using Webapp.Services;
+using Webapp.Services.Game;
 using Webapp.Settings;
 
 namespace Webapp
@@ -68,8 +69,9 @@ namespace Webapp
             // Services
             services.ConfigureKickermatSettings(Configuration)
                 .RegisterKickermatPlayers()
-                .AddSingleton<KickermatService>()
+                .AddSingleton<GameService>()
                 .AddSingleton<SettingsService>()
+                .AddSingleton<PlayerService>()
                 .AddKickerServices<DalsaCamera, CameraCalibration, ClassicImageProcessor>()
                 .ConfigureKicker<DalsaSettings, CalibrationSettings,
                     ClassicImageProcessorSettings>(Configuration);

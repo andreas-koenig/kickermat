@@ -1,5 +1,8 @@
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
-import { Settings, KickerParameter, NumberParameter, ColorRangeParameter, BooleanParameter, EnumParameter } from '@api/api.model';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Input } from '@angular/core';
+import {
+  Settings, KickerParameter, NumberParameter, ColorRangeParameter,
+  BooleanParameter, EnumParameter, KickermatPlayer
+} from '@api/api.model';
 import { ApiService } from '@api/api.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -12,6 +15,8 @@ import util from './params-util';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
+  @Input("player") public player?: KickermatPlayer;
+
   public settings!: Settings[];
   public subscriptions: Subscription[] = [];
   public playerName: string | undefined;
@@ -37,7 +42,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const sub = this.route.queryParams.subscribe(params => {
-      this.playerName = params["player"];
+      if (this.player) {
+        this.playerName = this.player.name;
+      } else {
+        this.playerName = params["player"];
+      }
+
       this.getSettings();
     });
 

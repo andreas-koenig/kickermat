@@ -3,11 +3,11 @@ import { Motor, Function, Bar } from '@api/api.model';
 import { barToString } from '../names';
 
 @Component({
-  selector: 'app-kickermat',
-  templateUrl: './kickermat.component.html',
-  styleUrls: ['./kickermat.component.scss']
+  selector: 'app-kicker',
+  templateUrl: './kicker.component.html',
+  styleUrls: ['./kicker.component.scss']
 })
-export class KickermatComponent {
+export class KickerComponent {
   @Input('motors') public motors!: Motor[];
   @Input() public selected!: Motor;
   @Output() public selectedChange: EventEmitter<Motor> = new EventEmitter<Motor>();

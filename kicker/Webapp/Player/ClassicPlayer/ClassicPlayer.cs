@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Configuration;
+using Microsoft.Extensions.Logging;
 using VideoSource.Dalsa;
 using Webapp.Player.Api;
 
@@ -17,36 +18,35 @@ namespace Webapp.Player
     public class ClassicPlayer : IKickermatPlayer
     {
         private readonly IWriteable<ClassicPlayerSettings> _settings;
+        private readonly ILogger _logger;
 
-        public ClassicPlayer(IWriteable<ClassicPlayerSettings> settings,
-            IWriteable<DalsaSettings> dalsaSettings)
+        public ClassicPlayer(
+            IWriteable<ClassicPlayerSettings> settings,
+            IWriteable<DalsaSettings> dalsaSettings,
+            ILogger<ClassicPlayer> logger)
         {
             _settings = settings;
+            _logger = logger;
         }
 
-        public void PauseGame()
+        public void Start()
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("ClassicPlayer started");
         }
 
-        public void Play()
+        public void Stop()
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("ClassicPlayer stopped");
         }
 
-        public void ResumeGame()
+        public void Pause()
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("ClassicPlayer paused");
         }
 
-        public void ShutDown()
+        public void Resume()
         {
-            throw new NotImplementedException();
-        }
-
-        public void Startup()
-        {
-            throw new NotImplementedException();
+            _logger.LogInformation("ClassicPlayer resumed");
         }
     }
 }

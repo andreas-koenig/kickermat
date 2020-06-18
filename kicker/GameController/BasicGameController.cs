@@ -1,4 +1,4 @@
-﻿namespace GameController
+﻿namespace GameControllers
 {
     using GameProperties;
 

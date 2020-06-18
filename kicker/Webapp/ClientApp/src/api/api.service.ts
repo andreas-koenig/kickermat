@@ -4,7 +4,8 @@ import { Observable, Subscription } from 'rxjs';
 
 import {
   KickerParameter, KickerComponent, VideoSource,
-  Channel, Motor, KickermatPlayer, Settings, UpdateSettingsResponse, ParameterUpdate
+  Channel, Motor, KickermatPlayer, Settings, UpdateSettingsResponse,
+  ParameterUpdate, Game
 } from './api.model';
 import { REST_BASE } from './api';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -15,9 +16,31 @@ import { NzMessageService } from 'ng-zorro-antd';
 export class ApiService {
   constructor(private http: HttpClient, private msg: NzMessageService) { }
 
-  // Game & Players
+  // Game
+  public getGame(): Observable<Game> {
+    const url = REST_BASE + '/game';
+
+    return this.http.get<Game>(url);
+  }
+
+  public startGame(player: KickermatPlayer): Observable<Game> {
+    const url = REST_BASE + '/game/start';
+
+    const params = new HttpParams()
+      .append("player", player.name);
+
+    return this.http.post<Game>(url, undefined, { params });
+  }
+
+  public stopGame(): Observable<Game> {
+    const url = REST_BASE + '/game/stop';
+
+    return this.http.post<Game>(url, undefined);
+  }
+
+  // Players
   public getKickermatPlayers(): Observable<KickermatPlayer[]> {
-    const url = REST_BASE + '/kickermat/players';
+    const url = REST_BASE + '/player';
 
     return this.http.get<KickermatPlayer[]>(url);
   }

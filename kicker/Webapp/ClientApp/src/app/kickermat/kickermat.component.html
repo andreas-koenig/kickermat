@@ -1,0 +1,39 @@
+<h1>Kickermat</h1>
+
+<div *ngTemplateOutlet="template">
+
+</div>
+
+<ng-template #players>
+  <app-player (selected)="selectPlayer($event)"></app-player>
+
+  <div [ngClass]="{'slide-up': player, 'slide-down': !player}">
+    <div id="start"
+         fxLayout="row"
+         fxLayoutAlign="end">
+      <button (click)="startGame()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzShape="round">
+        <i nz-icon nzType="play-circle" nzTheme="fill"></i>
+        Start Game
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #game>
+  <app-settings [player]="player"></app-settings>
+
+  <button (click)="stopGame()"
+          class="stop"
+          nz-button
+          nzType="primary"
+          nzSize="large"
+          nzShape="round"
+          nzDanger>
+    <i nz-icon nzType="close-circle" nzTheme="fill"></i>
+    Stop Game
+  </button>
+</ng-template>

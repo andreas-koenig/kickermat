@@ -8,14 +8,12 @@ namespace Webapp
 {
     public interface IKickermatPlayer
     {
-        void Startup();
+        void Start();
 
-        void Play();
+        void Stop();
 
-        void PauseGame();
+        void Pause();
 
-        void ResumeGame();
-
-        void ShutDown();
+        void Resume();
     }
 }

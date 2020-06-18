@@ -12,15 +12,15 @@ namespace Webapp.Services
 {
     public class SettingsService
     {
-        private readonly KickermatService _kickermatService;
+        private readonly PlayerService _playerService;
         private readonly IServiceProvider _services;
 
         private readonly Dictionary<string, Type> _settingsDict;
         private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions();
 
-        public SettingsService(KickermatService kickermatService, IServiceProvider services)
+        public SettingsService(PlayerService playerService, IServiceProvider services)
         {
-            _kickermatService = kickermatService;
+            _playerService = playerService;
             _services = services;
 
             PlayerSettings = CollectPlayerSettings();
@@ -123,7 +123,7 @@ namespace Webapp.Services
         private Dictionary<string, IEnumerable<IWriteable>> CollectPlayerSettings()
         {
             var settingsDict = new Dictionary<string, IEnumerable<IWriteable>>();
-            foreach (var player in _kickermatService.Players)
+            foreach (var player in _playerService.Players)
             {
                 settingsDict.Add(player.Key, GetSettings(player.Value));
             }

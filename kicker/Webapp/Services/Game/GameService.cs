@@ -7,29 +7,19 @@ using Configuration;
 using Webapp.Player;
 using Webapp.Player.Api;
 
-namespace Webapp.Services
+namespace Webapp.Services.Game
 {
-    public sealed class KickermatService
+    public sealed class GameService
     {
         private readonly object _lock = new object();
         private readonly IServiceProvider _services;
-        private readonly IWriteable<ClassicPlayerSettings> _settings;
+        private readonly PlayerService _playerService;
 
-        public KickermatService(IServiceProvider services, IWriteable<ClassicPlayerSettings> settings)
+        public GameService(IServiceProvider services, PlayerService playerService)
         {
             _services = services;
-            Players = CollectPlayers();
-            _settings = settings;
+            _playerService = playerService;
         }
-
-        public enum GameState
-        {
-            NoGame,
-            IsRunning,
-            IsPaused,
-        }
-
-        public Dictionary<string, Type> Players { get; set; }
 
         public GameState State { get; private set; }
 
@@ -46,15 +36,16 @@ namespace Webapp.Services
                     case GameState.IsPaused:
                         throw new KickermatException("The current game is paused");
                     case GameState.NoGame:
-                        if (Players.TryGetValue(playerName, out Type playerType))
+                        if (_playerService.Players.TryGetValue(playerName, out var playerType))
                         {
                             CurrentPlayer = (IKickermatPlayer)_services.GetService(playerType);
-                            CurrentPlayer.Startup();
-                            CurrentPlayer.Play();
+                            CurrentPlayer.Start();
                             State = GameState.IsRunning;
+                            return;
                         }
 
-                        return;
+                        throw new KickermatException(
+                            $"Cannot start game: Player {playerName} does not exist");
                 }
             }
         }
@@ -66,7 +57,7 @@ namespace Webapp.Services
                 switch (State)
                 {
                     case GameState.IsRunning:
-                        CurrentPlayer.PauseGame();
+                        CurrentPlayer.Pause();
                         State = GameState.IsPaused;
                         return;
                     case GameState.IsPaused:
@@ -85,7 +76,7 @@ namespace Webapp.Services
                 switch (State)
                 {
                     case GameState.IsPaused:
-                        CurrentPlayer.ResumeGame();
+                        CurrentPlayer.Resume();
                         State = GameState.IsRunning;
                         return;
                     case GameState.IsRunning:
@@ -105,30 +96,15 @@ namespace Webapp.Services
                 {
                     case GameState.IsRunning:
                     case GameState.IsPaused:
-                        CurrentPlayer.ShutDown();
+                        CurrentPlayer.Stop();
                         State = GameState.NoGame;
+                        CurrentPlayer = null;
                         return;
                     case GameState.NoGame:
                         throw new KickermatException(
                             "There is no game running that could be stopped");
                 }
             }
-        }
-
-        private Dictionary<string, Type> CollectPlayers()
-        {
-            var players = new Dictionary<string, Type>();
-
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                if (type.GetInterfaces().Contains(typeof(IKickermatPlayer)))
-                {
-                    var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
-                    players.Add(playerAttr.Name, type);
-                }
-            }
-
-            return players;
         }
     }
 }

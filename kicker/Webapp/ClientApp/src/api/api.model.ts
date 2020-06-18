@@ -59,6 +59,18 @@ export interface ParameterUpdate {
   value: any;
 }
 
+// Game
+export interface Game {
+  state: GameState;
+  player?: KickermatPlayer;
+}
+
+export enum GameState {
+  NoGame = 0,
+  Running = 1,
+  Paused = 2,
+}
+
 // Players
 export interface KickermatPlayer {
   name: string;
