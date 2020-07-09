@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Webapp.Api.Player;
 using Webapp.Controllers.Player;
-using Webapp.Player.Api;
 using Webapp.Services.Game;
 
 namespace Webapp.Controllers.Game

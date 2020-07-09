@@ -24,31 +24,32 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public playerSub: Subscription | undefined;
   public players: KickermatPlayer[] = [];
 
-  constructor(private api: ApiService) { }
+  private deselect: () => void;
+
+  constructor(private api: ApiService) {
+    this.deselect = (() => {
+      this.selectPlayer(undefined);
+    }).bind(this);
+  }
 
   ngOnInit() {
     this.playerSub = this.api.getKickermatPlayers().subscribe(
       resp => {
-        this.players = [...resp, ...resp, ...resp, ...resp]
-          .map((player, i) => (
-            i === 0
-              ? player
-              : {
-                  ...player,
-                  ...{ name: `${player.name} ${i}` }
-              })
-          ); // TODO: replace
+        this.players = resp;
         this.state = State.Ready;
       },
       () => this.state = State.Error
     );
+
+    window.addEventListener("click", this.deselect);
   }
 
   ngOnDestroy() {
     this.playerSub && this.playerSub.unsubscribe();
+    window.removeEventListener("click", this.deselect);
   }
 
-  selectPlayer(player: KickermatPlayer, event?: MouseEvent) {
+  selectPlayer(player?: KickermatPlayer, event?: MouseEvent) {
     event && event.stopPropagation();
     this.selectedPlayer = player;
     this.selectedEvent.emit(player);

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Webapp.Player.Api;
+using Webapp.Api.Player;
 using Webapp.Services;
 
 namespace Webapp.Controllers.Player
@@ -25,9 +25,9 @@ namespace Webapp.Controllers.Player
         public ActionResult<IEnumerable<object>> GetKickermatPlayers()
         {
             var playerAttrs = new List<KickermatPlayerAttribute>();
-            foreach (var playerType in _playerService.Players.Values)
+            foreach (var player in _playerService.Players.Values)
             {
-                playerAttrs.Add(playerType.GetCustomAttribute<KickermatPlayerAttribute>());
+                playerAttrs.Add(player.GetType().GetCustomAttribute<KickermatPlayerAttribute>());
             }
 
             var players = playerAttrs.Select(

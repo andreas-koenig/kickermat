@@ -75,12 +75,6 @@ namespace Webapp
                 .AddKickerServices<DalsaCamera, CameraCalibration, ClassicImageProcessor>()
                 .ConfigureKicker<DalsaSettings, CalibrationSettings,
                     ClassicImageProcessorSettings>(Configuration);
-
-            // RouteConstraints
-            services.Configure<RouteOptions>(options =>
-            {
-                options.ConstraintMap.Add("videoSourceType", typeof(VideoSourceTypeRouteConstraint));
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

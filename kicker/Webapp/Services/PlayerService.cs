@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Webapp.Player.Api;
+using Webapp.Api.Player;
 
 namespace Webapp.Services
 {
@@ -17,18 +17,20 @@ namespace Webapp.Services
             Players = CollectPlayers();
         }
 
-        public Dictionary<string, Type> Players { get; }
+        public Dictionary<string, IKickermatPlayer> Players { get; }
 
-        private Dictionary<string, Type> CollectPlayers()
+        private Dictionary<string, IKickermatPlayer> CollectPlayers()
         {
-            var players = new Dictionary<string, Type>();
+            var players = new Dictionary<string, IKickermatPlayer>();
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (type.GetInterfaces().Contains(typeof(IKickermatPlayer)))
                 {
                     var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
-                    players.Add(playerAttr.Name, type);
+
+                    var player = _services.GetService(type) as IKickermatPlayer;
+                    players.Add(playerAttr.Name, player);
                 }
             }
 

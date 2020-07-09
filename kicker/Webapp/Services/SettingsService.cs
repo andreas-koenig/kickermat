@@ -125,7 +125,7 @@ namespace Webapp.Services
             var settingsDict = new Dictionary<string, IEnumerable<IWriteable>>();
             foreach (var player in _playerService.Players)
             {
-                settingsDict.Add(player.Key, GetSettings(player.Value));
+                settingsDict.Add(player.Key, GetSettings(player.Value.GetType()));
             }
 
             return settingsDict;

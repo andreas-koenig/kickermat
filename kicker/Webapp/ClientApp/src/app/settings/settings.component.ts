@@ -68,7 +68,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       .subscribe(
         settings => {
           this.settings = settings;
-          this.settings.forEach((_s, i) => this.isExpanded[i] = false);
+          this.settings.forEach((_s, i) => this.isExpanded[i] = true);
           this.loaded = true;
         });
 

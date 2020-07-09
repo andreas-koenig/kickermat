@@ -4,8 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Configuration;
-using Webapp.Player;
-using Webapp.Player.Api;
+using Webapp.Api.Player;
 
 namespace Webapp.Services.Game
 {
@@ -36,9 +35,9 @@ namespace Webapp.Services.Game
                     case GameState.IsPaused:
                         throw new KickermatException("The current game is paused");
                     case GameState.NoGame:
-                        if (_playerService.Players.TryGetValue(playerName, out var playerType))
+                        if (_playerService.Players.TryGetValue(playerName, out var player))
                         {
-                            CurrentPlayer = (IKickermatPlayer)_services.GetService(playerType);
+                            CurrentPlayer = player;
                             CurrentPlayer.Start();
                             State = GameState.IsRunning;
                             return;

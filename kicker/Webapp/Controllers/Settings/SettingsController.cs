@@ -30,6 +30,7 @@ namespace Webapp.Controllers.Settings
             _playerService = playerService;
 
             _jsonOptions = new JsonSerializerOptions();
+            _jsonOptions.PropertyNameCaseInsensitive = true;
             _jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         }
 
@@ -81,12 +82,12 @@ namespace Webapp.Controllers.Settings
                 return BadRequest("No player name was provided!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out Type playerType))
+            if (!_playerService.Players.TryGetValue(playerName, out var player))
             {
                 return BadRequest($"Could not load settings: player {playerName} not found");
             }
 
-            var settings = _settingsService.GetSettings(playerType);
+            var settings = _settingsService.GetSettings(player.GetType());
             var response = CreateResponse(settings);
 
             return Ok(response);

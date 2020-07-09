@@ -1,21 +1,4 @@
-// VideoSource
-export enum VideoSource {
-  Camera = "Camera",
-  Calibration = "Calibration",
-  ImageProcessing = "ImageProcessing",
-}
-
-export interface Channel {
-  id: string;
-  name: string;
-  description: string;
-}
-
-export enum KickerComponent {
-  Camera = "Camera",
-}
-
-// Parameter System
+// Settings
 export interface KickerParameter<T> {
   name: string;
   description: string;
@@ -82,6 +65,21 @@ export interface KickermatPlayer {
 export interface Settings {
   name: string;
   parameters: KickerParameter<any>[];
+}
+
+// User Interface
+export enum UserInterface {
+  Video = 0,
+}
+
+export interface VideoChannel {
+  name: string;
+  description: string;
+}
+
+export interface ChannelsResponse {
+  channels: VideoChannel[];
+  currentChannel: VideoChannel;
 }
 
 // Motor Diagnostics

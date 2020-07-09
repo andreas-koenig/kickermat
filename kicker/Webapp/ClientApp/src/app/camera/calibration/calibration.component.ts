@@ -1,8 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
-import { HUB_CALIBRATION, HUB_CALIBRATION_START } from '../../api/api';
+import { HUB_CALIBRATION, HUB_CALIBRATION_START } from '@api/api';
 import { NzMessageService } from 'ng-zorro-antd';
-import { VideoSource } from '@api/api.model';
 
 @Component({
   selector: 'app-calibration',
@@ -14,7 +13,6 @@ export class CalibrationComponent implements OnDestroy {
 
   public calibrationRunning = false;
   public progress = 0;
-  public camera = VideoSource.Calibration;
 
   constructor(private message: NzMessageService) {
     this.connection = new HubConnectionBuilder()

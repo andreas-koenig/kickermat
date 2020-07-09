@@ -11,8 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VideoSource;
-using Webapp.Player;
-using Webapp.Player.Api;
+using Webapp.Api.Player;
 
 namespace Webapp.Settings
 {

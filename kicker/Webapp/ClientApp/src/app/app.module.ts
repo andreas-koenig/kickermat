@@ -13,10 +13,8 @@ import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { CameraComponent } from './camera/camera.component';
-import { CalibrationComponent } from './calibration/calibration.component';
+import { CalibrationComponent } from './camera/calibration/calibration.component';
 import { PlayerComponent } from './player/player.component';
-import { ImageProcessingComponent } from './image-processing/image-processing.component';
-import { VideoPlayerComponent } from './video-player/video-player.component';
 import { MotorComponent } from './motor/motor.component';
 import { NmtStateComponent } from './motor/nmt-state/nmt-state.component';
 import { InfoTableComponent } from './motor/info-table/info-table.component';
@@ -31,6 +29,8 @@ import { NumberParamComponent } from './settings/number-param/number-param.compo
 import { ColorRangeParamComponent } from './settings/color-range-param/color-range-param.component';
 import { BooleanParameterComponent } from './settings/boolean-param/boolean-param.component';
 import { EnumParamComponent } from './settings/enum-param/enum-param.component';
+import { UserInterfaceComponent } from './user-interface/user-interface.component';
+import { VideoInterfaceComponent } from './user-interface/video-interface/video-interface.component';
 
 
 const routes: Route[] = [
@@ -56,10 +56,6 @@ const routes: Route[] = [
     component: CalibrationComponent
   },
   {
-    path: 'imgproc',
-    component: ImageProcessingComponent
-  },
-  {
     path: 'settings',
     component: SettingsComponent
   }
@@ -71,12 +67,9 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
     NavigationComponent,
-    VideoPlayerComponent,
     CameraComponent,
     CalibrationComponent,
     PlayerComponent,
-    ImageProcessingComponent,
-    VideoPlayerComponent,
     MotorComponent,
     NmtStateComponent,
     InfoTableComponent,
@@ -89,7 +82,9 @@ registerLocaleData(en);
     NumberParamComponent,
     ColorRangeParamComponent,
     BooleanParameterComponent,
-    EnumParamComponent
+    EnumParamComponent,
+    UserInterfaceComponent,
+    VideoInterfaceComponent,
   ],
   imports: [
     BrowserModule,

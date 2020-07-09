@@ -3,9 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 
 import {
-  KickerParameter, KickerComponent, VideoSource,
-  Channel, Motor, KickermatPlayer, Settings, UpdateSettingsResponse,
-  ParameterUpdate, Game
+  KickerParameter, Motor, KickermatPlayer, Settings, UpdateSettingsResponse,
+  ParameterUpdate, Game, ChannelsResponse, VideoChannel
 } from './api.model';
 import { REST_BASE } from './api';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -45,6 +44,34 @@ export class ApiService {
     return this.http.get<KickermatPlayer[]>(url);
   }
 
+  public getUserInterfaces(player: KickermatPlayer): Observable<string[]> {
+    const url = REST_BASE + '/ui';
+
+    let params = new HttpParams()
+      .append("player", player.name);
+
+    return this.http.get<string[]>(url, { params });
+  }
+
+  // User Interface
+  public getVideoChannels(player: KickermatPlayer): Observable<ChannelsResponse> {
+    const url = REST_BASE + '/ui/video/channel';
+
+    let params = new HttpParams()
+      .append("player", player.name);
+
+    return this.http.get<ChannelsResponse>(url, { params });
+  }
+
+  public switchVideoChannel(player: KickermatPlayer, channel: VideoChannel) {
+    const url = REST_BASE + '/ui/video/channel';
+
+    let params = new HttpParams()
+      .append("player", player.name);
+
+    return this.http.post(url, channel, { params });
+  }
+
   // Settings
   public getPlayerSettings(playerName: string): Observable<Settings[]> {
     const url = REST_BASE + '/settings';
@@ -80,45 +107,6 @@ export class ApiService {
           this.msg.create("error", error.error.message);
           onError(error.error.value);
         });
-  }
-
-  // Parameters
-  public getParameters(component: KickerComponent): Observable<KickerParameter<any>[]> {
-    const url = REST_BASE + '/parameters/' + component;
-
-    return this.http.get<KickerParameter<any>[]>(url);
-  }
-
-  public setParameter(component: KickerComponent, parameter: string, value: any):
-    Observable<any> {
-    const url = REST_BASE + '/parameters/' + component + '/' + parameter;
-
-    return this.http.put(url, value);
-  }
-
-  // ImageProcessing
-  public startBallSearch() {
-    const url = REST_BASE + '/imageprocessing';
-    this.http.get(url).subscribe();
-  }
-
-  // VideoSource
-  public getChannels(videoSource: VideoSource): Observable<Channel[]> {
-    const url = REST_BASE + '/video/' + videoSource + '/channels';
-
-    return this.http.get<Channel[]>(url);
-  }
-
-  public getChannel(videoSource: VideoSource): Observable<Channel> {
-    const url = REST_BASE + '/video/' + videoSource + '/channel';
-
-    return this.http.get<Channel>(url);
-  }
-
-  public switchChannel(videoSource: VideoSource, channel: Channel): Observable<Channel> {
-    const url = REST_BASE + '/video/' + videoSource + '/channel';
-
-    return this.http.put<Channel>(url, channel);
   }
 
   // Motor Diagnostics

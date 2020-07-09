@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Webapp.Player.Api;
+using Webapp.Api.Player;
 using Webapp.Services;
 using Webapp.Services.Game;
 

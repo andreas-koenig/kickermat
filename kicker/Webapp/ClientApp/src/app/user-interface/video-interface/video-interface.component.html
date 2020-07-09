@@ -1,13 +1,13 @@
-<div id="video" fxLayout="row" fxLayoutAlign="center center" [ngStyle]="{'height': videoHeight}">
-  <div id="img-container" [ngStyle]="{'height': videoHeight}">
+<div id="video" *ngIf="player" fxLayout="row" fxLayoutAlign="center center">
+  <div id="img-container" #imgcontainer>
     <img id="image" #img
-         src="http://localhost:5001/api/video/{{videoSource}}"
-         [ngClass]="{'failure': status == cameraStatusEnum.Failure}"
+         [src]="videoUrl + player.name"
+         [ngClass]="{'failure': status == videoStatusEnum.Failure}"
          (error)="error()"
          (abort)="error()"
          (load)="loaded()">
 
-    <div id="error" *ngIf="status == cameraStatusEnum.Failure">
+    <div id="error" *ngIf="status == videoStatusEnum.Failure">
       An error occurred at the server.<br />
       Please check if a camera is connected!<br /><br />
       <button nz-button nzType="primary" (click)="retry()">
@@ -15,10 +15,10 @@
       </button>
     </div>
 
-    <div id="overlay" *ngIf="status != cameraStatusEnum.Failure">
-      <div id="name">{{getName(videoSource)}}</div>
+    <div id="overlay" *ngIf="status != videoStatusEnum.Failure">
+      <div id="name">Video Source</div>
       <div id="channels" fxLayout="row" fxLayoutAlign="space-evenly stretch">
-        <div *ngFor="let channel of (channels | async)"
+        <div *ngFor="let channel of channels"
              [ngClass]="{ 'selected': isSelected(channel) }"
              class="channel"
              fxFlex="auto"
@@ -29,6 +29,6 @@
       </div>
     </div>
 
-    <nz-spin nzSimple [nzSize]="'large'" *ngIf="status == cameraStatusEnum.Loading"></nz-spin>
+    <nz-spin nzSimple [nzSize]="'large'" *ngIf="status == videoStatusEnum.Loading"></nz-spin>
   </div>
 </div>
