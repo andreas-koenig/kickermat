@@ -1,4 +1,7 @@
-﻿using Communication;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Api.Settings;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;
@@ -8,10 +11,12 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using VideoSource.Dalsa;
 using Webapp.Controllers;
 using Webapp.Hubs;
 using Webapp.Services;
+using Webapp.Services.Game;
 using Webapp.Settings;
 
 namespace Webapp
@@ -45,8 +50,15 @@ namespace Webapp
                             .AllowAnyMethod();
                     });
             });
+
             services.AddSignalR();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers(options => options.EnableEndpointRouting = true)
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                });
 
             // Add Angular frontend
             services.AddSpaStaticFiles(configuration =>
@@ -55,33 +67,32 @@ namespace Webapp
             });
 
             // Services
-            services.AddSingleton<ParameterService>();
-            services.AddKickerServices<DalsaCamera, CameraCalibration, ImageProcessor, Communication.Communication>();
-            services.ConfigureKicker<DalsaSettings, CalibrationSettings,
-                ImageProcessorSettings, CommunicationSettings>(Configuration);
-
-            // RouteConstraints
-            services.Configure<RouteOptions>(options =>
-            {
-                options.ConstraintMap.Add("videoSourceType", typeof(VideoSourceTypeRouteConstraint));
-            });
+            services.ConfigureKickermatSettings(Configuration)
+                .RegisterKickermatPlayers()
+                .AddSingleton<GameService>()
+                .AddSingleton<SettingsService>()
+                .AddSingleton<PlayerService>()
+                .AddKickerServices<DalsaCamera, CameraCalibration, ClassicImageProcessor>()
+                .ConfigureKicker<DalsaSettings, CalibrationSettings,
+                    ClassicImageProcessorSettings>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Configure Cors
+            app.UseStaticFiles(); // Call before useRouting()
+            app.UseSpaStaticFiles();
+
+            app.UseRouting();
+
+            // Configure CORS (before middleware using CORS, such as useEndpoints())
             app.UseCors(CorsPolicy);
 
-            // Configure SignalR hubs
-            app.UseSignalR(route =>
+            app.UseEndpoints(config =>
             {
-                route.MapHub<CalibrationHub>(SignalrBasePath + "/calibration");
+                config.MapHub<CalibrationHub>(SignalrBasePath + "/calibration");
+                config.MapDefaultControllerRoute();
             });
-
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-            app.UseMvc();
 
             if (env.IsDevelopment())
             {
@@ -97,7 +108,7 @@ namespace Webapp
                     }
                 });
             }
-            else
+            else if (env.IsStaging() || env.IsProduction())
             {
                 // Use internal SinglePageApp mechanism to start Angular in production mode
                 app.UseSpa(spa =>

@@ -1,36 +1,18 @@
-export enum VideoSource {
-  Camera = "Camera",
-  Calibration = "Calibration",
-  ImageProcessing = "ImageProcessing",
-}
-
-export interface Channel {
-  id: string;
+// Settings
+export interface KickerParameter<T> {
   name: string;
   description: string;
+  value: T;
+  defaultValue: T;
 }
 
-export enum KickerComponent {
-  Camera = "Camera",
-}
-
-export interface KickerParameter {
-  name: string;
-  description: string;
-  value: object | number;
-}
-
-export interface NumberParameter extends KickerParameter {
-  defaultValue: number;
+export interface NumberParameter extends KickerParameter<number> {
   min: number;
   max: number;
   step: number;
 }
 
-export interface ColorRangeParameter extends KickerParameter {
-  defaultValue: ColorRange;
-  value: ColorRange;
-}
+export interface ColorRangeParameter extends KickerParameter<ColorRange> {}
 
 export interface ColorRange {
   lower: HsvColor;
@@ -43,6 +25,64 @@ export interface HsvColor {
   value: number; // [0, 100]
 }
 
+export interface BooleanParameter extends KickerParameter<boolean> {}
+
+export interface EnumParameter extends KickerParameter<number> {
+  options: { key: number, value: string }[];
+}
+
+export interface UpdateSettingsResponse<T extends KickerParameter<T>> {
+  message: string;
+  value: T;
+}
+
+export interface ParameterUpdate {
+  settings: string;
+  parameter: string;
+  value: any;
+}
+
+// Game
+export interface Game {
+  state: GameState;
+  player?: KickermatPlayer;
+}
+
+export enum GameState {
+  NoGame = 0,
+  Running = 1,
+  Paused = 2,
+}
+
+// Players
+export interface KickermatPlayer {
+  name: string;
+  description: string;
+  authors: string[];
+  emoji: string;
+}
+
+export interface Settings {
+  name: string;
+  parameters: KickerParameter<any>[];
+}
+
+// User Interface
+export enum UserInterface {
+  Video = 0,
+}
+
+export interface VideoChannel {
+  name: string;
+  description: string;
+}
+
+export interface ChannelsResponse {
+  channels: VideoChannel[];
+  currentChannel: VideoChannel;
+}
+
+// Motor Diagnostics
 export enum Function {
   Rotation = 0,
   Shift = 1

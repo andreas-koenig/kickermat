@@ -1,6 +1,6 @@
 ﻿using GameProperties;
 
-namespace GameController
+namespace GameControllers
 {
     /// <summary>
     /// Interface which describes the game controller

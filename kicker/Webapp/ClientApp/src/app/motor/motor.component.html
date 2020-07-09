@@ -1,13 +1,19 @@
 <ng-container *ngIf="!loading">
   <app-motor-list [motors]="motors" [(selected)]="selectedMotor"></app-motor-list>
 
-  <div class="motor-information" fxLayout="row" fxLayoutGap="3em">
-    <div class="left" fxFlex="20%">
-      <app-info-table [motor]="selectedMotor" (onChange)="changeItem($event)"></app-info-table>
+  <div id="motor-info-wrapper">
+    <div id="dark-background">
+      <div id="white-foreground"></div>
     </div>
 
-    <div class="right" fxFlex="80%">
-      <ng-container *ngTemplateOutlet="getInfoTemplate(selectedItem); context: selectedMotor"></ng-container>
+    <div class="motor-information" fxLayout="row" fxLayoutGap="3em">
+      <div class="left" fxFlex="20%">
+        <app-info-table [motor]="selectedMotor" (onChange)="changeItem($event)"></app-info-table>
+      </div>
+
+      <div class="right" fxFlex="80%">
+        <ng-container *ngTemplateOutlet="getInfoTemplate(selectedItem); context: selectedMotor"></ng-container>
+      </div>
     </div>
   </div>
 </ng-container>
@@ -21,7 +27,7 @@
 
 <!-- Kickermat (Bar)-->
 <ng-template #bar>
-  <app-kickermat [motors]="motors" [(selected)]="selectedMotor"></app-kickermat>
+  <app-kicker [motors]="motors" [(selected)]="selectedMotor"></app-kicker>
 </ng-template>
 
 <!-- CanId -->

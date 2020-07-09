@@ -7,7 +7,7 @@ import { NmtState } from '@api/api.model';
   styleUrls: ['../state-diagram.scss']
 })
 export class NmtStateComponent implements OnInit {
-  @Input('nmtState') public nmtState: string | undefined;
+  @Input('nmtState') public nmtState!: NmtState
 
   public tooltipInitialization = "The motor just received power and started its initialization";
   public tooltipPreOperational = "The motor has finished the initialization and broadcast the\

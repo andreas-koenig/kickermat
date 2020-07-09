@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Configuration;
+using Api.Settings;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
@@ -41,7 +41,7 @@ namespace UnitTesting.Configuration
             {
                 ContentRootFileProvider = new PhysicalFileProvider(Path.GetTempPath())
             };
-            var options = new WritableOptions<Settings>(
+            var options = new Writable<Settings>(
                 env, null, Section, Path.GetFileName(fileName));
 
             // Act

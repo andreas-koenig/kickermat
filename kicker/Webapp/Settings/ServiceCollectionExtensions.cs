@@ -1,6 +1,9 @@
 ﻿using System;
-using Communication;
-using Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Api.Settings;
+using Api.Settings.Parameter;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.Extensions.Configuration;
@@ -8,11 +11,141 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VideoSource;
+using Api.Player;
 
 namespace Webapp.Settings
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Register all classes implementing <see cref="IKickermatPlayer" /> as a singleton
+        /// service that can be injected into other classes. An implementation can be accessed
+        /// like so: <code>services.GetService(typeof(KickermatPlayerImpl))</code>
+        /// </summary>
+        public static IServiceCollection RegisterKickermatPlayers(this IServiceCollection services)
+        {
+            var players = new Dictionary<string, Type>();
+
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                if (type.GetInterfaces().Contains(typeof(IKickermatPlayer)))
+                {
+                    var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
+                    if (playerAttr == null)
+                    {
+                        throw new KickermatException(
+                            $@"Please register the IKickermatPlayer implementation '{type.FullName}'
+                            by using annotating it with {typeof(KickermatPlayerAttribute).FullName}");
+                    }
+
+                    string playerName = playerAttr.Name;
+                    if (players.ContainsKey(playerName))
+                    {
+                        throw new KickermatException(
+                            $@"The IKickermatPlayer implementations {type.FullName} and
+                            {players[playerName].FullName} are both registered under the name
+                            {playerName}. Please choose distinct names!");
+                    }
+
+                    players.Add(playerAttr.Name, type);
+                }
+            }
+
+            foreach (var playerType in players.Values)
+            {
+                services.AddSingleton(playerType);
+            }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Register all implementations of <see cref="ISettings" /> as a service wrapped into
+        /// <see cref="IWriteable{TSettings}" />. The instance can be injected into a class
+        /// by adding the following parameter to its constructor:
+        /// <code>
+        /// public class Example
+        /// {
+        ///     public Example(IWritable{TSettings} settings)
+        ///     {
+        ///         // ...
+        ///     }
+        /// }
+        /// </code>
+        /// </summary>
+        public static IServiceCollection ConfigureKickermatSettings(
+            this IServiceCollection services,
+            IConfiguration config)
+        {
+            var configureMethod = typeof(OptionsConfigurationServiceCollectionExtensions)
+                .GetMethods()
+                .First(m => m.Name.Equals(nameof(OptionsConfigurationServiceCollectionExtensions.Configure)));
+
+            var tmpSettingsDict = new Dictionary<string, Type>();
+
+            AppDomain.CurrentDomain.GetAssemblies()
+                .ToList()
+                .ForEach(asm => asm.GetTypes()
+                    .ToList()
+                    .ForEach(type =>
+                        {
+                            if (type.GetInterfaces().Contains(typeof(ISettings)))
+                            {
+                                CheckDefaultValues(services, type);
+                                ConfigureSettingsType(services, type, config, configureMethod);
+                            }
+                        }));
+
+            return services;
+        }
+
+        private static void CheckDefaultValues(this IServiceCollection services, Type settingsType)
+        {
+            var settings = Activator.CreateInstance(settingsType);
+
+            settingsType.GetProperties()
+                .ToList()
+                .ForEach(prop =>
+                {
+                    var value = prop.GetValue(settings);
+                    if (value == default || value == null)
+                    {
+                        throw new KickermatException(@$"Please define a default value for the
+                            property '{prop.Name}' of the 'ISettings' implementation
+                            '{settingsType.FullName}'");
+                    }
+                });
+        }
+
+        private static void ConfigureSettingsType(
+            this IServiceCollection services,
+            Type settingsType,
+            IConfiguration config,
+            MethodInfo configureMethod)
+        {
+            var name = (Activator.CreateInstance(settingsType) as ISettings).Name;
+            var iWriteableType = typeof(IWriteable<>).MakeGenericType(settingsType);
+
+            // Call services.Configure<TOptions>(section) with settingsType as TOptions
+            configureMethod
+                .MakeGenericMethod(settingsType)
+                .Invoke(null, new object[] { services, config.GetSection(name) });
+
+            // Register IWriteable<TOptions> as transient service
+            services.AddTransient(iWriteableType, provider =>
+            {
+                var writableType = typeof(Writable<>).MakeGenericType(settingsType);
+                var monitorType = typeof(IOptionsMonitor<>).MakeGenericType(settingsType);
+                var optionsMonitor = provider.GetService(monitorType);
+                var environment = provider.GetService<IHostingEnvironment>();
+
+                var writableOptions = Activator.CreateInstance(
+                    writableType, environment, optionsMonitor, name, "appsettings.json");
+
+                return writableOptions;
+            });
+        }
+
         /// <summary>
         /// Add an OptionsMonitor whose updates are written back to its underlying JSON file.
         /// </summary>
@@ -28,11 +161,11 @@ namespace Webapp.Settings
             where TOptions : class, new()
         {
             services.Configure<TOptions>(section);
-            services.AddTransient<IWritableOptions<TOptions>>(provider =>
+            services.AddTransient<IWriteable<TOptions>>(provider =>
             {
                 var environment = provider.GetService<IHostingEnvironment>();
                 var options = provider.GetService<IOptionsMonitor<TOptions>>();
-                return new WritableOptions<TOptions>(environment, options, section.Path, file);
+                return new Writable<TOptions>(environment, options, section.Path, file);
             });
 
             return services;
@@ -44,21 +177,18 @@ namespace Webapp.Settings
         /// <typeparam name="TVideoSource">The type of the implementation for IVideoSource.</typeparam>
         /// <typeparam name="TCameraCalibration">The type of the implementation for ICameraCalibration.</typeparam>
         /// <typeparam name="TImageProcessor">The type of the implementation for IImageProcessor.</typeparam>
-        /// <typeparam name="TKickerControl">The type of the implementation for IKickerControl.</typeparam>
         /// <param name="services">The IServiceCollection to be extended.</param>
         /// <returns>The IServiceCollection.</returns>
         public static IServiceCollection AddKickerServices<TVideoSource, TCameraCalibration,
-            TImageProcessor, TKickerControl>(
+            TImageProcessor>(
             this IServiceCollection services)
             where TVideoSource : class, IVideoSource
             where TCameraCalibration : class, ICameraCalibration
             where TImageProcessor : class, IImageProcessor
-            where TKickerControl : class, ICommunication
         {
             services.AddSingleton<IVideoSource, TVideoSource>();
             services.AddSingleton<ICameraCalibration, TCameraCalibration>();
             services.AddSingleton<IImageProcessor, TImageProcessor>();
-            services.AddSingleton<ICommunication, TKickerControl>();
 
             return services;
         }
@@ -70,21 +200,18 @@ namespace Webapp.Settings
         /// <typeparam name="TVideoSourceSettings">The type of the settings for the IVideoSource.</typeparam>
         /// <typeparam name="TCameraCalibrationSettings">The type of the settings for the ICameraCalibration.</typeparam>
         /// <typeparam name="TImageProcessorSettings">The type of the settings for the IImageProcessor.</typeparam>
-        /// <typeparam name="TKickerControlSettings">The type of the settings for the IKickerControl.</typeparam>
         /// <param name="services">The IServiceCollection to be extended.</param>
         /// <param name="config">The configuration instance containing the appsettings.json file.</param>
         public static void ConfigureKicker<TVideoSourceSettings, TCameraCalibrationSettings,
-            TImageProcessorSettings, TKickerControlSettings>(
+            TImageProcessorSettings>(
             this IServiceCollection services, IConfiguration config)
             where TVideoSourceSettings : class, new()
             where TCameraCalibrationSettings : class, new()
             where TImageProcessorSettings : class, new()
-            where TKickerControlSettings : class, new()
         {
             services.ConfigureKickerOptions<TVideoSourceSettings>(config);
             services.ConfigureKickerOptions<TCameraCalibrationSettings>(config);
             services.ConfigureKickerOptions<TImageProcessorSettings>(config);
-            services.ConfigureKickerOptions<TKickerControlSettings>(config);
         }
 
         private static void ConfigureKickerOptions<TKickerOptions>(
@@ -92,7 +219,7 @@ namespace Webapp.Settings
             where TKickerOptions : class, new()
         {
             var optionsAttrs = typeof(TKickerOptions)
-                .GetCustomAttributes(typeof(KickerOptionsAttribute), false);
+                .GetCustomAttributes(typeof(KickermatSettingsAttribute), false);
 
             if (optionsAttrs == null || optionsAttrs.Length == 0)
             {
@@ -102,7 +229,7 @@ namespace Webapp.Settings
                 throw new Exception(msg);
             }
 
-            var kickerOptionsAttr = (KickerOptionsAttribute)optionsAttrs[0];
+            var kickerOptionsAttr = (KickermatSettingsAttribute)optionsAttrs[0];
             var key = string.Join(":", kickerOptionsAttr.Path);
             services.ConfigureWritable<TKickerOptions>(config.GetSection(key));
             services.PostConfigure<TKickerOptions>(o => ValidateOptions<TKickerOptions>(o));

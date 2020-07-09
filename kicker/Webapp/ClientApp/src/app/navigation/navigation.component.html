@@ -21,7 +21,7 @@
           [nzDisabled]="menu.disabled"
           nzMatchRouterExact>
         <span title>
-          <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon"></i>
+          <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon" nzTheme="fill"></i>
           <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
         </span>
         <ul>

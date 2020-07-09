@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release;Integration</Configurations>
   </PropertyGroup>
 
@@ -45,8 +45,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.1.0.20190416" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.5" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.3.0.20200701" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Api\Api.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>
 
@@ -61,6 +62,10 @@
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
       <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OpenCvImageProcessor\" />
   </ItemGroup>
 
 </Project>

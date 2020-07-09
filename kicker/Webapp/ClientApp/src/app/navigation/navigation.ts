@@ -31,7 +31,7 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
   {
     path: 'camera',
     level: 1,
-    title: 'Camera',
+    title: 'Cameras',
     icon: 'video-camera',
     open: false,
     selected: false,
@@ -57,13 +57,4 @@ export const KICKER_NAV_ITEMS: NavItem[] = [
       }
     ]
   },
-  {
-    path: 'imgproc',
-    level: 1,
-    title: 'Image Processing',
-    icon: 'picture',
-    open: false,
-    selected: false,
-    disabled: false,
-  }
 ]

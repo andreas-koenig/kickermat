@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using Configuration;
+using Api.Settings;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 
@@ -51,7 +51,7 @@ namespace VideoSource.Dalsa
         private readonly CameraDisconnected _disconnectedDelegate;
 
         // members
-        private readonly IWritableOptions<DalsaSettings> _options;
+        private readonly IWriteable<DalsaSettings> _options;
 
         private readonly object _lockObject = new object();
         private readonly string _name;
@@ -59,7 +59,7 @@ namespace VideoSource.Dalsa
         private unsafe bool _acquisitionRunning;
 
         public DalsaCamera(
-            ILogger<DalsaCamera> logger, IWritableOptions<DalsaSettings> options)
+            ILogger<DalsaCamera> logger, IWriteable<DalsaSettings> options)
             : base(logger)
         {
             _options = options;

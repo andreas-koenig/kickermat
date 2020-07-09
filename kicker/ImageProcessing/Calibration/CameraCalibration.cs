@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Configuration;
+using Api.Settings;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using VideoSource;
@@ -28,7 +28,7 @@ namespace ImageProcessing.Calibration
 
         // Logging & Options
         private readonly ILogger<ICameraCalibration> _logger;
-        private readonly IWritableOptions<CalibrationSettings> _calibrationOptions;
+        private readonly IWriteable<CalibrationSettings> _calibrationOptions;
 
         // Calibration
         private readonly object _objectLock;
@@ -41,7 +41,7 @@ namespace ImageProcessing.Calibration
         private uint _frameCount = 0;
 
         public CameraCalibration(IVideoSource camera, ILogger<ICameraCalibration> logger,
-            IWritableOptions<CalibrationSettings> calibrationOptions)
+            IWriteable<CalibrationSettings> calibrationOptions)
             : base(camera, logger)
         {
             _objectLock = new object();
@@ -130,7 +130,7 @@ namespace ImageProcessing.Calibration
             {
                 _isFindingCorners = true;
 
-                var corners = new MatOfPoint2f();
+                var corners = new Mat<Point2f>();
                 var found = Cv2.FindChessboardCorners(frame, _boardSize, corners,
                     ChessboardFlags.AdaptiveThresh |
                     ChessboardFlags.FastCheck |
@@ -180,16 +180,16 @@ namespace ImageProcessing.Calibration
         private void CalculateDistortionParameters(out Mat cameraMatrix, out Mat distCoeffs,
             Size size)
         {
-            cameraMatrix = new MatOfDouble(Mat.Eye(3, 3, MatType.CV_64FC1));
-            distCoeffs = new MatOfDouble();
+            cameraMatrix = new Mat(Mat.Eye(3, 3, MatType.CV_64FC1));
+            distCoeffs = new Mat<double>();
             var objectPoints = new List<Mat>();
             var imagePoints = new List<Mat>();
             var cornerPositions = CalcBoardCornerPositions();
 
             for (int i = 0; i < _chessboardCorners.Count; i++)
             {
-                objectPoints.Add(MatOfPoint3f.FromArray(cornerPositions));
-                imagePoints.Add(MatOfPoint2f.FromArray(_chessboardCorners[i]));
+                objectPoints.Add(Mat.FromArray(cornerPositions));
+                imagePoints.Add(Mat.FromArray(_chessboardCorners[i]));
             }
 
             double error = Cv2.CalibrateCamera(objectPoints, imagePoints,

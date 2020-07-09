@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Configuration;
+using Api.Settings.Parameter;
 using OpenCvSharp;
 
 namespace ImageProcessing.Calibration
 {
-    [KickerOptions(typeof(CameraCalibration), "Camera", "Calibration")]
+    [KickermatSettings(typeof(CameraCalibration), "Camera", "Calibration")]
     public class CalibrationSettings
     {
         public double[][] CameraMatrix { get; set; }
@@ -15,12 +15,12 @@ namespace ImageProcessing.Calibration
 
         public Mat GetCameraMatrixAsMat()
         {
-            return MatOfDouble.FromArray(ToMultiDimArray(CameraMatrix));
+            return Mat.FromArray(ToMultiDimArray(CameraMatrix));
         }
 
         public Mat GetDistCoeffsAsMat()
         {
-            return MatOfDouble.FromArray(DistortionCoefficients);
+            return Mat.FromArray(DistortionCoefficients);
         }
 
         private static double[,] ToMultiDimArray(double[][] matrix)
