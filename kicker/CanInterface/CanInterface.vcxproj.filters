@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Motor">
+      <UniqueIdentifier>{1d19463f-921d-4fde-a695-63321c07629f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CanOpen">
+      <UniqueIdentifier>{a9795185-aa4d-4a83-8fcd-1c053f9b2672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Motor">
+      <UniqueIdentifier>{1a6ee39d-17ff-40b8-86db-b5b56106ec98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CanOpen">
+      <UniqueIdentifier>{5e684f10-df31-4802-b026-1a6bf9e2d255}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Motor\Faulhaber.h">
+      <Filter>Header Files\Motor</Filter>
+    </ClInclude>
+    <ClInclude Include="Motor\Motor.h">
+      <Filter>Header Files\Motor</Filter>
+    </ClInclude>
+    <ClInclude Include="Motor\Telemecanique.h">
+      <Filter>Header Files\Motor</Filter>
+    </ClInclude>
+    <ClInclude Include="CanOpen\CanOpen.h">
+      <Filter>Header Files\CanOpen</Filter>
+    </ClInclude>
+    <ClInclude Include="api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor\Faulhaber.cpp">
+      <Filter>Source Files\Motor</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor\Telemecanique.cpp">
+      <Filter>Source Files\Motor</Filter>
+    </ClCompile>
+    <ClCompile Include="CanOpen\CanOpen.cpp">
+      <Filter>Source Files\CanOpen</Filter>
+    </ClCompile>
+    <ClCompile Include="api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor\Motor.cpp">
+      <Filter>Source Files\Motor</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
