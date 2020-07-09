@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Configuration;
+using Api.Settings;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.AspNetCore.Builder;

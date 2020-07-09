@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Configuration
+namespace Api.Settings
 {
     public class Writable<T> : IWriteable<T>
         where T : class, new()

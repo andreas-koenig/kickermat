@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Webapp.Api.Player;
-using Webapp.Api.UserInterface;
-using Webapp.Api.UserInterface.Video;
-using Webapp.Api.Video;
+using Api.Player;
+using Api.UserInterface;
+using Api.UserInterface.Video;
+using Api.Video;
 using Webapp.Services;
 
 namespace Webapp.Controllers.UserInterface

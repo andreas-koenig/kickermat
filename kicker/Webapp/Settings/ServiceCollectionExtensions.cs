@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Configuration;
-using Configuration.Parameter;
+using Api.Settings;
+using Api.Settings.Parameter;
 using ImageProcessing;
 using ImageProcessing.Calibration;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VideoSource;
-using Webapp.Api.Player;
+using Api.Player;
 
 namespace Webapp.Settings
 {

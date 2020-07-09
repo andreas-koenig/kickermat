@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Webapp.Api.Video
+namespace Api.Video
 {
     public class VideoObserver<T> : IObserver<T>
     {

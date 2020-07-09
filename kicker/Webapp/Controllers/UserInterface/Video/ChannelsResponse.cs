@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Webapp.Api.Video;
+using Api.Video;
 
 namespace Webapp.Controllers.UserInterface.Video
 {

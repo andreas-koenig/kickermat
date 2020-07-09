@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Configuration.Parameter
+namespace Api.Settings.Parameter
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public abstract class BaseParameterAttribute : Attribute

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenCvSharp;
-using Webapp.Api.UserInterface;
-using Webapp.Api.UserInterface.Video;
+using Api.UserInterface;
+using Api.UserInterface.Video;
 
-namespace Webapp.Api.Video
+namespace Api.Video
 {
     public class VideoSource : IVideoSource<byte[]>
     {

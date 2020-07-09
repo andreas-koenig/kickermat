@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Configuration.Parameter;
+using Api.Settings.Parameter;
 using OpenCvSharp;
 
 namespace ImageProcessing.Calibration
@@ -15,12 +15,12 @@ namespace ImageProcessing.Calibration
 
         public Mat GetCameraMatrixAsMat()
         {
-            return MatOfDouble.FromArray(ToMultiDimArray(CameraMatrix));
+            return Mat.FromArray(ToMultiDimArray(CameraMatrix));
         }
 
         public Mat GetDistCoeffsAsMat()
         {
-            return MatOfDouble.FromArray(DistortionCoefficients);
+            return Mat.FromArray(DistortionCoefficients);
         }
 
         private static double[,] ToMultiDimArray(double[][] matrix)

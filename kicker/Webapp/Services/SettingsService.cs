@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Configuration;
-using Configuration.Parameter;
+using Api.Settings;
+using Api.Settings.Parameter;
 
 namespace Webapp.Services
 {

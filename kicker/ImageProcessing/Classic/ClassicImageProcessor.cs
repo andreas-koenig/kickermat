@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Configuration;
-using Configuration.Parameter;
+using Api.Settings;
+using Api.Settings.Parameter;
 using ImageProcessing.OpenCvImageProcessor;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;

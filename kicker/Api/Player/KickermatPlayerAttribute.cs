@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Webapp.Api.Player
+namespace Api.Player
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    internal class KickermatPlayerAttribute : Attribute
+    public class KickermatPlayerAttribute : Attribute
     {
         public KickermatPlayerAttribute(string name, string description, string[] authors,
             char emoji)

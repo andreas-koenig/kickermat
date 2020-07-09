@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Configuration.Parameter;
+using Api.Settings.Parameter;
 
 namespace ImageProcessing
 {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using VideoSource.Dalsa;
-using Webapp.Api.Player;
-using Webapp.Api.UserInterface.Video;
-using Webapp.Api.Video;
+using Api.Player;
+using Api.UserInterface.Video;
+using Api.Video;
+using Api.Settings;
 
 namespace Webapp.Player
 {
@@ -45,7 +45,7 @@ namespace Webapp.Player
                 new VideoChannel("EdgeDetection", "Image after EdgeDetection"),
             };
 
-            _videoSource = new Webapp.Api.Video.VideoSource(channels);
+            _videoSource = new Api.Video.VideoSource(channels);
         }
 
         public void Start()
@@ -68,7 +68,7 @@ namespace Webapp.Player
                         var img = _videoSource.Channel.Name.Equals("Image")
                             ? _img1
                             : _img2;
-                        (_videoSource as Webapp.Api.Video.VideoSource).Push(img);
+                        (_videoSource as Api.Video.VideoSource).Push(img);
                     }
                 },
                 _tokenSource.Token);

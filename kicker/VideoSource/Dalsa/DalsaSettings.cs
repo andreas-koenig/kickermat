@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
-using Configuration;
-using Configuration.Parameter;
+using Api.Settings;
+using Api.Settings.Parameter;
 
 namespace VideoSource.Dalsa
 {

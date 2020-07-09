@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Configuration.Parameter
+namespace Api.Settings.Parameter
 {
     public class NumberParameterAttribute : BaseParameterAttribute
     {

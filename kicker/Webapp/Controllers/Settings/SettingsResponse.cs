@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Configuration.Parameter;
+using Api.Settings.Parameter;
 
 namespace Webapp.Controllers.Settings
 {

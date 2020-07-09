@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Configuration
+namespace Api.Settings
 {
     public interface ISettings
     {

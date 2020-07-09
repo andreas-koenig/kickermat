@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Webapp.Api.UserInterface.Video
+namespace Api.UserInterface.Video
 {
     public class Unsubscriber<T> : IDisposable
     {

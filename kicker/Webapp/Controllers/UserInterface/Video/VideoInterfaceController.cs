@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Api.UserInterface.Video;
+using Api.Video;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Webapp.Api.Player;
-using Webapp.Api.UserInterface.Video;
-using Webapp.Api.Video;
 using Webapp.Services;
 
 namespace Webapp.Controllers.UserInterface.Video

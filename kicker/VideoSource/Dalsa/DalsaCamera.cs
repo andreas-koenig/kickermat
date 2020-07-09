@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using Configuration;
+using Api.Settings;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 

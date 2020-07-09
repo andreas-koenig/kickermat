@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Configuration;
+using Api.Settings;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;

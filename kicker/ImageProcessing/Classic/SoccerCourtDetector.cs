@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Configuration;
+using Api.Settings;
 using OpenCvSharp;
 using VideoSource;
 

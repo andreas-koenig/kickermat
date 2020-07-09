@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Webapp.Api.Video;
+using Api.Video;
 
-namespace Webapp.Api.UserInterface.Video
+namespace Api.UserInterface.Video
 {
     [UserInterface(UserInterfaceType.Video)]
     public interface IVideoInterface<T>

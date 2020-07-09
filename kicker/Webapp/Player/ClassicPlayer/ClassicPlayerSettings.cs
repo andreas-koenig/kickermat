@@ -1,5 +1,5 @@
-﻿using Configuration;
-using Configuration.Parameter;
+﻿using Api.Settings;
+using Api.Settings.Parameter;
 
 namespace Webapp.Player
 {

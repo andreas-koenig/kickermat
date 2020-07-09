@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Webapp.Api.Player;
+using Api.Player;
 
 namespace Webapp.Services
 {
