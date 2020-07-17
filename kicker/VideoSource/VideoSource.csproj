@@ -26,10 +26,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="StyleCop.ruleset">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

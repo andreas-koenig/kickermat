@@ -8,23 +8,24 @@ namespace MotorController
     {
         public static Motor[] Collect()
         {
-            return new Motor[] {
-            new Motor("Telemecanique", Function.Shift, Bar.Keeper, 1, NmtState.Operational,
-                OperatingState.NotReadyToSwitchOn, OperatingMode.ProfilePositionMode, null),
-            new Motor("Telemecanique", Function.Shift, Bar.Defense, 2, NmtState.Initialization,
-                OperatingState.SwitchedOn, OperatingMode.ProfilePositionMode, null),
-            new Motor("Telemecanique", Function.Shift, Bar.Midfield, 3, NmtState.PreOperational,
-                OperatingState.OperationEnable, OperatingMode.ProfilePositionMode, null),
-            new Motor("Telemecanique", Function.Shift, Bar.Striker, 4, NmtState.Operational,
-                OperatingState.QuickStopActive, OperatingMode.ProfilePositionMode, null),
-            new Motor("Faulhaber", Function.Rotation, Bar.Keeper, 10, NmtState.Operational,
-                OperatingState.SwitchOnDisabled, OperatingMode.ProfileVelocityMode, null),
-            new Motor("Faulhaber", Function.Rotation, Bar.Defense, 11, NmtState.Initialization,
-                OperatingState.SwitchedOn, OperatingMode.ProfileVelocityMode, null),
-            new Motor("Faulhaber", Function.Rotation, Bar.Midfield, 12, NmtState.Stopped,
-                OperatingState.Fault, OperatingMode.ProfileVelocityMode, "Overheated"),
-            new Motor("Faulhaber", Function.Rotation, Bar.Striker, 13, NmtState.Operational,
-                OperatingState.FaultReactionActive, OperatingMode.ProfileVelocityMode, null),
+            return new Motor[]
+            {
+                new Motor("Telemecanique", Function.Shift, Bar.Keeper, 1, NmtState.Operational,
+                    OperatingState.NotReadyToSwitchOn, OperatingMode.ProfilePositionMode, null),
+                new Motor("Telemecanique", Function.Shift, Bar.Defense, 2, NmtState.Initialization,
+                    OperatingState.SwitchedOn, OperatingMode.ProfilePositionMode, null),
+                new Motor("Telemecanique", Function.Shift, Bar.Midfield, 3, NmtState.PreOperational,
+                    OperatingState.OperationEnable, OperatingMode.ProfilePositionMode, null),
+                new Motor("Telemecanique", Function.Shift, Bar.Striker, 4, NmtState.Operational,
+                    OperatingState.QuickStopActive, OperatingMode.ProfilePositionMode, null),
+                new Motor("Faulhaber", Function.Rotation, Bar.Keeper, 10, NmtState.Operational,
+                    OperatingState.SwitchOnDisabled, OperatingMode.ProfileVelocityMode, null),
+                new Motor("Faulhaber", Function.Rotation, Bar.Defense, 11, NmtState.Initialization,
+                    OperatingState.SwitchedOn, OperatingMode.ProfileVelocityMode, null),
+                new Motor("Faulhaber", Function.Rotation, Bar.Midfield, 12, NmtState.Stopped,
+                    OperatingState.Fault, OperatingMode.ProfileVelocityMode, "Overheated"),
+                new Motor("Faulhaber", Function.Rotation, Bar.Striker, 13, NmtState.Operational,
+                    OperatingState.FaultReactionActive, OperatingMode.ProfileVelocityMode, null),
             };
         }
     }

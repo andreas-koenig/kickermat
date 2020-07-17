@@ -54,7 +54,7 @@ namespace ImageProcessing.OpenCvImageProcessor
                         return (null, ballRect);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return (threshImg, new Rect(0, 0, 10, 10));
             }

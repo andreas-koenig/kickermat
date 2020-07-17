@@ -61,7 +61,7 @@ namespace Webapp.Services
                     writeable.Update(changes => prop.SetValue(changes, val));
                     return value;
                 }
-                catch (Exception ex)
+                catch
                 {
                     // TODO: Log exception
 

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{0BD7E732-9874-43AF-BFC5-273EA30356F6}</ProjectGuid>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyOriginatorKeyFile />
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -30,7 +30,7 @@
     <FileVersion>1.2.0.0</FileVersion>
     <RuntimeIdentifiers>win7-x64;win10-x64</RuntimeIdentifiers>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
-    <Configurations>Debug;Release;Integration</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <RunCodeAnalysis>False</RunCodeAnalysis>
@@ -44,25 +44,12 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Integration|AnyCPU'">
-    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
-    <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>True</RunCodeAnalysis>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Update="StyleCop.ruleset">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Communication\Communication.csproj" />
-    <ProjectReference Include="..\Game\Game.csproj" />
     <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
   </ItemGroup>
   <ItemGroup>
