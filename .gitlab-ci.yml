@@ -74,7 +74,7 @@ before_script:
   - 'git fetch --all'
   - 'git checkout $BRANCH'
   - 'git pull origin $BRANCH'
-  - '$VS2019TOOLS'/VsDevCmd.bat'
+  - '$VS2019TOOLS/VsDevCmd.bat'
 
 build:
   stage: build
