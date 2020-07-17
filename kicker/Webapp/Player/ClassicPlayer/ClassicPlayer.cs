@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Api.Player;
+using Api.Settings;
+using Api.UserInterface.Video;
+using Api.Video;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using VideoSource.Dalsa;
-using Api.Player;
-using Api.UserInterface.Video;
-using Api.Video;
-using Api.Settings;
 
 namespace Webapp.Player
 {
@@ -19,17 +19,20 @@ namespace Webapp.Player
         new string[] { "Dominik Hagenauer", "Andreas König" },
         '⚽')
     ]
-    public class ClassicPlayer : IKickermatPlayer, IVideoInterface<byte[]>
+    public class ClassicPlayer : IKickermatPlayer, IVideoInterface<byte[]>, IDisposable
     {
         private readonly IWriteable<ClassicPlayerSettings> _settings;
         private readonly ILogger _logger;
+
+        private readonly Mat _img1 = Cv2.ImRead(@"C:\Users\Andreas\Desktop\kicker\kicker_wb_gain_1_6.bmp");
+        private readonly Mat _img2 = Cv2.ImRead(@"C:\Users\Andreas\Desktop\kicker\kicker_wb_gain_3.bmp");
 
         private readonly IVideoSource<byte[]> _videoSource;
         private Task _videoTask;
         private CancellationTokenSource _tokenSource;
         private CancellationToken _ct;
-        private Mat _img1 = Cv2.ImRead(@"C:\Users\Andreas\Desktop\kicker\kicker_wb_gain_1_6.bmp");
-        private Mat _img2 = Cv2.ImRead(@"C:\Users\Andreas\Desktop\kicker\kicker_wb_gain_3.bmp");
+
+        private bool _disposed = false;
 
         public ClassicPlayer(
             IWriteable<ClassicPlayerSettings> settings,
@@ -64,7 +67,7 @@ namespace Webapp.Player
                             return;
                         }
 
-                        await Task.Delay(100);
+                        await Task.Delay(100).ConfigureAwait(true);
                         var img = _videoSource.Channel.Name.Equals("Image")
                             ? _img1
                             : _img2;
@@ -93,6 +96,28 @@ namespace Webapp.Player
         public IVideoSource<byte[]> GetVideoSource()
         {
             return _videoSource;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _img1?.Dispose();
+                _img2?.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

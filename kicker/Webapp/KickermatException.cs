@@ -16,5 +16,7 @@ namespace Webapp
             : base(message, innerException)
         {
         }
+
+        protected KickermatException() { }
     }
 }

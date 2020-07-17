@@ -17,14 +17,14 @@ namespace VideoSource.Dalsa
     [StructLayout(LayoutKind.Sequential)]
     internal struct RoiSettings
     {
-        #pragma warning disable SX1309 // Due to C++ compatibility
-        #pragma warning disable SA1306
-        private int XMin;
-        private int YMin;
-        private int Width;
-        private int Height;
-        #pragma warning restore SX1309
-        #pragma warning restore SA1306
+#pragma warning disable SX1309 // Due to C++ compatibility
+#pragma warning disable SA1306
+        public int XMin;
+        public int YMin;
+        public int Width;
+        public int Height;
+#pragma warning restore SX1309
+#pragma warning restore SA1306
 
         public RoiSettings(int xMin, int yMin, int width, int height)
         {
@@ -63,7 +63,7 @@ namespace VideoSource.Dalsa
             : base(logger)
         {
             _options = options;
-            _name = options.Value.CameraName;
+            _name = options?.Value.CameraName;
 
             _frameArrivedDelegate = FrameArrived;
             _connectedDelegate = CameraConnected;
@@ -126,7 +126,7 @@ namespace VideoSource.Dalsa
             }
         }
 
-        [DllImport(DalsaDll, EntryPoint = "CreateCamera")]
+        [DllImport(DalsaDll, EntryPoint = "CreateCamera", CharSet = CharSet.Unicode)]
         private static extern IntPtr DLL_CreateCamera(string name, RoiSettings roi,
             FrameArrived frameArrived, CameraConnected connected, CameraDisconnected disconnected);
 
@@ -142,7 +142,7 @@ namespace VideoSource.Dalsa
         [DllImport(DalsaDll, EntryPoint = "ReleaseBuffer")]
         private static extern bool DLL_ReleaseBuffer(IntPtr camera, int bufferIndex);
 
-        [DllImport(DalsaDll, EntryPoint = "SetFeatureValue")]
+        [DllImport(DalsaDll, EntryPoint = "SetFeatureValue", CharSet = CharSet.Unicode)]
         private static extern bool DLL_SetFeatureValue(IntPtr camera, string featureName,
             double featureValue);
 
