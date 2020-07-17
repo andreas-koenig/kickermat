@@ -9,6 +9,8 @@ variables:
 stages:
   - build
   - test
+  - docs
+  - release
 
 # ### Define global cache rule
 #
@@ -72,6 +74,7 @@ before_script:
   - 'git fetch --all'
   - 'git checkout $BRANCH'
   - 'git pull origin $BRANCH'
+  - '$VS2019TOOLS'/VsDevCmd.bat'
 
 build:
   stage: build
@@ -81,7 +84,7 @@ build:
     - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
-    - '.$MSBUILD_DIR/msbuild.exe $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - 'msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
 tests:
   stage: test
@@ -93,3 +96,18 @@ tests:
   artifacts:
     reports:
       junit: $CI_PROJECT_DIR/$SOURCE_CODE_PATH/UnitTesting/TestResult.xml
+
+docs:
+  stage: docs
+  tags:
+    - docs
+  script:
+    - 'docfx $CI_PROJECT_DIR/docs/docfx.json'
+    - '%KICKERMAT_HOME%/scripts/copy-docs.bat $CI_PROJECT_DIR/docs/_site'
+
+releases:
+  stage: release
+  tags:
+    - release
+  script: 
+    - 'tar -a -c -f %KICKERMAT_HOME%/www/builds/release.zip'
