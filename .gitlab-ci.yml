@@ -103,11 +103,11 @@ docs:
     - docs
   script:
     - 'docfx $CI_PROJECT_DIR/docs/docfx.json'
-    - '%KICKERMAT_HOME%/scripts/copy-docs.bat $CI_PROJECT_DIR/docs/_site'
+    - '$KICKERMAT_HOME/scripts/copy-docs.bat $CI_PROJECT_DIR/docs/_site'
 
 releases:
   stage: release
   tags:
     - release
   script: 
-    - 'tar -a -c -f %KICKERMAT_HOME%/www/builds/release.zip'
+    - 'tar -a -c -f $KICKERMAT_HOME/www/builds/release.zip'
