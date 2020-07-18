@@ -105,7 +105,7 @@ docs:
     - docs
   script:
     - 'docfx $CI_PROJECT_DIR/docs/docfx.json'
-    - 'rmdir /s /q $KICKERMAT_HOME/www/docs'
+    - 'Remove-Item $KICKERMAT_HOME/www/docs -Recurse -Force'
     - 'mkdir $KICKERMAT_HOME/www/docs'
     - xcopy $CI_PROJECT_DIR/docs/_site $KICKERMAT_HOME/www/docs /E
 
