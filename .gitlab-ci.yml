@@ -80,6 +80,7 @@ build:
   tags:
     - build
   script:
+    - '& $VS2019TOOLS/VsDevCmd.bat'
     - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
