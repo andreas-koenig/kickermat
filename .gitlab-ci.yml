@@ -83,7 +83,7 @@ build:
     - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
-    - '$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - '.$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
 tests:
   stage: test
