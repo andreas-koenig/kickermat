@@ -80,11 +80,10 @@ build:
   tags:
     - build
   script:
-    - '& $VS2019TOOLS/VsDevCmd.bat'
     - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
-    - 'msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - '& $VS2019TOOLS/VsDevCmd.bat & msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
 tests:
   stage: test
