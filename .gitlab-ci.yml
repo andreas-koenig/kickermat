@@ -74,7 +74,6 @@ before_script:
   - 'git fetch --all'
   - 'git checkout $BRANCH'
   - 'git pull origin $BRANCH'
-  - call: $VS2019TOOLS/VsDevCmd.bat
 
 build:
   stage: build
@@ -103,7 +102,9 @@ docs:
     - docs
   script:
     - 'docfx $CI_PROJECT_DIR/docs/docfx.json'
-    - call: $KICKERMAT_HOME/scripts/copy-docs.bat $CI_PROJECT_DIR/docs/_site
+    - 'rmdir /s /q $KICKERMAT_HOME/www/docs'
+    - 'mkdir $KICKERMAT_HOME/www/docs'
+    - xcopy $CI_PROJECT_DIR/docs/_site $KICKERMAT_HOME/www/docs /E
 
 releases:
   stage: release
