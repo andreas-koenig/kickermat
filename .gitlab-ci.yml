@@ -107,7 +107,7 @@ docs:
     - 'docfx $CI_PROJECT_DIR/docs/docfx.json'
     - 'Remove-Item $KICKERMAT_HOME/www/docs -Recurse -Force'
     - 'mkdir $KICKERMAT_HOME/www/docs'
-    - xcopy $CI_PROJECT_DIR/docs/_site $KICKERMAT_HOME/www/docs /E
+    - 'Copy-Item -Path $CI_PROJECT_DIR/docs/_site/* -Destination $KICKERMAT_HOME/www/docs -Recurse'
 
 releases:
   stage: release
