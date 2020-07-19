@@ -114,4 +114,4 @@ releases:
   tags:
     - release
   script: 
-    - 'tar -a -c -f $KICKERMAT_HOME/www/builds/release.zip'
+    - 'Compress-Archive -Path $CI_PROJECT_DIR/$SOURCE_CODE_PATH/bin/Release -DestinationPath $KICKERMAT_HOME/www/builds/release -Force'
