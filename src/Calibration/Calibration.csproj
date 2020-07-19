@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VideoSource\VideoSource.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="Images\PlayingField.png" />
+  </ItemGroup>
+</Project>

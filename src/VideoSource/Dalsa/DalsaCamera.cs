@@ -38,7 +38,7 @@ namespace VideoSource.Dalsa
     public class DalsaCamera : BaseVideoSource
     {
         // native DLL bindings
-        internal const string DalsaDll = @"..\lib\DalsaVideoSource.dll";
+        internal const string DalsaDll = @"DalsaVideoSource.dll";
 
         // constants
         private const int XMin = 64;

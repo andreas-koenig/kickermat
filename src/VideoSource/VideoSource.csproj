@@ -1,35 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RuntimeIdentifiers>win7-x64;win10-x64</RuntimeIdentifiers>
+    <Configurations>Debug;Release</Configurations>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationIcon />
-    <StartupObject />
     <Configurations>Debug;Release</Configurations>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
-    <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
-    <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Update="StyleCop.ruleset">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.4">
@@ -51,12 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Api\Api.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

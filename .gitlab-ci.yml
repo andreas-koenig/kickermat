@@ -3,8 +3,7 @@ variables:
   OBJECTS_DIRECTORY: 'obj'
   # 2) Name of directory used for keeping restored dependencies.
   NUGET_PACKAGES_DIRECTORY: '.nuget'
-  SOURCE_CODE_PATH: 'kicker'
-  GIT_STRATEGY: none
+  GIT_STRATEGY: fetch
   GIT_CLONE_PATH: $CI_BUILDS_DIR/repo
 
 stages:
@@ -82,22 +81,22 @@ build:
   tags:
     - build
   script:
-    - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
+    - 'cd $CI_PROJECT_DIR/src/Webapp/ClientApp'
     - 'npm install'
     - 'ng build --prod'
-    - '.$KICKERMAT_HOME/NuGet/nuget.exe restore $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln'
-    - '.$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - '.$KICKERMAT_HOME/NuGet/nuget.exe restore $CI_PROJECT_DIR/src/kicker.sln'
+    - '.$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/src/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
-tests:
+test:
   stage: test
   tags:
     - test
   script:
-    - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH'
+    - 'cd $CI_PROJECT_DIR/src'
     - 'dotnet test --no-restore --logger "junit;LogFilePath=TestResult.xml"'
   artifacts:
     reports:
-      junit: $CI_PROJECT_DIR/$SOURCE_CODE_PATH/UnitTesting/TestResult.xml
+      junit: $CI_PROJECT_DIR/src/UnitTesting/TestResult.xml
 
 docs:
   stage: docs
@@ -109,9 +108,9 @@ docs:
     - 'mkdir $KICKERMAT_HOME/www/docs'
     - 'Copy-Item -Path $CI_PROJECT_DIR/docs/_site/* -Destination $KICKERMAT_HOME/www/docs -Recurse'
 
-releases:
+release:
   stage: release
   tags:
     - release
   script: 
-    - 'Compress-Archive -Path $CI_PROJECT_DIR/$SOURCE_CODE_PATH/bin/Release -DestinationPath $KICKERMAT_HOME/www/builds/release -Force'
+    - 'Compress-Archive -Path $CI_PROJECT_DIR/src/bin/Release -DestinationPath $KICKERMAT_HOME/www/builds/release -Force'
