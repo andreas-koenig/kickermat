@@ -3,7 +3,7 @@ variables:
   OBJECTS_DIRECTORY: 'obj'
   # 2) Name of directory used for keeping restored dependencies.
   NUGET_PACKAGES_DIRECTORY: '.nuget'
-  GIT_STRATEGY: fetch
+  GIT_STRATEGY: none
   GIT_CLONE_PATH: $CI_BUILDS_DIR/repo
 
 stages:
