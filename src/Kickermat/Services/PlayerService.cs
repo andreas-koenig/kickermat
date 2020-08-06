@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Api.Player;
+using Microsoft.Extensions.Logging;
+
+namespace Webapp.Services
+{
+    public sealed class PlayerService
+    {
+        private readonly ILogger _logger;
+        private readonly IServiceProvider _services;
+
+        public PlayerService(IServiceProvider services, IEnumerable<Type> playerTypes)
+        {
+            _services = services;
+            Players = CollectPlayers(playerTypes);
+            _logger = services.GetService(typeof(ILogger<PlayerService>)) as ILogger;
+
+            var count = Players.Count;
+            if (count > 0)
+            {
+                var players = Players.Select(p => $"- {p.Key} ({p.Value.GetType().FullName})\n")
+                    .Aggregate((p1, p2) => $"{p1}\n{p2}");
+                _logger.LogInformation($"Registered {Players.Count} players:\n{players}");
+            }
+            else
+            {
+                _logger.LogInformation("No players registered");
+            }
+        }
+
+        public Dictionary<string, IKickermatPlayer> Players { get; }
+
+        private Dictionary<string, IKickermatPlayer> CollectPlayers(IEnumerable<Type> playerTypes)
+        {
+            var players = new Dictionary<string, IKickermatPlayer>();
+
+            foreach (var type in playerTypes)
+            {
+                if (type.GetInterfaces().Contains(typeof(IKickermatPlayer)))
+                {
+                    var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
+
+                    var player = _services.GetService(type) as IKickermatPlayer;
+                    players.Add(playerAttr.Name, player);
+                }
+            }
+
+            return players;
+        }
+    }
+}

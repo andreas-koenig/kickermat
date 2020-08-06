@@ -1,0 +1,110 @@
+<h2>Network Management (NMT) state</h2>
+
+<p>
+  Within the CANopen network the motors are considered slaves, whereas the Kickermat computer
+  is the master that sends them commands. The motors are controlled by a state machine that
+  reacts on <i>NMT messages</i> from the master and internal signals by changing the state.
+</p>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="background-color: rgb(255, 255, 255);"
+     xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="390px" height="427px" viewBox="-0.5 -0.5 390 427">
+  <!--width="390px" height="427px"-->
+  <g>
+    <path d="M 149 235 L 288.94 235.05 Q 298.94 235.06 298.95 245.06 L 298.99 298.88" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 299 303.88 L 297.33 298.88 L 300.66 298.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <path d="M 59 265 L 59 378.88" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 59 383.88 L 57.33 378.88 L 60.67 378.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <path d="M 59 225 L 59 111.12" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 59 106.12 L 60.67 111.12 L 57.33 111.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.PreOperational}" transform="translate(-0.5 -0.5)">
+      <rect x="29" y="225" width="120" height="40" rx="6" ry="6" />
+      <text x="89" y="249">Pre-Operational</text>
+    </g>
+    <path d="M 119 105 L 119 218.88" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 119 223.88 L 117.33 218.88 L 120.67 218.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.Initialization}" transform="translate(-0.5 -0.5)">
+      <rect x="29" y="65" width="120" height="40" rx="6" ry="6" />
+      <text x="89" y="89">Initialization</text>
+    </g>
+    <path d="M 89 385 L 89 271.12" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 89 266.12 L 90.67 271.12 L 87.33 271.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <path d="M 149 415 L 288.94 415.05 Q 298.94 415.06 298.95 405.06 L 298.99 351.12" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 299 346.12 L 300.66 351.12 L 297.33 351.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <path d="M 29 405 L 18.94 405.03 Q 8.94 405.06 8.94 395.06 L 8.94 95.06 Q 8.94 85.06 15.91 85.04 L 22.88 85.02" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 27.88 85 L 22.89 86.68 L 22.88 83.35 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.Operational}" transform="translate(-0.5 -0.5)">
+      <rect x="29" y="385" width="120" height="40" rx="6" ry="6" />
+      <text x="89" y="409">Operational</text>
+    </g>
+    <path d="M 269 315 L 128.94 315.05 Q 118.94 315.06 118.95 305.06 L 118.99 271.12" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 119 266.12 L 120.66 271.12 L 117.33 271.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <path d="M 269 335 L 128.94 335.05 Q 118.94 335.06 118.95 345.06 L 118.99 378.88" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 119 383.88 L 117.33 378.88 L 120.66 378.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <path d="M 329 305 L 328.94 95.06 Q 328.94 85.06 318.94 85.06 L 155.12 85" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 150.12 85 L 155.12 83.34 L 155.12 86.67 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <g [ngClass]="{'state': true, 'selected': nmtState === nmtStateEnum.Stopped}" transform="translate(-0.5 -0.5)">
+      <rect x="269" y="305" width="120" height="40" rx="6" ry="6" />
+      <text x="329" y="329">Stopped</text>
+    </g>
+    <path d="M 89 5 L 89 58.88" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 89 63.88 L 87.33 58.88 L 90.67 58.88 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <g class="cmd" transform="translate(-0.5 -0.5)">
+      <rect x="182.5" y="409" width="85" height="14" rx="1.26" ry="1.26" />
+      <text x="225" y="419">StopRemoteNode</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(90 121.99999999999955 162)">
+      <rect x="72" y="158" width="100" height="14" rx="1.26" ry="1.26" />
+      <text x="122" y="167">EnterPreOperational</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 86.99999999999955 36)">
+      <rect x="77" y="31" width="24" height="14" rx="1.26" ry="1.26" />
+      <text x="89" y="41">auto</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)">
+      <rect x="211" y="79" width="58" height="14" rx="1.26" ry="1.26" />
+      <text x="240" y="90">ResetNode</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 326.99999999999955 201)">
+      <rect x="279" y="196" width="100" height="14" rx="1.26" ry="1.26" />
+      <text x="329" y="206">ResetCommunication</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 7.000000000000455 327)">
+      <rect x="-20" y="322" width="58" height="14" rx="1.26" ry="1.26" />
+      <text x="8" y="332">ResetNode</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 6.999999999999545 172)">
+      <rect x="-41" y="167" width="100" height="14" rx="1.26" ry="1.26" />
+      <text x="8" y="177">ResetCommunication</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(90 62.000000000000455 323)">
+      <rect x="17.5" y="319" width="83" height="14" rx="1.26" ry="1.26" />
+      <text x="59" y="329">StartRemoteNode</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 86.99999999999955 328)">
+      <rect x="37" y="323" width="100" height="14" rx="1.26" ry="1.26" />
+      <text x="86" y="333">EnterPreOperational</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 57.000000000000455 172)">
+      <rect x="30" y="167" width="58" height="14" rx="1.26" ry="1.26" />
+      <text x="58" y="177">ResetNode</text>
+    </g>
+    <path d="M 89 225 L 89 111.12" fill="none" stroke="#adadad" stroke-miterlimit="10" pointer-events="stroke" />
+    <path d="M 89 106.12 L 90.67 111.12 L 87.33 111.12 Z" fill="#adadad" stroke="#adadad" stroke-miterlimit="10" />
+    <g class="cmd" transform="translate(-0.5 -0.5)rotate(-90 86.99999999999955 168)">
+      <rect x="39" y="163" width="100" height="14" rx="1.26" ry="1.26" />
+      <text x="88" y="173">ResetCommunication</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)">
+      <rect x="158" y="329" width="83" height="14" rx="1.26" ry="1.26" />
+      <text x="199" y="340">StartRemoteNode</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)">
+      <rect x="149.5" y="308" width="100" height="14" rx="1.26" ry="1.26" />
+      <text x="199" y="318">EnterPreOperational</text>
+    </g>
+    <g class="cmd" transform="translate(-0.5 -0.5)">
+      <rect x="182.5" y="229" width="85" height="14" rx="1.26" ry="1.26" />
+      <text x="225" y="239">StopRemoteNode</text>
+    </g>
+  </g>
+</svg>
