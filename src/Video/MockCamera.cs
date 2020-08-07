@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Api.Periphery;
 using Api.Camera;
+using Api.Periphery;
+using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 
 namespace Video
@@ -14,7 +15,7 @@ namespace Video
     {
         private const int ImageInterval = 100;
 
-        private Mat[] _images = new Mat[]
+        private readonly Mat[] _images = new Mat[]
         {
             Cv2.ImRead(@"C:\Users\Andreas\Desktop\kicker\kicker_wb_gain_1_6.bmp"),
             Cv2.ImRead(@"C:\Users\Andreas\Desktop\kicker\kicker_wb_gain_3.bmp"),
@@ -23,7 +24,8 @@ namespace Video
         private CancellationTokenSource _tokenSource;
         private CancellationToken _ct;
 
-        public MockCamera()
+        public MockCamera(ILogger<MockCamera> logger)
+            : base(logger)
         {
             PeripheralState = PeripheralState.Ready;
         }
@@ -50,7 +52,7 @@ namespace Video
                         await Task.Delay(ImageInterval).ConfigureAwait(true);
 
                         // Alternate images so you can see that it is working
-                        var img = _images[++counter % _images.Length];
+                        var img = _images[++counter % _images.Length].Clone();
                         Push(new MatFrame(img));
                     }
                 },

@@ -39,7 +39,8 @@ namespace Webapp.Player.Classic
             MockCamera mockCamera,
             IWriteable<ClassicPlayerSettings> settings,
             IWriteable<ClassicImageProcessorSettings> imgProcSettings,
-            ILogger<ClassicPlayer> logger)
+            ILogger<ClassicPlayer> logger,
+            ILoggerFactory loggerFactory)
         {
             _settings = settings;
             _logger = logger;
@@ -51,7 +52,7 @@ namespace Webapp.Player.Classic
                 new VideoChannel("EdgeDetection", "Image after EdgeDetection"),
             };
 
-            _videoInterface = new VideoInterface(channels);
+            _videoInterface = new VideoInterface(channels, loggerFactory, nameof(ClassicPlayer));
 
             if (genieNanoCamera.PeripheralState == PeripheralState.Ready)
             {
@@ -111,9 +112,10 @@ namespace Webapp.Player.Classic
             try
             {
                 //var img = _imgProcessor.ProcessFrame(frame.Mat);
-                _videoInterface.Push(frame.Mat.ToJpg());
+                _videoInterface.Push(new JpgFrame(frame.Mat));
                 frame.Mat.Dispose();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError("Failure {}", ex);
             }

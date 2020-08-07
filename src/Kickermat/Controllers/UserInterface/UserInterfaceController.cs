@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Api.Player;
 using Api.UserInterface;
-using Api.UserInterface.Video;
 using Api.Camera;
-using Webapp.Services;
 using Video;
+using Webapp.Services;
+using Api.UserInterface.Video;
 
 namespace Webapp.Controllers.UserInterface
 {
@@ -100,11 +100,11 @@ namespace Webapp.Controllers.UserInterface
             var abortTask = new Task(abortAction);
 
             // Subscribe to camera
-            var observer = new VideoObserver<byte[]>(
+            var observer = new VideoObserver<IFrame>(
                 (frame) =>
                 {
                     Response.Body.Write(headerBytes);
-                    Response.Body.Write(frame);
+                    Response.Body.Write(frame.ToBytes());
                 },
                 () => abortTask.Start(),
                 (ex) => abortTask.Start());

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Api.Settings;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting.Internal;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -37,9 +37,10 @@ namespace UnitTesting.Configuration
             // Arrange
             var fileName = Path.GetTempFileName();
             File.WriteAllText(fileName, jsonData);
+
             var env = new HostingEnvironment()
             {
-                ContentRootFileProvider = new PhysicalFileProvider(Path.GetTempPath())
+                ContentRootFileProvider = new PhysicalFileProvider(Path.GetTempPath()),
             };
             var options = new Writable<Settings>(
                 env, null, Section, Path.GetFileName(fileName));
@@ -65,6 +66,7 @@ namespace UnitTesting.Configuration
         private class Settings
         {
             public string CameraName { get; set; }
+
             public double Brightness { get; set; }
         }
     }

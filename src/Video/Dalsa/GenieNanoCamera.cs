@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Api;
 using Api.Periphery;
 using Api.Settings;
-using Api.Camera;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 
@@ -11,18 +10,18 @@ namespace Video.Dalsa
 {
     public class GenieNanoCamera : BaseCamera<MatFrame>, IPeripheral
     {
+        // constants
+        private const int XMin = 64;
+        private const int YMin = 150;
+        private const int Width = 1168;
+        private const int Height = 646;
+
         // We have reference our callback methods through member variables to
         // bind them to the lifetime of the GenieNanoCamera object. Otherwise
         // they could be garbage collected before.
         private readonly GenieNanoDll.FrameArrived _frameArrived;
         private readonly GenieNanoDll.CameraConnected _cameraConnected;
         private readonly GenieNanoDll.CameraDisconnected _cameraDisconnected;
-
-        // constants
-        private const int XMin = 64;
-        private const int YMin = 150;
-        private const int Width = 1168;
-        private const int Height = 646;
 
         // Members
         private readonly IWriteable<GenieNanoSettings> _options;
@@ -31,8 +30,8 @@ namespace Video.Dalsa
         private IntPtr _cameraPtr = IntPtr.Zero;
 
         public GenieNanoCamera(
-            ILogger<GenieNanoCamera> logger,
-            IWriteable<GenieNanoSettings> options)
+            ILogger<GenieNanoCamera> logger, IWriteable<GenieNanoSettings> options)
+                : base(logger)
         {
             _frameArrived = FrameArrived;
             _cameraConnected = CameraConnected;
@@ -113,7 +112,7 @@ namespace Video.Dalsa
 
             if (name.Equals(_options.Value.CameraName))
             {
-                if (isAquisitionRunning)
+                if (IsAcquisitionRunning)
                 {
                     StartAcquisition();
                 }

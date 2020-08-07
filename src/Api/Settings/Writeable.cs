@@ -11,13 +11,13 @@ namespace Api.Settings
         where T : class, new()
     {
         private static Action _onChange;
-        private readonly IHostingEnvironment _environment;
+        private readonly IHostEnvironment _environment;
         private readonly IOptionsMonitor<T> _options;
         private readonly string _section;
         private readonly string _file;
 
         public Writable(
-            IHostingEnvironment environment,
+            IHostEnvironment environment,
             IOptionsMonitor<T> options,
             string sectionPath,
             string file)

@@ -13,7 +13,7 @@ namespace Webapp.Controllers.UserInterface.Video
 {
     [Route("api/ui/video")]
     [ApiController]
-    public class VideoInterfaceController : ControllerBase, IObserver<byte[]>
+    public class VideoInterfaceController : ControllerBase, IObserver<IFrame>
     {
         private const string BOUNDARY = "camera_image";
         private readonly string _contentType = $"multipart/x-mixed-replace;boundary={BOUNDARY}";
@@ -143,12 +143,12 @@ namespace Webapp.Controllers.UserInterface.Video
         }
 
         [NonAction]
-        public void OnNext(byte[] frame)
+        public void OnNext(IFrame frame)
         {
             try
             {
                 Response.Body.WriteAsync(_headerBytes);
-                Response.Body.WriteAsync(frame);
+                Response.Body.WriteAsync(frame.ToBytes());
             }
             catch
             {

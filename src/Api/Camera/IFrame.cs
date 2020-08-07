@@ -1,6 +1,8 @@
-﻿namespace Api.Camera
+﻿using System;
+
+namespace Api.Camera
 {
-    public interface IFrame
+    public interface IFrame : ICloneable
     {
         public byte[] ToBytes();
     }

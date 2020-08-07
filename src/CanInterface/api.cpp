@@ -59,7 +59,7 @@ CAN_API void start_calibration(void* apiHandle, void __stdcall done_callback(voi
     }
 
     api->Mutex->lock();
-    api->CalibrationState == CalibrationState::Running;
+    api->CalibrationState = CalibrationState::Running;
     api->Mutex->unlock();
 
     auto calibrate = [](BaseMotor* motor) { motor->Calibrate(); };
@@ -85,7 +85,7 @@ CAN_API void start_calibration(void* apiHandle, void __stdcall done_callback(voi
     threadFhStriker.join();
 
     api->Mutex->lock();
-    api->CalibrationState == CalibrationState::Finished;
+    api->CalibrationState = CalibrationState::Finished;
     api->Mutex->unlock();
 
     done_callback();

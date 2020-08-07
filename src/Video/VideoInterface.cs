@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Api.Camera;
 using Api.Periphery;
 using Api.UserInterface.Video;
-using Api.Camera;
+using Microsoft.Extensions.Logging;
 
 namespace Video
 {
-    public class VideoInterface : BaseVideoObservable<byte[]>, IVideoInterface
+    public class VideoInterface : BaseVideoObservable<JpgFrame>, IVideoInterface
     {
         private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim();
 
         private IVideoChannel _channel;
         private IEnumerable<IVideoChannel> _channels;
 
-        public VideoInterface(IEnumerable<IVideoChannel> channels)
+        public VideoInterface(
+            IEnumerable<IVideoChannel> channels, ILoggerFactory loggerFactory, string playerName)
+                : base(loggerFactory.CreateLogger($"{playerName}-VideoInterface"))
         {
             _channels = channels;
             _channel = _channels.First();
@@ -58,9 +61,14 @@ namespace Video
             }
         }
 
-        public new void Push(byte[] image)
+        public new void Push(JpgFrame image)
         {
             base.Push(image);
+        }
+
+        public IDisposable Subscribe(IObserver<IFrame> observer)
+        {
+            return base.Subscribe(observer);
         }
 
         protected override void StartAcquisition()

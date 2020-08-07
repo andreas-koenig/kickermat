@@ -22,6 +22,9 @@ namespace Motor {
         case PositioningMethod::Relative:
             command = Pdo2Commands::SetRelativePosition;
             break;
+        default:
+            command = Pdo2Commands::SetAbsolutePosition;
+            break;
         }
 
         auto msg = CanOpen::CreatePdoMessage(MotorId, command, position, CanOpen::FunctionCode::R_PDO2);

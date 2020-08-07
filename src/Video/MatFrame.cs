@@ -15,6 +15,11 @@ namespace Video
 
         public Mat Mat { get; protected set; }
 
+        public object Clone()
+        {
+            return new MatFrame(Mat.Clone());
+        }
+
         public byte[] ToBytes()
         {
             return Mat.ToBytes();

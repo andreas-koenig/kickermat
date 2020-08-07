@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Api;
+using Api.Periphery;
+using Api.Player;
 using Api.Settings;
 using Api.Settings.Parameter;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-
-using Api.Periphery;
-using Api.Player;
-using Webapp.Player.Classic;
-using Api;
 
 namespace Webapp.Settings
 {
@@ -193,7 +191,7 @@ namespace Webapp.Settings
                 var writableType = typeof(Writable<>).MakeGenericType(settingsType);
                 var monitorType = typeof(IOptionsMonitor<>).MakeGenericType(settingsType);
                 var optionsMonitor = provider.GetService(monitorType);
-                var environment = provider.GetService<IHostingEnvironment>();
+                var environment = provider.GetService<IHostEnvironment>();
 
                 var writableOptions = Activator.CreateInstance(
                     writableType, environment, optionsMonitor, name, "appsettings.json");
@@ -219,7 +217,7 @@ namespace Webapp.Settings
             services.Configure<TOptions>(section);
             services.AddTransient<IWriteable<TOptions>>(provider =>
             {
-                var environment = provider.GetService<IHostingEnvironment>();
+                var environment = provider.GetService<IHostEnvironment>();
                 var options = provider.GetService<IOptionsMonitor<TOptions>>();
                 return new Writable<TOptions>(environment, options, section.Path, file);
             });

@@ -6,7 +6,7 @@ using Api.Camera;
 
 namespace Api.UserInterface.Video
 {
-    public interface IVideoInterface : IObservable<byte[]>
+    public interface IVideoInterface : IObservable<IFrame>
     {
         /// <summary>
         /// The different channels that an <see cref="IVideoInterface"/> provides.

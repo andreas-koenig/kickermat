@@ -48,12 +48,19 @@ namespace MotorController
         }
 
         public string Model { get; set; }
+
         public Function Function { get; set; }
+
         public Bar Bar { get; set; }
+
         public byte CanId { get; set; }
+
         public NmtState NmtState { get; set; }
+
         public OperatingState OperatingState { get; set; }
+
         public OperatingMode OperatingMode { get; set; }
+
         public string Error { get; set; }
     }
 
@@ -62,13 +69,13 @@ namespace MotorController
         Keeper = 0,
         Defense = 1,
         Midfield = 2,
-        Striker = 3
+        Striker = 3,
     }
 
     public enum Function
     {
         Rotation = 0,
-        Shift = 1
+        Shift = 1,
     }
 
     public enum NmtState
@@ -76,7 +83,7 @@ namespace MotorController
         Initialization = 0,
         PreOperational = 1,
         Operational = 2,
-        Stopped = 3
+        Stopped = 3,
     }
 
     public enum OperatingState
@@ -88,7 +95,7 @@ namespace MotorController
         OperationEnable = 4,
         QuickStopActive = 5,
         FaultReactionActive = 6,
-        Fault = 7
+        Fault = 7,
     }
 
     public enum OperatingMode
@@ -98,6 +105,6 @@ namespace MotorController
         HomingMode = 2,          // Referenzierung
         OscillatorMode = 3,      // Drehzahlregelung
         GearingMode = 4,         // Elektronisches Getriebe
-        JogMode = 5              // Manuellfahrt
+        JogMode = 5,             // Manuellfahrt
     }
 }

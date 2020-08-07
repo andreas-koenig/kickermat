@@ -8,6 +8,20 @@ namespace Webapp.Services.Settings
 {
     public class UpdateSettingsException : KickermatException
     {
+        public UpdateSettingsException()
+        {
+        }
+
+        public UpdateSettingsException(string message)
+            : base(message)
+        {
+        }
+
+        public UpdateSettingsException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
         public UpdateSettingsException(string message, object value)
             : base(message)
         {
