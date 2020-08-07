@@ -8,7 +8,7 @@ namespace Video.Dalsa
     internal static class GenieNanoDll
     {
         // Path of to the C++ DLL
-        private const string DalsaDll = "DalsaVideoSource.dll";
+        private const string DalsaDll = "GenieNanoCamera.dll";
 
         // Delegates for callbacks that are passed to the DLL
         internal delegate void CameraConnected(string name);

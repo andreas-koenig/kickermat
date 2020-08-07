@@ -27,14 +27,7 @@ Camera::Camera(
     trash_buffer->SetHeight(roi.height);
     transfer = new SapAcqDeviceToBuf(device, trash_buffer, XferCallback, this);
 
-    if (SapManager::IsResourceAvailable(name, SapManager::ResourceAcqDevice)) {
-        CreateObjects();
-        ConfigureCamera();
-        DestroyObjects();
-    }
-    else {
-        cam_disconnected(name);
-    }
+    CreateObjects();
 }
 Camera::~Camera() {
     StopAcquisition();
@@ -54,6 +47,9 @@ bool Camera::CreateObjects() {
         DestroyObjects();
         return false;
     }
+    
+    // Must be called after device was created but before transfer
+    ConfigureCamera();
 
     if (!trash_buffer->Create()) {
         DestroyObjects();
@@ -65,6 +61,7 @@ bool Camera::CreateObjects() {
         return false;
     }
     transfer->SetAutoEmpty(false);
+
     resources_created = true;
     return true;
 }
@@ -83,11 +80,9 @@ void Camera::DestroyObjects() {
 }
 
 bool Camera::StartAcquisition() {
-    if (!CreateObjects()) {
+    if (acquisition_running) {
         return false;
     }
-
-    ConfigureCamera();
 
     if (transfer->Grab()) {
         acquisition_running = true;
@@ -110,19 +105,21 @@ bool Camera::StopAcquisition() {
         };
     }
 
-    DestroyObjects();
     acquisition_running = false;
     
     return success;
 }
 
 void Camera::ConfigureCamera() {
+    device->SetFeatureValue("PixelFormat", "BayerRG8");
     device->SetFeatureValue("autoBrightnessMode", true);
     device->SetFeatureValue("BalanceWhiteAuto", "Periodic");
     device->SetFeatureValue("Width", roi.width);
     device->SetFeatureValue("Height", roi.height);
     device->SetFeatureValue("OffsetX", roi.x_min);
     device->SetFeatureValue("OffsetY", roi.y_min);
+    device->SetFeatureValue("acquisitionFrameRateControlMode", "MaximumSpeed");
+    device->SetFeatureValue("turboTransferEnable", true);
 }
 
 void Camera::ServerCallback(SapManCallbackInfo* info) {
@@ -158,7 +155,12 @@ void Camera::XferCallback(SapXferCallbackInfo* info) {
         return;
     }
 	
-    camera->frame_arrived(camera->trash_buffer->GetIndex(), address);
+    try {
+        camera->frame_arrived(camera->trash_buffer->GetIndex(), address);
+    }
+    catch (std::exception & ex) {
+        std::cout << ex.what() << std::endl;
+    }
 }
 
 void Camera::ErrorCallback(SapManCallbackInfo* info) {

@@ -24,10 +24,15 @@ void* CreateCamera(char* camera_name,
     void __stdcall connected_callback(char* server_name),
     void __stdcall disconnected_callback(char* server_name)
 ) {
-    auto camera = new Camera(camera_name, roi, frame_callback,
-        connected_callback, disconnected_callback);
+    SapManager::Open();
+    if (SapManager::IsResourceAvailable(camera_name, SapManager::ResourceAcqDevice)) {
+        auto camera = new Camera(camera_name, roi, frame_callback,
+            connected_callback, disconnected_callback);
 
-    return camera;
+        return camera;
+    }
+
+    return nullptr;
 }
 
 void DestroyCamera(Camera* camera) {

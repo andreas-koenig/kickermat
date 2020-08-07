@@ -11,6 +11,13 @@ namespace Video.Dalsa
 {
     public class GenieNanoCamera : BaseCamera<MatFrame>, IPeripheral
     {
+        // We have reference our callback methods through member variables to
+        // bind them to the lifetime of the GenieNanoCamera object. Otherwise
+        // they could be garbage collected before.
+        private readonly GenieNanoDll.FrameArrived _frameArrived;
+        private readonly GenieNanoDll.CameraConnected _cameraConnected;
+        private readonly GenieNanoDll.CameraDisconnected _cameraDisconnected;
+
         // constants
         private const int XMin = 64;
         private const int YMin = 150;
@@ -27,12 +34,15 @@ namespace Video.Dalsa
             ILogger<GenieNanoCamera> logger,
             IWriteable<GenieNanoSettings> options)
         {
+            _frameArrived = FrameArrived;
+            _cameraConnected = CameraConnected;
+            _cameraDisconnected = CameraDisconnected;
+
             _logger = logger;
             _options = options;
             _name = options?.Value.CameraName;
 
             CreateCamera();
-            ApplyOptions();
 
             _options?.RegisterChangeListener(ApplyOptions);
         }
@@ -66,8 +76,21 @@ namespace Video.Dalsa
         private void CreateCamera()
         {
             var roi = new RegionOfInterest(XMin, YMin, Width, Height);
-            _cameraPtr = GenieNanoDll.CreateCamera(_name, roi, FrameArrived,
-                CameraConnected, CameraDisconnected);
+            _cameraPtr = GenieNanoDll.CreateCamera(
+                _options.Value.CameraName, roi, _frameArrived, _cameraConnected, _cameraDisconnected);
+
+            if (!_cameraPtr.Equals(IntPtr.Zero))
+            {
+                PeripheralState = PeripheralState.Ready;
+                try
+                {
+                    ApplyOptions();
+                }
+                catch (KickermatException ex)
+                {
+                    _logger.LogError(ex.Message);
+                }
+            }
         }
 
         private void ApplyOptions()
@@ -87,7 +110,14 @@ namespace Video.Dalsa
         private void CameraConnected(string name)
         {
             _logger.LogInformation($"Camera {name} connected");
-            PeripheralState = PeripheralState.Ready;
+
+            if (name.Equals(_options.Value.CameraName))
+            {
+                if (isAquisitionRunning)
+                {
+                    StartAcquisition();
+                }
+            }
         }
 
         private void CameraDisconnected(string name)

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Video
 {
@@ -28,6 +29,7 @@ namespace Video
 
             if (_observers.Count > 0 && !isAquisitionRunning)
             {
+                isAquisitionRunning = true;
                 StartAcquisition();
             }
 
@@ -41,6 +43,7 @@ namespace Video
                 if (_observers.Count == 0 && isAquisitionRunning)
                 {
                     StopAcquisition();
+                    isAquisitionRunning = false;
                 }
             });
         }
@@ -49,7 +52,9 @@ namespace Video
         {
             foreach (var observer in _observers.Values)
             {
-                observer.OnNext(image);
+                Console.WriteLine($"Thread Count: {ThreadPool.ThreadCount}");
+                ThreadPool.QueueUserWorkItem((state) => observer.OnNext(image));
+                //observer.OnNext(image);
             }
         }
     }
