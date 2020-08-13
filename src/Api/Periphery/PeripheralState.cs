@@ -12,22 +12,22 @@ namespace Api.Periphery
         /// <summary>
         /// The peripheral is not connected to the current machine.
         /// </summary>
-        NotConnected,
+        NotConnected = 0,
 
         /// <summary>
         /// The peripheral is currently performing an initialization procedure such
         /// as a calibration.
         /// </summary>
-        Initializing,
+        Initializing = 1,
 
         /// <summary>
         /// The peripheral suffered an unrecoverable error.
         /// </summary>
-        Error,
+        Error = 2,
 
         /// <summary>
         /// The peripheral is ready for use.
         /// </summary>
-        Ready,
+        Ready = 3,
     }
 }

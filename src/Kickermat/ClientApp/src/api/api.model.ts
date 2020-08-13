@@ -1,3 +1,7 @@
+export interface Identifiable {
+  id: string;
+}
+
 // Settings
 export interface KickerParameter<T> {
   name: string;
@@ -55,7 +59,7 @@ export enum GameState {
 }
 
 // Players
-export interface KickermatPlayer {
+export interface KickermatPlayer extends Identifiable {
   name: string;
   description: string;
   authors: string[];
@@ -81,6 +85,20 @@ export interface ChannelsResponse {
   channels: VideoChannel[];
   currentChannel: VideoChannel;
 }
+
+// Camera & Peripherals
+export interface Camera extends Identifiable {
+  name: string;
+  peripheralState: PeripheralState;
+}
+
+export enum PeripheralState {
+  NotConnected = 0,
+  Initializing = 1,
+  Error = 2,
+  Ready = 3,
+}
+
 
 // Motor Diagnostics
 export enum Function {

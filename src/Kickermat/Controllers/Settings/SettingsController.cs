@@ -5,8 +5,10 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Api;
 using Api.Settings;
 using Api.Settings.Parameter;
+using Kickermat.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Webapp.Services;
@@ -20,15 +22,18 @@ namespace Webapp.Controllers.Settings
     {
         private readonly SettingsService _settingsService;
         private readonly PlayerService _playerService;
+        private readonly PeripheralsService _peripheralsService;
 
         private readonly JsonSerializerOptions _jsonOptions;
 
         public SettingsController(
             SettingsService settingsService,
-            PlayerService playerService)
+            PlayerService playerService,
+            PeripheralsService peripheralsService)
         {
             _settingsService = settingsService;
             _playerService = playerService;
+            _peripheralsService = peripheralsService;
 
             _jsonOptions = new JsonSerializerOptions();
             _jsonOptions.PropertyNameCaseInsensitive = true;
@@ -75,20 +80,22 @@ namespace Webapp.Controllers.Settings
 
         // GET: api/Settings
         [HttpGet]
-        public IActionResult GetSettingsForPlayer(
-            [FromQuery(Name = "player")] string? playerName)
+        public IActionResult GetSettings(
+            [FromQuery(Name = "id")] Guid id)
         {
-            if (playerName == null)
+            if (id == null)
             {
-                return BadRequest("No player name was provided!");
+                return BadRequest("No id was provided!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out var player))
+            var identifiable = ControllersUtil.GetIdentifiable(
+                id, _playerService.Players.Values, _peripheralsService.Peripherals);
+            if (identifiable == default)
             {
-                return BadRequest($"Could not load settings: player {playerName} not found");
+                return BadRequest($"No configurable object found for ID {id}");
             }
 
-            var settings = _settingsService.GetSettings(player.GetType());
+            var settings = _settingsService.GetSettings(identifiable.GetType());
             var response = CreateResponse(settings);
 
             return Ok(response);

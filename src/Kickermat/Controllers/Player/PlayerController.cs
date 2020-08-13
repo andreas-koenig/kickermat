@@ -24,14 +24,21 @@ namespace Webapp.Controllers.Player
         [HttpGet]
         public ActionResult<IEnumerable<object>> GetKickermatPlayers()
         {
-            var playerAttrs = new List<KickermatPlayerAttribute>();
+            var playerMap = new Dictionary<KickermatPlayerAttribute, IKickermatPlayer>();
             foreach (var player in _playerService.Players.Values)
             {
-                playerAttrs.Add(player.GetType().GetCustomAttribute<KickermatPlayerAttribute>());
+                playerMap.Add(
+                    player.GetType().GetCustomAttribute<KickermatPlayerAttribute>(),
+                    player);
             }
 
-            var players = playerAttrs.Select(
-                attr => new SerializedPlayer(attr.Name, attr.Description, attr.Authors, attr.Emoji));
+            var players = playerMap.Select(
+                entry => new SerializedPlayer(
+                    entry.Key.Name,
+                    entry.Key.Description,
+                    entry.Key.Authors,
+                    entry.Key.Emoji,
+                    entry.Value.Id));
 
             return Ok(players);
         }

@@ -1,6 +1,10 @@
-<h1>Camera</h1>
-<h3>Here you can adjust the settings of the camera.</h3>
+<ng-container *ngIf="camera">
+  <h1>{{camera.name}}</h1>
 
-<nz-divider></nz-divider>
+  <h3><b>Status</b>: {{camera.peripheralState}}</h3>
 
-TODO: Camera
+  <app-video-interface [videoSource]="camera"></app-video-interface>
+
+  <app-settings [id]="camera.id"></app-settings>
+</ng-container>
+

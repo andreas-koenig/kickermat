@@ -1,7 +1,7 @@
-import { Component, Input, ElementRef, ViewChild, OnDestroy, OnInit, AfterViewChecked, Renderer2 } from '@angular/core';
-import { VideoChannel, KickermatPlayer } from '@api/api.model';
+import { Component, Input, ElementRef, ViewChild, OnDestroy, OnInit, AfterViewChecked, Renderer2, OnChanges } from '@angular/core';
+import { VideoChannel, KickermatPlayer, Camera } from '@api/api.model';
 import { ApiService } from '@api/api.service';
-import { VIDEO_URL } from '@api/api';
+import { UI_VIDEO_URL, CAMERA_VIDEO_URL } from '@api/api';
 import { Subscription } from 'rxjs';
 
 enum VideoStatus {
@@ -13,18 +13,18 @@ enum VideoStatus {
   templateUrl: './video-interface.component.html',
   styleUrls: ['./video-interface.component.scss']
 })
-export class VideoInterfaceComponent implements OnDestroy, OnInit, AfterViewChecked {
-  @Input('player') public player!: KickermatPlayer;
+export class VideoInterfaceComponent implements OnDestroy, OnInit, AfterViewChecked, OnChanges {
+  @Input('videoSource') public videoSource!: KickermatPlayer | Camera;
 
   @ViewChild("imgcontainer", { static: false }) public container!: ElementRef<HTMLDivElement>;
   @ViewChild("img", { static: false }) public img!: ElementRef<HTMLImageElement>;
-  public videoUrl = `${VIDEO_URL}?player=`;
+  public videoUrl: string = "";
 
   public status = VideoStatus.Loading;
   public videoStatusEnum = VideoStatus;
 
   public currentChannel: VideoChannel | undefined;
-  public channels: VideoChannel[] | undefined;
+  public channels: VideoChannel[] = [];
 
   private subs: Subscription[] = [];
 
@@ -34,18 +34,15 @@ export class VideoInterfaceComponent implements OnDestroy, OnInit, AfterViewChec
   ) { }
 
   ngOnInit() {
-    const sub = this.api.getVideoChannels(this.player).subscribe(
-      resp => {
-        this.channels = resp.channels;
-        this.currentChannel = resp.currentChannel;
-      },
-      error => {
-        this.status = VideoStatus.Failure;
-        console.log(error);
-      }
-    );
+    if (!this.isCamera()) {
+      this.getChannels();
+    }
+  }
 
-    this.subs.push(sub);
+  ngOnChanges() {
+    this.videoUrl = this.isCamera()
+      ? this.videoUrl = `${CAMERA_VIDEO_URL}?camera=${this.videoSource.name}`
+      : this.videoUrl = `${UI_VIDEO_URL}?player=${this.videoSource.name}`;
   }
 
   ngAfterViewChecked() {
@@ -67,7 +64,7 @@ export class VideoInterfaceComponent implements OnDestroy, OnInit, AfterViewChec
 
   public retry() {
     this.status = VideoStatus.Loading;
-    this.img && (this.img.nativeElement.src = VIDEO_URL);
+    this.img && (this.img.nativeElement.src = this.videoUrl);
   }
 
   public error() {
@@ -81,7 +78,8 @@ export class VideoInterfaceComponent implements OnDestroy, OnInit, AfterViewChec
   }
 
   public switchChannel(channel: VideoChannel) {
-    const sub = this.api.switchVideoChannel(this.player, channel)
+    const sub = this.api
+      .switchVideoChannel(this.videoSource as KickermatPlayer, channel)
       .subscribe(() => this.currentChannel = channel);
 
     this.subs.push(sub);
@@ -93,5 +91,26 @@ export class VideoInterfaceComponent implements OnDestroy, OnInit, AfterViewChec
     }
 
     return false;
+  }
+
+  public isCamera(): boolean {
+    return (this.videoSource as any).peripheralState ? true : false;
+  }
+
+  private getChannels() {
+    const sub = this.api
+      .getVideoChannels(this.videoSource as KickermatPlayer)
+      .subscribe(
+        resp => {
+          this.channels = resp.channels;
+          this.currentChannel = resp.currentChannel;
+        },
+        error => {
+          this.status = VideoStatus.Failure;
+          console.log(error);
+        }
+      );
+
+    this.subs.push(sub);
   }
 }

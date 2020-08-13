@@ -28,7 +28,7 @@
   <app-user-interface [player]="player"></app-user-interface>
 
   <h1>Settings</h1>
-  <app-settings [player]="player"></app-settings>
+  <app-settings [id]="player.id"></app-settings>
 
   <button (click)="stopGame()"
           class="stop"

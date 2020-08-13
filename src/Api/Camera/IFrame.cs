@@ -2,8 +2,10 @@
 
 namespace Api.Camera
 {
-    public interface IFrame : ICloneable
+    public interface IFrame : ICloneable, IDisposable
     {
         public byte[] ToBytes();
+
+        public byte[] ToJpg();
     }
 }

@@ -39,7 +39,7 @@ namespace Video
             {
                 _observers.TryAdd(hash, observer);
 
-                _logger.LogDebug($"New observer (total: {_observers.Count}");
+                _logger.LogDebug($"New observer (total: {_observers.Count})");
             }
 
             if (_observers.Count > 0 && !_isAcquisitionRunning)
@@ -53,7 +53,10 @@ namespace Video
             {
                 if (observer != null)
                 {
-                    _observers.TryRemove(observer.GetHashCode(), out var removedObserver);
+                    if (_observers.TryRemove(observer.GetHashCode(), out var removedObserver))
+                    {
+                        _logger.LogDebug($"Observer unsubscribed (total: {_observers.Count})");
+                    }
                 }
 
                 if (_observers.Count == 0 && _isAcquisitionRunning)
@@ -78,3 +81,4 @@ namespace Video
         protected abstract void StopAcquisition();
     }
 }
+

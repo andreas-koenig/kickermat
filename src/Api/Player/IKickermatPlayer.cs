@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.Player
 {
-    public interface IKickermatPlayer
+    public interface IKickermatPlayer : IIdentifiable
     {
         void Start();
 

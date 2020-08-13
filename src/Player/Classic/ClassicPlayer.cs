@@ -72,6 +72,8 @@ namespace Webapp.Player.Classic
             }
         }
 
+        public Guid Id => new Guid("356A8F33-301C-47F9-85EF-CEAE377FBD8E");
+
         public void Start()
         {
             // Subscribe to VideoSource etc.
@@ -112,7 +114,7 @@ namespace Webapp.Player.Classic
             try
             {
                 //var img = _imgProcessor.ProcessFrame(frame.Mat);
-                _videoInterface.Push(new JpgFrame(frame.Mat));
+                _videoInterface.Push(new MatFrame(frame.Mat));
                 frame.Mat.Dispose();
             }
             catch (Exception ex)

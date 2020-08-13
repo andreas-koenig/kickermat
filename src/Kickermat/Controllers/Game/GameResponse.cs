@@ -27,7 +27,7 @@ namespace Webapp.Controllers.Game
             {
                 var attr = player.GetType().GetCustomAttribute<KickermatPlayerAttribute>();
                 Player = new SerializedPlayer(
-                    attr.Name, attr.Description, attr.Authors, attr.Emoji);
+                    attr.Name, attr.Description, attr.Authors, attr.Emoji, player.Id);
             }
         }
 

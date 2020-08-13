@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 
 import {
   KickerParameter, Motor, KickermatPlayer, Settings, UpdateSettingsResponse,
-  ParameterUpdate, Game, ChannelsResponse, VideoChannel
+  ParameterUpdate, Game, ChannelsResponse, VideoChannel, Camera
 } from './api.model';
 import { REST_BASE } from './api';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -72,12 +72,28 @@ export class ApiService {
     return this.http.post(url, channel, { params });
   }
 
+  // Camera
+  public getCameras(): Observable<Camera[]> {
+    const url = REST_BASE + '/camera';
+
+    return this.http.get<Camera[]>(url);
+  }
+
+  public getCamera(name: string): Observable<Camera> {
+    const url = REST_BASE + '/camera';
+
+    let params = new HttpParams()
+      .append("name", name);
+
+    return this.http.get<Camera>(url, { params });
+  }
+
   // Settings
-  public getPlayerSettings(playerName: string): Observable<Settings[]> {
+  public getSettings(id: string): Observable<Settings[]> {
     const url = REST_BASE + '/settings';
 
     const params = new HttpParams()
-      .append("player", playerName);
+      .append("id", id);
 
     return this.http.get<Settings[]>(url, { params });
   }

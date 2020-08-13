@@ -8,7 +8,8 @@
           [nzDisabled]="menu.disabled"
           [nzSelected]="menu.selected"
           nzMatchRouterExact
-          routerLink="{{parentPath + '/' + menu.path}}">
+          routerLink="{{menu.path}}"
+          [queryParams]="menu.queryParams">
         <span title>
           <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon" nzTheme="fill"></i>
           <span>{{ menu.title }}</span>
@@ -22,7 +23,10 @@
           nzMatchRouterExact>
         <span title>
           <i nz-icon [nzType]="menu.icon" *ngIf="menu.icon" nzTheme="fill"></i>
-          <span routerLink="{{parentPath + '/' + menu.path}}">{{ menu.title }}</span>
+          <span routerLink="{{menu.path}}"
+                [queryParams]="menu.queryParams">
+            {{ menu.title }}
+          </span>
         </span>
         <ul>
           <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menu.children, parentPath: parentPath + '/' + menu.path }"></ng-container>

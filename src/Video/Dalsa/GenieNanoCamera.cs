@@ -56,6 +56,10 @@ namespace Video.Dalsa
 
         public override PeripheralState PeripheralState { get; set; }
 
+        public override string Name => "Genie Nano C1280";
+
+        public override Guid Id => new Guid("DFDEB2E8-9EB9-42A3-B9A9-B300CD210303");
+
         protected override void StartAcquisition()
         {
             if (!GenieNanoDll.StartAcquisition(_cameraPtr))

@@ -24,5 +24,18 @@ namespace Video
         {
             return Mat.ToBytes();
         }
+
+        public byte[] ToJpg()
+        {
+            return Mat.ToJpg();
+        }
+
+        public void Dispose()
+        {
+            if (!Mat.IsDisposed)
+            {
+                Mat.Dispose();
+            }
+        }
     }
 }

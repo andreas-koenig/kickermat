@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   Settings, KickerParameter, NumberParameter, ColorRangeParameter,
-  BooleanParameter, EnumParameter, KickermatPlayer
-} from '@api/api.model';
+  BooleanParameter, EnumParameter } from '@api/api.model';
 import { ApiService } from '@api/api.service';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 
 import util from './params-util';
 
@@ -14,12 +12,11 @@ import util from './params-util';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit, OnDestroy {
-  @Input("player") public player?: KickermatPlayer;
+export class SettingsComponent implements OnInit, OnDestroy, OnChanges {
+  @Input("id") public id?: string;
 
   public settings!: Settings[];
   public subscriptions: Subscription[] = [];
-  public playerName: string | undefined;
   public loaded = false;
 
   public isExpanded: { [key: number]: boolean } = {};
@@ -37,34 +34,29 @@ export class SettingsComponent implements OnInit, OnDestroy {
   @ViewChild("enumTmpl", { static: true })
   public enumTmpl!: TemplateRef<EnumParameter>;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {
-  }
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
-    const sub = this.route.queryParams.subscribe(params => {
-      if (this.player) {
-        this.playerName = this.player.name;
-      } else {
-        this.playerName = params["player"];
-      }
-
-      this.getSettings();
-    });
-
-    this.subscriptions.push(sub);
+    this.getSettings();
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes["id"]) {
+      this.getSettings();
+    }
+  }
+
   getSettings() {
-    if (!this.playerName) {
+    if (!this.id) {
       return;
     }
 
     const sub = this.api
-      .getPlayerSettings(this.playerName)
+      .getSettings(this.id)
       .subscribe(
         settings => {
           this.settings = settings;

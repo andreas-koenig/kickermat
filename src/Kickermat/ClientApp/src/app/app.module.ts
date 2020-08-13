@@ -48,17 +48,13 @@ const routes: Route[] = [
     component: MotorComponent
   },
   {
-    path: 'camera/settings',
+    path: 'camera',
     component: CameraComponent,
   },
   {
     path: 'camera/calibration',
     component: CalibrationComponent
   },
-  {
-    path: 'settings',
-    component: SettingsComponent
-  }
 ]
 
 registerLocaleData(en);

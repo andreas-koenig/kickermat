@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Video
 {
-    public class VideoInterface : BaseVideoObservable<JpgFrame>, IVideoInterface
+    public class VideoInterface : BaseVideoObservable<IFrame>, IVideoInterface
     {
         private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim();
 
@@ -61,14 +61,9 @@ namespace Video
             }
         }
 
-        public new void Push(JpgFrame image)
+        public new void Push(IFrame image)
         {
             base.Push(image);
-        }
-
-        public IDisposable Subscribe(IObserver<IFrame> observer)
-        {
-            return base.Subscribe(observer);
         }
 
         protected override void StartAcquisition()
