@@ -32,6 +32,7 @@ import { EnumParamComponent } from './settings/enum-param/enum-param.component';
 import { UserInterfaceComponent } from './user-interface/user-interface.component';
 import { VideoInterfaceComponent } from './user-interface/video-interface/video-interface.component';
 
+import { UIShellModule } from 'carbon-components-angular';
 
 const routes: Route[] = [
   {
@@ -89,7 +90,8 @@ registerLocaleData(en);
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgZorroAntdModule
+    NgZorroAntdModule,
+    UIShellModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent],
