@@ -99,7 +99,7 @@ namespace Webapp
                 // Configure proxy to Angular frontend if in development mode
                 app.UseSpa(spa =>
                 {
-                    spa.Options.SourcePath = "ClientApp";
+                    spa.Options.SourcePath = "Webapp";
                     if (env.IsDevelopment())
                     {
                         spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");

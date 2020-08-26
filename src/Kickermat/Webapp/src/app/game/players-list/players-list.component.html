@@ -1,0 +1,42 @@
+<div ibmRow>
+  <ng-container *ngIf="status === 'done'">
+    <ng-container *ngTemplateOutlet="playerTemplate">
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="status === 'loading'">
+    <ng-container *ngTemplateOutlet="skeletonTemplate">
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="status === 'error'">
+    <p>An error occured while loading the players...</p>
+  </ng-container>
+</div>
+
+<ng-template #playerTemplate>
+  <div ibmCol [columnNumbers]="{'lg': 3, 'md': 4}" *ngFor="let player of players; let i = index"
+    (click)="selectPlayer($event, i)">
+    <ibm-tile [ngClass]="{'player': true, 'selected': i === selectedIndex}">
+      <div class="bx--aspect-ratio bx--aspect-ratio--2x1">
+        <div class="bx--aspect-ratio--object emoji">{{player.emoji}}</div>
+      </div>
+
+      <div class="content">
+        <h4 class="name">{{player.name}}</h4>
+        <h6 class="authors">{{player.authors.join(', ')}}</h6>
+        <p class="description">{{player.description}}</p>
+      </div>
+    </ibm-tile>
+  </div>
+</ng-template>
+
+<ng-template #skeletonTemplate>
+  <div ibmCol *ngFor="let i of [0, 1, 2, 3]" class="player-skeleton">
+    <ibm-tile>
+      <ibm-skeleton-placeholder></ibm-skeleton-placeholder>
+      <ibm-skeleton-text [lines]="1"></ibm-skeleton-text>
+      <ibm-skeleton-text [lines]="3"></ibm-skeleton-text>
+    </ibm-tile>
+  </div>
+</ng-template>

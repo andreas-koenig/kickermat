@@ -1,0 +1,58 @@
+<div id="video" class="bx--aspect-ratio bx--aspect-ratio--16x9">
+  <div class="bx--aspect-ratio--object container">
+    <img #img
+      [ngClass]="{'image': true, 'visible': status === 'success'}"
+      [src]="videoUrl"
+      (error)="onError()"
+      (abort)="onError()"
+      (load)="onSuccess()"
+    >
+
+    <ng-container *ngIf="status === 'success'">
+      <ng-container *ngTemplateOutlet="success"></ng-container>
+    </ng-container>
+    
+    <ng-container *ngIf="status === 'error'">
+      <ng-container *ngTemplateOutlet="error"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="status === 'loading'">
+      <ng-container *ngTemplateOutlet="loading"></ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #loading>
+  <ibm-loading *ngIf="status === 'loading'">
+  </ibm-loading>
+</ng-template>
+
+<ng-template #error>
+  <div class="error">
+    <p>
+      An error occurred at the server.<br />
+      Please check if a camera is connected!
+    </p>
+
+    <button ibmButton="primary" (click)="retry()">
+      Retry
+      <svg ibmIconRenew size="16" class="bx--btn__icon"></svg>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #success>
+  <div class="channels">
+    <div
+      class="channel bx--aspect-ratio bx--aspect-ratio--2x1"
+      *ngFor="let channel of channels"
+      (click)="switchChannel(channel)"
+      [ngClass]="{ 'selected': isSelected(channel) }"
+    >
+      <div class="content bx--aspect-ratio--object">
+        <h3>{{channel.name}}</h3>
+        <p>{{channel.description}}</p>
+      </div>
+    </div>
+  </div>
+</ng-template>

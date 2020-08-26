@@ -1,0 +1,12 @@
+<ibm-select
+  (valueChange)="updateEnum($event)"
+  [disabled]="isUpdating"
+>
+  <option
+    selected
+    *ngFor="let opt of param.options"
+    [value]="opt.key"
+    [label]="opt.value"
+    [selected]="opt.key == param.value"
+  ></option>
+</ibm-select>

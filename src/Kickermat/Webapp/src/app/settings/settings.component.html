@@ -1,0 +1,62 @@
+<ng-container *ngIf="status === 'loading'">
+  <ng-container *ngTemplateOutlet="settingsSkeletonTemplate">
+  </ng-container>
+</ng-container>
+
+<ng-container *ngTemplateOutlet="settingsTemplate">
+</ng-container>
+
+<ng-template #settingsSkeletonTemplate>
+  <ibm-tabs type="container" skeleton="true">
+    <ibm-tab></ibm-tab>
+    <ibm-tab></ibm-tab>
+    <ibm-tab></ibm-tab>
+    <ibm-tab></ibm-tab>
+  </ibm-tabs>
+</ng-template>
+
+<ng-template #settingsTemplate>
+  <ibm-tabs type="container" [cacheActive]="true">
+    <ibm-tab [heading]="setting.name" *ngFor="let setting of settings">
+      <div ibmGrid class="tab-content">
+        <div ibmRow style="box-sizing: border-box">
+          <div
+            ibmCol
+            [columnNumbers]="{'lg': 4, 'md': 6, 'sm': 12}"
+            *ngFor="let param of setting.parameters"
+            class="param"
+          >
+            <h3 class="name">{{param.name}}</h3>
+            <p class="description">{{param.description}}</p>
+            
+            <ng-container
+              *ngTemplateOutlet="getParamTemplate(param); context: {$implicit: {param: param, settings: setting.name}}">
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ibm-tab>
+    <span before class="indent-span"></span>
+  </ibm-tabs>
+</ng-template>
+
+<!-- Parameter templates -->
+<ng-template #numberTmpl let-ctx>
+  <oth-number-param [param]="ctx.param" [settings]="ctx.settings">
+  </oth-number-param>
+</ng-template>
+
+<ng-template #colorRangeTmpl let-ctx>
+  <oth-color-range-param [param]="ctx.param" [settings]="ctx.settings">
+  </oth-color-range-param>
+</ng-template>
+
+<ng-template #booleanTmpl let-ctx>
+  <oth-boolean-param [param]="ctx.param" [settings]="ctx.settings">
+  </oth-boolean-param>
+</ng-template>
+
+<ng-template #enumTmpl let-ctx>
+  <oth-enum-param [param]="ctx.param" [settings]="ctx.settings">
+  </oth-enum-param>
+</ng-template>

@@ -115,7 +115,6 @@ namespace Webapp.Player.Classic
             {
                 //var img = _imgProcessor.ProcessFrame(frame.Mat);
                 _videoInterface.Push(new MatFrame(frame.Mat));
-                frame.Mat.Dispose();
             }
             catch (Exception ex)
             {

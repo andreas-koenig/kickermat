@@ -81,7 +81,7 @@ build:
   tags:
     - build
   script:
-    - 'cd $CI_PROJECT_DIR/src/Webapp/ClientApp'
+    - 'cd $CI_PROJECT_DIR/src/Kickermat/Webapp'
     - 'npm install'
     - 'ng build --prod'
     - '.$KICKERMAT_HOME/NuGet/nuget.exe restore $CI_PROJECT_DIR/src/kicker.sln'

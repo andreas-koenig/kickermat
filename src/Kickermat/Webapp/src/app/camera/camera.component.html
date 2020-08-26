@@ -1,0 +1,24 @@
+<ng-container *ngIf="camera">
+  <div ibmGrid>
+
+    <div ibmRow id="heading">
+      <div ibmCol>
+        <oth-page-heading [heading]="camera.name" subHeading="Cameras">
+        </oth-page-heading>
+      </div>
+    </div>
+
+    <div ibmRow id="video">
+      <div ibmCol>
+        <oth-video-interface [videoSource]="camera"></oth-video-interface>
+      </div>
+    </div>
+
+    <div ibmRow id="settings">
+      <div ibmCol>
+        <oth-settings [id]="camera.id"></oth-settings>
+      </div>
+    </div>
+
+  </div>
+</ng-container>

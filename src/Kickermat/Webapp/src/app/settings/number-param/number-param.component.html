@@ -1,0 +1,14 @@
+<ibm-slider
+  *ngIf="param"
+  [min]="param.min"
+  [max]="param.max"
+  [step]="param.step"
+  [value]="num"
+  [disabled]="isUpdating"
+  (valueChange)="numberChange($event)"
+  style="display: block"
+>
+  <span minLabel>{{param.min}}</span>
+  <span maxLabel>{{param.max}}</span>
+  <input />
+</ibm-slider>

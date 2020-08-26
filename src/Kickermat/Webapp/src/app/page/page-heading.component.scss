@@ -1,0 +1,16 @@
+@import "styles";
+
+h2 {
+  @include carbon--type-style("productive-heading-01");
+  font-weight: 400;
+  color: $interactive-01;
+}
+
+h1 {
+  @include carbon--type-style("productive-heading-05");
+  margin-bottom: $layout-03;
+}
+
+ibm-skeleton-text {
+  padding-bottom: $layout-03;
+}

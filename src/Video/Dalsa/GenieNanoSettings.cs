@@ -20,8 +20,7 @@ namespace Video.Dalsa
 
         public string CameraName { get; set; } = "Genie Nano C1280";
 
-        [NumberParameter("Brightness", "The brightness of the camera",
-            BrightnessDefault, BrightnessMin, BrightnessMax, 1)]
+        [NumberParameter("Brightness", "The Genie Nano C1280 camera is configured to automatically adjust its brightness to the ambient lighting conditions. You can configure a target value, though.", BrightnessDefault, BrightnessMin, BrightnessMax, 1)]
         public double Brightness { get; set; }
     }
 }

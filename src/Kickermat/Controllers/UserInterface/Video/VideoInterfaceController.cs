@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Api.UserInterface.Video;
 using Kickermat.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Video;
 using Webapp.Services;
 
 namespace Webapp.Controllers.UserInterface.Video
@@ -71,7 +72,7 @@ namespace Webapp.Controllers.UserInterface.Video
         [HttpPost("channel")]
         public IActionResult SwitchChannel(
             [FromQuery(Name = "player")] string? playerName,
-            [FromBody] IVideoChannel? channel)
+            [FromBody] VideoChannel? channel)
         {
             if (playerName == null)
             {
