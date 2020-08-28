@@ -5,7 +5,7 @@ using System.Reflection;
 using Api.Player;
 using Microsoft.Extensions.Logging;
 
-namespace Webapp.Services
+namespace Kickermat.Services
 {
     public sealed class PlayerService
     {
@@ -31,6 +31,9 @@ namespace Webapp.Services
             }
         }
 
+        /// <summary>
+        /// A dictionary of all players with the full type name as the key.
+        /// </summary>
         public Dictionary<string, IKickermatPlayer> Players { get; }
 
         private Dictionary<string, IKickermatPlayer> CollectPlayers(IEnumerable<Type> playerTypes)
@@ -41,10 +44,8 @@ namespace Webapp.Services
             {
                 if (type.GetInterfaces().Contains(typeof(IKickermatPlayer)))
                 {
-                    var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
-
                     var player = _services.GetService(type) as IKickermatPlayer;
-                    players.Add(playerAttr.Name, player);
+                    players.Add(type.FullName, player);
                 }
             }
 

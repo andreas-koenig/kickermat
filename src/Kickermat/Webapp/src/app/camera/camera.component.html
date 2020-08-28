@@ -1,12 +1,15 @@
 <ng-container *ngIf="camera">
-  <div ibmGrid>
+  <oth-page>
 
-    <div ibmRow id="heading">
-      <div ibmCol>
-        <oth-page-heading [heading]="camera.name" subHeading="Cameras">
-        </oth-page-heading>
-      </div>
-    </div>
+    <oth-heading
+      [heading]="camera.name"
+      subHeading="Cameras"
+    >
+      <oth-peripheral-state
+        *ngIf="camera"
+        [peripheral]="camera">
+      </oth-peripheral-state>
+    </oth-heading>
 
     <div ibmRow id="video">
       <div ibmCol>
@@ -20,5 +23,5 @@
       </div>
     </div>
 
-  </div>
+  </oth-page>
 </ng-container>

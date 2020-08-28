@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api;
 
-namespace Webapp.Services.Settings
+namespace Kickermat.Services.Settings
 {
     public class UpdateSettingsException : KickermatException
     {

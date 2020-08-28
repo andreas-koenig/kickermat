@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   Settings, KickerParameter, NumberParameter, ColorRangeParameter,
-  BooleanParameter, EnumParameter } from '@api/api.model';
+  BooleanParameter, EnumParameter } from '@api/model';
 import { ApiService } from '@api/api.service';
 import { Subscription } from 'rxjs';
 

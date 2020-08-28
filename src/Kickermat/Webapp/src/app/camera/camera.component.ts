@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '@api/api.service';
-import { Camera } from '@api/api.model';
+import { Camera } from '@api/model';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -23,7 +23,7 @@ export class CameraComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const sub = this.route
       .queryParams
-      .subscribe(params => this.loadCamera(params.name));
+      .subscribe(params => this.loadCamera(params.id));
 
     this.subs.push(sub);
   }

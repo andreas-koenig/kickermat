@@ -1,4 +1,4 @@
-import { KickerParameter } from '@api/api.model';
+import { KickerParameter } from '@api/model';
 
 const isNumberParam = (parameter: KickerParameter<any>): boolean => {
   return 'min' in parameter && 'max' in parameter && 'step' in parameter;

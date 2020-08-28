@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Api.Player;
-using Webapp.Services;
+using Kickermat.Services;
 
-namespace Webapp.Controllers.Player
+namespace Kickermat.Controllers.Player
 {
     [Route("api/player")]
     [ApiController]
@@ -22,25 +22,21 @@ namespace Webapp.Controllers.Player
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<object>> GetKickermatPlayers()
+        public ActionResult<IEnumerable<SerializedPlayer>> GetKickermatPlayers()
         {
-            var playerMap = new Dictionary<KickermatPlayerAttribute, IKickermatPlayer>();
-            foreach (var player in _playerService.Players.Values)
-            {
-                playerMap.Add(
-                    player.GetType().GetCustomAttribute<KickermatPlayerAttribute>(),
-                    player);
-            }
-
-            var players = playerMap.Select(
-                entry => new SerializedPlayer(
-                    entry.Key.Name,
-                    entry.Key.Description,
-                    entry.Key.Authors,
-                    entry.Key.Emoji,
-                    entry.Value.Id));
+            var players = new List<SerializedPlayer>();
+            _playerService.Players.Values
+                .ToList()
+                .ForEach(player => players.Add(
+                    new SerializedPlayer(
+                        player.GetType().FullName,
+                        player.Name,
+                        player.Description,
+                        player.Authors,
+                        player.Emoji)));
 
             return Ok(players);
         }
     }
 }
+

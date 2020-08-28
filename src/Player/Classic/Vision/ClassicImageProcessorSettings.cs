@@ -4,7 +4,7 @@ using System.Text;
 using Api.Settings;
 using Api.Settings.Parameter;
 
-namespace Webapp.Player.Classic.Vision
+namespace Player.Classic.Vision
 {
     public class ClassicImageProcessorSettings : ISettings
     {

@@ -12,17 +12,13 @@ using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 using Video;
 using Video.Dalsa;
-using Webapp.Player.Classic.Vision;
+using Player.Classic.Vision;
 using Api.Periphery;
+using Motor;
+using System.Text;
 
-namespace Webapp.Player.Classic
+namespace Player.Classic
 {
-    [KickermatPlayer(
-        "Classic Player",
-        "This player uses the image processing mechanism and GameController provided by the framework",
-        new string[] { "Dominik Hagenauer", "Andreas König" },
-        '⚽')
-    ]
     public class ClassicPlayer : IKickermatPlayer, IVideoProvider, IObserver<MatFrame>
     {
         private readonly IWriteable<ClassicPlayerSettings> _settings;
@@ -32,11 +28,13 @@ namespace Webapp.Player.Classic
 
         private readonly ClassicImageProcessor _imgProcessor;
         private readonly ICamera<MatFrame> _camera;
+        private readonly MotorController _motorController;
         private IDisposable _subscription;
 
         public ClassicPlayer(
             GenieNanoCamera genieNanoCamera,
             MockCamera mockCamera,
+            MotorController motorController,
             IWriteable<ClassicPlayerSettings> settings,
             IWriteable<ClassicImageProcessorSettings> imgProcSettings,
             ILogger<ClassicPlayer> logger,
@@ -45,6 +43,7 @@ namespace Webapp.Player.Classic
             _settings = settings;
             _logger = logger;
             _imgProcessor = new ClassicImageProcessor(imgProcSettings);
+            _motorController = motorController;
 
             var channels = new VideoChannel[]
             {
@@ -64,6 +63,17 @@ namespace Webapp.Player.Classic
             }
         }
 
+        public string Name => "Classic Player";
+
+        public string Description =>
+            @"This player uses the image processing mechanism and GameController provided
+by the framework. It is not finished due to Corona, but feel free to contribute or use it
+as a reference for your own implementation.";
+
+        public string[] Authors => new string[] { "Dominik Hagenauer", "Andreas König" };
+
+        public Rune Emoji => new Rune('⚽');
+
         public IVideoInterface VideoInterface
         {
             get
@@ -71,8 +81,6 @@ namespace Webapp.Player.Classic
                 return _videoInterface;
             }
         }
-
-        public Guid Id => new Guid("356A8F33-301C-47F9-85EF-CEAE377FBD8E");
 
         public void Start()
         {
@@ -86,16 +94,6 @@ namespace Webapp.Player.Classic
             // Unsubscribe from VideoSource etc.
             _subscription.Dispose();
             _logger.LogInformation("ClassicPlayer stopped");
-        }
-
-        public void Pause()
-        {
-            _logger.LogInformation("ClassicPlayer paused");
-        }
-
-        public void Resume()
-        {
-            _logger.LogInformation("ClassicPlayer resumed");
         }
 
         public void OnCompleted()

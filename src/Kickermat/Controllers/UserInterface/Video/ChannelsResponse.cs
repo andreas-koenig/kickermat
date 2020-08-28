@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.UserInterface.Video;
 
-namespace Webapp.Controllers.UserInterface.Video
+namespace Kickermat.Controllers.UserInterface.Video
 {
     public class ChannelsResponse
     {
@@ -19,3 +19,4 @@ namespace Webapp.Controllers.UserInterface.Video
         public IVideoChannel CurrentChannel { get; set; }
     }
 }
+

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Webapp.Services.Game
+namespace Kickermat.Services.Game
 {
     public enum GameState
     {

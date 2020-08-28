@@ -1,4 +1,4 @@
-import { OperatingMode, OperatingState, NmtState, Bar } from '@api/api.model';
+import { OperatingMode, OperatingState, NmtState, Bar } from '@api/model';
 
 export function opModeToString(mode: OperatingMode): string {
   switch (mode) {

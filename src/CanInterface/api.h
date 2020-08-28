@@ -6,6 +6,7 @@
 #include "Motor/Motor.h"
 #include "Motor/Faulhaber.h"
 #include "Motor/Telemecanique.h"
+#include "Motor/Diagnostics.h"
 
 #define CAN_API __declspec(dllexport)
 
@@ -30,6 +31,7 @@ struct ApiHandle {
     Telemecanique* TelemecaniqueStriker;
 
     CalibrationState CalibrationState;
+    Diagnostics* Diagnostics;
 };
 
 extern "C" {
@@ -39,7 +41,6 @@ extern "C" {
     CAN_API void start_calibration(void* api, void __stdcall done_callback(void));
     CAN_API CalibrationState get_calibration_state(void* api);
     
-    CAN_API void move_bar(void* api, uint8_t bar, uint8_t position, char angle, char rot_direction);
-    CAN_API void shift_bar(void* api, uint8_t bar, uint8_t position);
-    CAN_API void rotate_bar(void* api, uint8_t bar, char angle, char rot_direction);
+    CAN_API void move_bar(void* api, uint8_t bar, int32_t position, int32_t angle);
 }
+

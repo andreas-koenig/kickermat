@@ -24,6 +24,7 @@ import {
   OperationsRecordModule,
   ArrowsVerticalModule,
   RotateModule,
+  StopFilledModule,
 } from '@carbon/icons-angular';
 
 @NgModule({
@@ -49,6 +50,7 @@ import {
     OperationsRecordModule,
     ArrowsVerticalModule,
     RotateModule,
+    StopFilledModule,
   ],
 })
 export class CarbonModule { }

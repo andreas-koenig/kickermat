@@ -10,10 +10,10 @@ using Api.Player;
 using Api.UserInterface;
 using Api.Camera;
 using Video;
-using Webapp.Services;
+using Kickermat.Services;
 using Api.UserInterface.Video;
 
-namespace Webapp.Controllers.UserInterface
+namespace Kickermat.Controllers.UserInterface
 {
     [Route("api/ui")]
     [ApiController]
@@ -27,17 +27,17 @@ namespace Webapp.Controllers.UserInterface
         }
 
         [HttpGet]
-        public IActionResult GetUserInterfaces([FromQuery(Name = "player")] string? playerName)
+        public IActionResult GetUserInterfaces([FromQuery(Name = "playerId")] string? playerId)
         {
-            if (playerName == null)
+            if (playerId == null)
             {
                 return BadRequest("Cannot get user interfaces: Please specify a player!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out var player))
+            if (!_playerService.Players.TryGetValue(playerId, out var player))
             {
                 return BadRequest(
-                    $"Cannot get user interfaces: Player {playerName} does not exist!");
+                    $"Cannot get user interfaces: Player {playerId} does not exist!");
             }
 
             var interfaces = new List<UserInterfaceType>();
@@ -59,14 +59,14 @@ namespace Webapp.Controllers.UserInterface
         [HttpGet("{userInterface}")]
         public object GetUserInterface(
             [FromRoute] UserInterfaceType userInterface,
-            [FromQuery(Name = "player")] string? playerName)
+            [FromQuery(Name = "playerId")] string? playerId)
         {
-            if (playerName == null)
+            if (playerId == null)
             {
                 return BadRequest("Cannot get user interface: Please specify a player!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out var player))
+            if (!_playerService.Players.TryGetValue(playerId, out var player))
             {
                 return BadRequest($"Cannot get user interface: Player {player} does not exist!");
             }
@@ -119,3 +119,4 @@ namespace Webapp.Controllers.UserInterface
         }
     }
 }
+

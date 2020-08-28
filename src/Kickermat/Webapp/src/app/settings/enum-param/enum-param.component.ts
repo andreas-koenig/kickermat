@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
-import { EnumParameter } from '@api/api.model';
+import { EnumParameter } from '@api/model';
 import { ApiService } from '@api/api.service';
 
 @Component({

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { Subscription } from 'rxjs';
 
 import { ApiService } from '@api/api.service';
-import { KickermatPlayer } from '@api/api.model';
+import { KickermatPlayer } from '@api/model';
 
 type Status = 'loading' | 'error' | 'done';
 

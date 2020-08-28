@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="api.h" />
     <ClInclude Include="CanOpen\CanOpen.h" />
+    <ClInclude Include="Motor\Diagnostics.h" />
     <ClInclude Include="Motor\Faulhaber.h" />
     <ClInclude Include="Motor\Motor.h" />
     <ClInclude Include="Motor\Telemecanique.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="api.cpp" />
     <ClCompile Include="CanOpen\CanOpen.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Motor\Diagnostics.cpp" />
     <ClCompile Include="Motor\Faulhaber.cpp" />
     <ClCompile Include="Motor\Motor.cpp" />
     <ClCompile Include="Motor\Telemecanique.cpp" />

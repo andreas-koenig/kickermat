@@ -10,15 +10,16 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Motor;
 using Video.Dalsa;
-using Webapp.Controllers;
-using Webapp.Hubs;
-using Webapp.Services;
-using Webapp.Services.Game;
-using Webapp.Services.Settings;
-using Webapp.Settings;
+using Kickermat.Controllers;
+using Kickermat.Hubs;
+using Kickermat.Services;
+using Kickermat.Services.Game;
+using Kickermat.Services.Settings;
+using Kickermat.Settings;
 
-namespace Webapp
+namespace Kickermat
 {
     public class Startup
     {
@@ -72,7 +73,8 @@ namespace Webapp
                 .RegisterPeripherals(out var peripheralTypes)
                 .AddSingleton((services) => new PeripheralsService(services, peripheralTypes))
                 .AddSingleton<GameService>()
-                .AddSingleton<SettingsService>();
+                .AddSingleton<SettingsService>()
+                .AddSingleton<MotorController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,9 +118,10 @@ namespace Webapp
                 });
             }
 
-            // Warm up services
+            // Warm up services (configure cameras and start motor calibration)
             app.ApplicationServices.GetService(typeof(PeripheralsService));
             app.ApplicationServices.GetService(typeof(PlayerService));
+            app.ApplicationServices.GetService(typeof(MotorController));
         }
     }
 }

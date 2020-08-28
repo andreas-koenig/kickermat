@@ -1,0 +1,17 @@
+@import "styles";
+
+h2 {
+  @include carbon--type-style("productive-heading-01");
+  font-weight: 400;
+  color: $interactive-01;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    @include carbon--type-style("productive-heading-05");
+  }
+}

@@ -6,7 +6,7 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <StartupObject>Webapp.Program</StartupObject>
+    <StartupObject>Kickermat.Program</StartupObject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Api\Api.csproj" />
-    <ProjectReference Include="..\MotorController\MotorController.csproj" />
+    <ProjectReference Include="..\Motor\Motor.csproj" />
     <ProjectReference Include="..\Player\Player.csproj" />
     <ProjectReference Include="..\Video\Video.csproj" />
   </ItemGroup>

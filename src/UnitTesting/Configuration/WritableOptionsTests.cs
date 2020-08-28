@@ -63,11 +63,13 @@ namespace UnitTesting.Configuration
             Assert.Equal(updatedSettings, formattedValidSettings);
         }
 
-        private class Settings
+        private class Settings : ISettings
         {
             public string CameraName { get; set; }
 
             public double Brightness { get; set; }
+
+            public string Name => "TestSettings";
         }
     }
 }

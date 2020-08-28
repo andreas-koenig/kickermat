@@ -6,7 +6,7 @@ using Api.Settings;
 using Api.Settings.Parameter;
 using OpenCvSharp;
 
-namespace Webapp.Player.Classic.Vision
+namespace Player.Classic.Vision
 {
     internal class ClassicImageProcessor
     {

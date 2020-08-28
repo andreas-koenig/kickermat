@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Api.Settings;
-using Api.Player;
 using Api;
+using Api.Player;
+using Api.Settings;
 
-namespace Webapp.Services.Game
+namespace Kickermat.Services.Game
 {
     public sealed class GameService
     {
@@ -25,7 +25,7 @@ namespace Webapp.Services.Game
 
         public IKickermatPlayer CurrentPlayer { get; private set; }
 
-        public void StartGame(string playerName)
+        public void StartGame(string playerId)
         {
             lock (_lock)
             {
@@ -36,7 +36,7 @@ namespace Webapp.Services.Game
                     case GameState.IsPaused:
                         throw new KickermatException("The current game is paused");
                     case GameState.NoGame:
-                        if (_playerService.Players.TryGetValue(playerName, out var player))
+                        if (_playerService.Players.TryGetValue(playerId, out var player))
                         {
                             CurrentPlayer = player;
                             CurrentPlayer.Start();
@@ -45,45 +45,7 @@ namespace Webapp.Services.Game
                         }
 
                         throw new KickermatException(
-                            $"Cannot start game: Player {playerName} does not exist");
-                }
-            }
-        }
-
-        public void PauseGame()
-        {
-            lock (_lock)
-            {
-                switch (State)
-                {
-                    case GameState.IsRunning:
-                        CurrentPlayer.Pause();
-                        State = GameState.IsPaused;
-                        return;
-                    case GameState.IsPaused:
-                        return;
-                    case GameState.NoGame:
-                        throw new KickermatException(
-                            "There is no game running that could be paused");
-                }
-            }
-        }
-
-        public void ResumeGame()
-        {
-            lock (_lock)
-            {
-                switch (State)
-                {
-                    case GameState.IsPaused:
-                        CurrentPlayer.Resume();
-                        State = GameState.IsRunning;
-                        return;
-                    case GameState.IsRunning:
-                        throw new KickermatException("The game is already running");
-                    case GameState.NoGame:
-                        throw new KickermatException(
-                            "There is no game running that could be resumed");
+                            $"Cannot start game: Player {playerId} does not exist");
                 }
             }
         }

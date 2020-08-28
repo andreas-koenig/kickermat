@@ -4,15 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Settings.Parameter;
 
-namespace Webapp.Controllers.Settings
+namespace Kickermat.Controllers.Settings
 {
     public class SettingsResponse
     {
-        public SettingsResponse(string name, IEnumerable<BaseParameterAttribute> parameters)
+        public SettingsResponse(
+            string settingsId, string name, IEnumerable<BaseParameterAttribute> parameters)
         {
+            Id = settingsId;
             Name = name;
             Parameters = parameters;
         }
+
+        public string Id { get; set; }
 
         public string Name { get; set; }
 

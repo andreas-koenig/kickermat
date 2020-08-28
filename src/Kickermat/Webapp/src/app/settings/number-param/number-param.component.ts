@@ -4,7 +4,7 @@ import { Subscription, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { ApiService } from '@api/api.service';
-import { NumberParameter } from '@api/api.model';
+import { NumberParameter } from '@api/model';
 
 @Component({
   selector: 'oth-number-param',

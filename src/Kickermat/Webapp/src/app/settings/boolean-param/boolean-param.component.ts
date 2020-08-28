@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { BooleanParameter } from '@api/api.model';
+import { BooleanParameter } from '@api/model';
 import { ApiService } from '@api/api.service';
 import { Subscription } from 'rxjs';
 

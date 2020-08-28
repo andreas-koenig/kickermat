@@ -12,13 +12,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace Webapp.Settings
+namespace Kickermat.Settings
 {
     public static class ServiceCollectionExtensions
     {
         private static readonly string[] _projects = new string[]
         {
-            "Player", "Video", "MotorController", "Api",
+            "Player", "Video", "Motor", "Api",
         };
 
         // Make sure all assemblies referenced by this project are loaded
@@ -46,25 +46,7 @@ namespace Webapp.Settings
                         continue;
                     }
 
-                    var playerAttr = type.GetCustomAttribute<KickermatPlayerAttribute>();
-                    if (playerAttr == null)
-                    {
-                        throw new KickermatException(
-                            $@"Please register the IKickermatPlayer implementation
-                                    '{type.FullName}' by using annotating it with
-                                    {typeof(KickermatPlayerAttribute).FullName}".Trim());
-                    }
-
-                    string playerName = playerAttr.Name;
-                    if (players.ContainsKey(playerName))
-                    {
-                        throw new KickermatException(
-                            $@"The IKickermatPlayer implementations {type.FullName} and
-                        {players[playerName].FullName} are both registered under the name
-                        {playerName}. Please choose distinct names!");
-                    }
-
-                    players.Add(playerAttr.Name, type);
+                    players.Add(type.FullName, type);
                 }
             }
 
@@ -212,7 +194,7 @@ namespace Webapp.Settings
             this IServiceCollection services,
             IConfigurationSection section,
             string file = "appsettings.json")
-            where TOptions : class, new()
+            where TOptions : class, ISettings, new()
         {
             services.Configure<TOptions>(section);
             services.AddTransient<IWriteable<TOptions>>(provider =>

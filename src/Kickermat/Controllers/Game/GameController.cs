@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Api;
+using Api.Player;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Api.Player;
-using Webapp.Services;
-using Webapp.Services.Game;
-using Api;
+using Kickermat.Services;
+using Kickermat.Services.Game;
 
-namespace Webapp.Controllers.Game
+namespace Kickermat.Controllers.Game
 {
     [Route("api/game")]
     [ApiController]
@@ -34,16 +34,16 @@ namespace Webapp.Controllers.Game
         }
 
         [HttpPost("start")]
-        public IActionResult StartGame([FromQuery(Name = "player")] string? player)
+        public IActionResult StartGame([FromQuery(Name = "playerId")] string? playerId)
         {
-            if (player == null)
+            if (playerId == null)
             {
                 return BadRequest("No player was selected");
             }
 
             try
             {
-                _gameService.StartGame(player);
+                _gameService.StartGame(playerId);
 
                 var resp = new GameResponse(
                     _gameService.State,

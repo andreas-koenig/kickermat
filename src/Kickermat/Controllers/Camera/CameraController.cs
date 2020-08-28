@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Api.Camera;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Webapp.Services;
+using Kickermat.Services;
 
 namespace Kickermat.Controllers.Camera
 {
@@ -21,35 +21,44 @@ namespace Kickermat.Controllers.Camera
         }
 
         [HttpGet]
-        public IActionResult GetCameras([FromQuery(Name = "name")] string? name)
+        public IActionResult GetCameras([FromQuery(Name = "id")] string? cameraId)
         {
-            if (name != null)
+            if (cameraId != null)
             {
                 var camera = _peripheralsService.Cameras
-                    .Where(cam => cam.Name.Equals(name))
+                    .Where(cam => cam.GetType().FullName.Equals(cameraId))
                     .FirstOrDefault();
 
-                return camera != null
-                    ? Ok(camera) as IActionResult
-                    : BadRequest($"Camera {name} not found") as IActionResult;
+                if (camera == null)
+                {
+                    return BadRequest($"Camera {cameraId} not found") as IActionResult;
+                }
+
+                return Ok(new Camera(
+                    camera.GetType().FullName,
+                    camera.Name,
+                    camera.PeripheralState));
             }
 
             var cameras = _peripheralsService.Cameras
-                .Select(camera => new Camera(camera.Name, camera.PeripheralState, camera.Id));
+                .Select(camera => new Camera(
+                    camera.GetType().FullName,
+                    camera.Name,
+                    camera.PeripheralState));
 
             return Ok(cameras);
         }
 
         [HttpGet("video")]
-        public async Task<IActionResult> Video([FromQuery(Name = "camera")] string? name)
+        public async Task<IActionResult> Video([FromQuery(Name = "id")] string? cameraId)
         {
-            if (name == null)
+            if (cameraId == null)
             {
-                return BadRequest("Please provide a name for the camera");
+                return BadRequest("Please provide an id for the camera");
             }
 
             var camera = _peripheralsService.Cameras
-                .Where(cam => cam.Name.Equals(name))
+                .Where(cam => cam.GetType().FullName.Equals(cameraId))
                 .FirstOrDefault();
 
             if (camera != null)
@@ -58,7 +67,7 @@ namespace Kickermat.Controllers.Camera
                 return Ok();
             }
 
-            return BadRequest($"Cannot find camera {name}");
+            return BadRequest($"Cannot find camera {cameraId}");
         }
     }
 }

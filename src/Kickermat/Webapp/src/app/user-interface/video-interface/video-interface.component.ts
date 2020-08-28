@@ -1,5 +1,5 @@
 import { Component, Input, ElementRef, ViewChild, OnDestroy, OnInit, AfterViewChecked, Renderer2, OnChanges } from '@angular/core';
-import { VideoChannel, KickermatPlayer, Camera } from '@api/api.model';
+import { VideoChannel, KickermatPlayer, Camera } from '@api/model';
 import { ApiService } from '@api/api.service';
 import { UI_VIDEO_URL, CAMERA_VIDEO_URL } from '@api/api';
 import { Subscription } from 'rxjs';
@@ -38,8 +38,8 @@ export class VideoInterfaceComponent implements OnDestroy, OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.videoUrl = this.isCamera()
-      ? this.videoUrl = `${CAMERA_VIDEO_URL}?camera=${this.videoSource.name}`
-      : this.videoUrl = `${UI_VIDEO_URL}?player=${this.videoSource.name}`;
+      ? this.videoUrl = `${CAMERA_VIDEO_URL}?id=${this.videoSource.id}`
+      : this.videoUrl = `${UI_VIDEO_URL}?playerId=${this.videoSource.id}`;
   }
 
   ngOnDestroy(): void {

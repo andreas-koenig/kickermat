@@ -9,7 +9,7 @@ namespace Api.Periphery
     /// cameras or the PCIe CAN card. It is used to check on the <see cref="PeripheralState"/>
     /// of the particular piece of hardware.
     /// </summary>
-    public interface IPeripheral : IIdentifiable
+    public interface IPeripheral : INamed
     {
         public PeripheralState PeripheralState { get; }
     }

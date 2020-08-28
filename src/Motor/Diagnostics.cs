@@ -2,39 +2,39 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MotorController
+namespace Motor
 {
     public class Diagnostics
     {
-        public static Motor[] Collect()
+        internal static MotorDevice[] Collect()
         {
-            return new Motor[]
+            return new MotorDevice[]
             {
-                new Motor("Telemecanique", Function.Shift, Bar.Keeper, 1, NmtState.Operational,
+                new MotorDevice("Telemecanique", Function.Shift, Bar.Keeper, 1, NmtState.Operational,
                     OperatingState.NotReadyToSwitchOn, OperatingMode.ProfilePositionMode, null),
-                new Motor("Telemecanique", Function.Shift, Bar.Defense, 2, NmtState.Initialization,
+                new MotorDevice("Telemecanique", Function.Shift, Bar.Defense, 2, NmtState.Initialization,
                     OperatingState.SwitchedOn, OperatingMode.ProfilePositionMode, null),
-                new Motor("Telemecanique", Function.Shift, Bar.Midfield, 3, NmtState.PreOperational,
+                new MotorDevice("Telemecanique", Function.Shift, Bar.Midfield, 3, NmtState.PreOperational,
                     OperatingState.OperationEnable, OperatingMode.ProfilePositionMode, null),
-                new Motor("Telemecanique", Function.Shift, Bar.Striker, 4, NmtState.Operational,
+                new MotorDevice("Telemecanique", Function.Shift, Bar.Striker, 4, NmtState.Operational,
                     OperatingState.QuickStopActive, OperatingMode.ProfilePositionMode, null),
-                new Motor("Faulhaber", Function.Rotation, Bar.Keeper, 10, NmtState.Operational,
+                new MotorDevice("Faulhaber", Function.Rotation, Bar.Keeper, 10, NmtState.Operational,
                     OperatingState.SwitchOnDisabled, OperatingMode.ProfileVelocityMode, null),
-                new Motor("Faulhaber", Function.Rotation, Bar.Defense, 11, NmtState.Initialization,
+                new MotorDevice("Faulhaber", Function.Rotation, Bar.Defense, 11, NmtState.Initialization,
                     OperatingState.SwitchedOn, OperatingMode.ProfileVelocityMode, null),
-                new Motor("Faulhaber", Function.Rotation, Bar.Midfield, 12, NmtState.Stopped,
+                new MotorDevice("Faulhaber", Function.Rotation, Bar.Midfield, 12, NmtState.Stopped,
                     OperatingState.Fault, OperatingMode.ProfileVelocityMode, "Overheated"),
-                new Motor("Faulhaber", Function.Rotation, Bar.Striker, 13, NmtState.Operational,
+                new MotorDevice("Faulhaber", Function.Rotation, Bar.Striker, 13, NmtState.Operational,
                     OperatingState.FaultReactionActive, OperatingMode.ProfileVelocityMode, null),
             };
         }
     }
 
-    public class Motor
+    public class MotorDevice
     {
-        public Motor() { }
+        public MotorDevice() { }
 
-        public Motor(string model, Function function, Bar bar, byte canId, NmtState nmtState,
+        public MotorDevice(string model, Function function, Bar bar, byte canId, NmtState nmtState,
             OperatingState operatingState, OperatingMode operatingMode, string error)
         {
             Model = model;
@@ -64,7 +64,7 @@ namespace MotorController
         public string Error { get; set; }
     }
 
-    public enum Bar
+    public enum Bar : byte
     {
         Keeper = 0,
         Defense = 1,

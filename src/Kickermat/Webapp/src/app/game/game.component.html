@@ -1,4 +1,4 @@
-<div *ngTemplateOutlet="template">
+<div *ngTemplateOutlet="isGameRunning() ? game : players">
 </div>
 
 <!-- No game running -->
@@ -60,13 +60,12 @@
 
 <!-- Game running -->
 <ng-template #game>
-  <div ibmGrid id="game-running">
-    <div ibmRow id="heading">
-      <div ibmCol>
-        <oth-page-heading [heading]="player.name" subHeading="Game">
-        </oth-page-heading>
-      </div>
-    </div>
+  <oth-page id="game-running">
+
+    <oth-heading
+      [heading]="player ? player.name : 'Choose a player'"
+      subHeading="Game"
+    ></oth-heading>
 
     <div ibmRow id="user-interface">
       <div ibmCol>
@@ -80,13 +79,5 @@
       </div>
     </div>
   
-    <button
-      ibmButton="secondary"
-      size="normal"
-      (click)="stopGame()"
-      class="stop"
-    >
-      Stop Game
-    </button>
-  </div>
+  </oth-page>
 </ng-template>

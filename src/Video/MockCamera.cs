@@ -34,8 +34,6 @@ namespace Video
 
         public override string Name => "Mock Camera";
 
-        public override Guid Id => Guid.Parse("FEAE3C24-85D6-4081-9133-EFAD6B1F33A5");
-
         protected override void StartAcquisition()
         {
             _tokenSource = new CancellationTokenSource();

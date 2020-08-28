@@ -1,17 +1,14 @@
-<div ibmGrid>
-  
-  <div ibmRow id="heading" [gutter]="false">
-    <div ibmCol>
-      <oth-page-heading
-        *ngIf="selectedMotor"
-        heading="{{selectedMotor.model}}"
-        subHeading="{{barToString(selectedMotor.bar)}}">
-      </oth-page-heading>
-
-      <oth-page-heading *ngIf="status === 'loading'" [skeleton]="true">
-      </oth-page-heading>
-    </div>
-  </div>
+<oth-page>
+  <oth-heading
+    [heading]="selectedMotor?.model"
+    [subHeading]="barToString(selectedMotor?.bar)"
+    [skeleton]="status === 'loading'"
+  >
+    <oth-peripheral-state
+      *ngIf="diagnostics"
+      [peripheral]="diagnostics">
+    </oth-peripheral-state>
+  </oth-heading>
 
   <div ibmRow id="motors" [gutter]="false">
     <div ibmCol>
@@ -19,21 +16,21 @@
         type="container"
         [cacheActive]="true"
         class="motors"
+        [skeleton]="status === 'loading'"
       >
         <ibm-tab
-          *ngFor="let motor of motors"
+          *ngFor="let motor of diagnostics?.motors"
           [heading]="tabTemplate"
           [context]="motor"
           (selected)="changeMotor(motor)"
-        >
-        </ibm-tab>
+        ></ibm-tab>
         <span before style="padding-left: 3rem"></span>
       </ibm-tabs>
     </div>
 
   </div>
 
-  <div ibmRow id="content-row">
+  <div ibmRow id="content-row" *ngIf="selectedMotor">
     <ng-container *ngTemplateOutlet="sidemenu"></ng-container>
 
     <!-- Content -->
@@ -48,7 +45,7 @@
     </div>
     
   </div>
-</div>
+</oth-page>
 
 <ng-template #tabTemplate let-motor>
   <div class="motor-tab">
@@ -86,7 +83,7 @@
 
 <!-- Motor info -->
 <ng-template #info>
-  <oth-motor-info [motors]="motors" [(selected)]="selectedMotor"></oth-motor-info>
+  <oth-motor-info [motors]="diagnostics.motors" [(selected)]="selectedMotor"></oth-motor-info>
 </ng-template>
 
 <!-- NMT State -->

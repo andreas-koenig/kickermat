@@ -6,7 +6,7 @@ using Api.Settings.Parameter;
 using OpenCvSharp;
 using Video;
 
-namespace Webapp.Player.Classic.Vision
+namespace Player.Classic.Vision
 {
     internal class BallDetector
     {

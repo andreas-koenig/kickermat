@@ -5,41 +5,38 @@ using Api.UserInterface.Video;
 using Kickermat.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Video;
-using Webapp.Services;
+using Kickermat.Services;
 
-namespace Webapp.Controllers.UserInterface.Video
+namespace Kickermat.Controllers.UserInterface.Video
 {
     [Route("api/ui/video")]
     [ApiController]
     public class VideoInterfaceController : BaseVideoController
     {
         private readonly PlayerService _playerService;
-        private readonly PeripheralsService _peripheralsService;
 
-        public VideoInterfaceController(
-            PlayerService playerService, PeripheralsService peripheralsService)
+        public VideoInterfaceController(PlayerService playerService)
         {
             _playerService = playerService;
-            _peripheralsService = peripheralsService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Video([FromQuery(Name = "player")] string? playerName)
+        public async Task<IActionResult> Video([FromQuery(Name = "playerId")] string? playerId)
         {
             // Validation
-            if (playerName == null)
+            if (playerId == null)
             {
                 return BadRequest("Cannot get video: Please specify a player!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out var player))
+            if (!_playerService.Players.TryGetValue(playerId, out var player))
             {
-                return BadRequest($"Cannot get video: Player {player} does not exist!");
+                return BadRequest($"Cannot get video: Player {playerId} does not exist!");
             }
 
             if (!(player is IVideoProvider))
             {
-                return BadRequest($"Player {player} does not provide a video user interface!");
+                return BadRequest($"Player {playerId} does not provide a video user interface!");
             }
 
             await VideoTask((player as IVideoProvider).VideoInterface);
@@ -47,21 +44,21 @@ namespace Webapp.Controllers.UserInterface.Video
         }
 
         [HttpGet("channel")]
-        public IActionResult GetChannels([FromQuery(Name = "player")] string? playerName)
+        public IActionResult GetChannels([FromQuery(Name = "playerId")] string? playerId)
         { 
-            if (playerName == null)
+            if (playerId == null)
             {
                 return BadRequest("Cannot get video channels: Please specify a player!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out var player))
+            if (!_playerService.Players.TryGetValue(playerId, out var player))
             {
-                return BadRequest($"Cannot get video channels: Player {player} does not exist!");
+                return BadRequest($"Cannot get video channels: Player {playerId} does not exist!");
             }
 
             if (!(player is IVideoProvider))
             {
-                BadRequest($"Player {player} does not provide a video user interface!");
+                BadRequest($"Player {playerId} does not provide a video user interface!");
             }
 
             var videoInterface = (player as IVideoProvider).VideoInterface;
@@ -71,22 +68,22 @@ namespace Webapp.Controllers.UserInterface.Video
 
         [HttpPost("channel")]
         public IActionResult SwitchChannel(
-            [FromQuery(Name = "player")] string? playerName,
+            [FromQuery(Name = "playerId")] string? playerId,
             [FromBody] VideoChannel? channel)
         {
-            if (playerName == null)
+            if (playerId == null)
             {
                 return BadRequest("Cannot switch video channels: Please specify a player!");
             }
 
-            if (!_playerService.Players.TryGetValue(playerName, out var player))
+            if (!_playerService.Players.TryGetValue(playerId, out var player))
             {
-                return BadRequest($"Cannot switch video channel: Player {player} does not exist!");
+                return BadRequest($"Cannot switch video channel: Player {playerId} does not exist!");
             }
 
             if (channel == null)
             {
-                return BadRequest(@$"Cannot switch video channel for player {player}:
+                return BadRequest(@$"Cannot switch video channel for player {playerId}:
                     Please specify a channel!");
             }
 
@@ -98,7 +95,7 @@ namespace Webapp.Controllers.UserInterface.Video
             var videoSource = (player as IVideoProvider).VideoInterface;
             if (!videoSource.Channels.Contains(channel))
             {
-                return BadRequest($@"Cannot switch to Channel {channel.Name} for player {player}:
+                return BadRequest($@"Cannot switch to Channel {channel.Name} for player {playerId}:
                     Channel does not exist!");
             }
 

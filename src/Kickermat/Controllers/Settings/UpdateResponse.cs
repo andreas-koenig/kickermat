@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Webapp.Controllers.Settings
+namespace Kickermat.Controllers.Settings
 {
     public class UpdateResponse
     {

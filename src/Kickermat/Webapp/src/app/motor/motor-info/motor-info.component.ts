@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Motor, MotorFunction, Bar } from '@api/api.model';
+import { Motor, MotorFunction, Bar } from '@api/model';
 import { barToString } from '../names';
 
 @Component({

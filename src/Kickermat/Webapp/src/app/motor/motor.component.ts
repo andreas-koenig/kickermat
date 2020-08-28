@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/co
 
 import { Subscription } from 'rxjs';
 
-import { Motor, MotorFunction } from '@api/api.model';
+import { Motor, MotorFunction, Diagnostics, Peripheral } from '@api/model';
 import { ApiService } from '@api/api.service';
 import { barToString } from './names';
 
@@ -16,10 +16,10 @@ type Selection = 'info' | 'nmt' | 'operation';
 })
 export class MotorComponent implements OnInit, OnDestroy {
   public status: Status = 'loading';
-  public subscription$: Subscription | undefined;
-  public motors: Motor[] = [];
+  public diagnostics: Diagnostics | undefined;
   public selectedMotor: Motor | undefined;
   public selectedItem: Selection = 'info';
+  public motorPeripheral: Peripheral | undefined;
 
   @ViewChild('info', { static: true }) public infoTemplate!: ElementRef<HTMLElement>;
   @ViewChild('nmt', { static: true }) public nmtTemplate!: ElementRef<HTMLElement>;
@@ -28,23 +28,26 @@ export class MotorComponent implements OnInit, OnDestroy {
   public barToString = barToString;
   public functionEnum = MotorFunction;
 
+  private subs: Subscription[] = [];
+
   constructor(private api: ApiService) { }
 
   ngOnInit(): void {
-    this.subscription$ = this.api.getMotorDiagnostics()
-      .subscribe(motors => {
-        this.motors = motors.sort((m1, m2): number =>
+    const sub = this.api.getMotorDiagnostics()
+      .subscribe(diagnostics => {
+        diagnostics.motors = diagnostics.motors.sort((m1, m2): number =>
           (m1.bar === m2.bar) ? m2.function - m1.function : m1.bar - m2.bar
         );
-        this.selectedMotor = { ...this.motors[0] };
+        this.diagnostics = diagnostics;
+        this.selectedMotor = this.diagnostics.motors[0];
         this.status = 'success';
       });
+    
+    this.subs.push(sub);
   }
 
   ngOnDestroy(): void {
-    if (this.subscription$) {
-      this.subscription$.unsubscribe();
-    }
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   public changeItem(item: Selection): void {

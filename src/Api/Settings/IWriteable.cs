@@ -14,7 +14,7 @@ namespace Api.Settings
 
     public interface IWriteable<out T>
         : IWriteable, IOptionsSnapshot<T>
-        where T : class, new()
+        where T : class, ISettings, new()
     {
         new T Value { get; }
 

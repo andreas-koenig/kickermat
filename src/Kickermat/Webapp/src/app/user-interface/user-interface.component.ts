@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { KickermatPlayer, UserInterface } from '@api/api.model';
+import { KickermatPlayer, UserInterface } from '@api/model';
 import { ApiService } from '@api/api.service';
 import { Subscription } from 'rxjs';
 

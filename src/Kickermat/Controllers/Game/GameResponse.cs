@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Api.Player;
-using Webapp.Controllers.Player;
-using Webapp.Services.Game;
+using Kickermat.Controllers.Player;
+using Kickermat.Services.Game;
 
-namespace Webapp.Controllers.Game
+namespace Kickermat.Controllers.Game
 {
     public class GameResponse
     {
@@ -25,9 +25,12 @@ namespace Webapp.Controllers.Game
             }
             else
             {
-                var attr = player.GetType().GetCustomAttribute<KickermatPlayerAttribute>();
                 Player = new SerializedPlayer(
-                    attr.Name, attr.Description, attr.Authors, attr.Emoji, player.Id);
+                    player.GetType().FullName,
+                    player.Name,
+                    player.Description,
+                    player.Authors,
+                    player.Emoji);
             }
         }
 

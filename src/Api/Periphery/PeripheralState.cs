@@ -9,25 +9,27 @@ namespace Api.Periphery
     /// </summary>
     public enum PeripheralState
     {
+        DriversNotInstalled = 0,
+
         /// <summary>
         /// The peripheral is not connected to the current machine.
         /// </summary>
-        NotConnected = 0,
+        NotConnected = 1,
 
         /// <summary>
         /// The peripheral is currently performing an initialization procedure such
         /// as a calibration.
         /// </summary>
-        Initializing = 1,
+        Initializing = 2,
 
         /// <summary>
         /// The peripheral suffered an unrecoverable error.
         /// </summary>
-        Error = 2,
+        Error = 3,
 
         /// <summary>
         /// The peripheral is ready for use.
         /// </summary>
-        Ready = 3,
+        Ready = 4,
     }
 }

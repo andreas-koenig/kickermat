@@ -2,7 +2,7 @@
 using Api.Settings;
 using Api.Settings.Parameter;
 
-namespace Webapp.Player.Classic
+namespace Player.Classic
 {
     public class ClassicPlayerSettings : ISettings
     {

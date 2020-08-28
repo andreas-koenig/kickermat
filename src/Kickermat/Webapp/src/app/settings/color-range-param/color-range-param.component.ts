@@ -4,7 +4,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { Subscription, Subject } from 'rxjs';
 
 import { ApiService } from '@api/api.service';
-import { HsvColor, ColorRange, ColorRangeParameter } from '@api/api.model';
+import { HsvColor, ColorRange, ColorRangeParameter } from '@api/model';
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 interface RgbColor {

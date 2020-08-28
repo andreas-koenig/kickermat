@@ -6,19 +6,19 @@ using Api.Periphery;
 
 namespace Kickermat.Controllers.Camera
 {
-    public class Camera
+    public class Camera : IEntity
     {
-        public Camera(string name, PeripheralState state, Guid id)
+        public Camera(string id, string name, PeripheralState state)
         {
-            Name = name;
-            State = state;
             Id = id;
+            Name = name;
+            PeripheralState = state;
         }
 
-        public string Name { get; }
+        public string Id { get; set; }
 
-        public PeripheralState State { get; }
+        public string Name { get; set; }
 
-        public Guid Id { get; }
+        public PeripheralState PeripheralState { get; set; }
     }
 }

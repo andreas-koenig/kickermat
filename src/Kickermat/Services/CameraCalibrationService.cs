@@ -8,7 +8,7 @@ using Api.Camera;
 using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 
-namespace Webapp.Services
+namespace Kickermat.Services
 {
     public class CameraCalibrationService : IObserver<IFrame>
     {

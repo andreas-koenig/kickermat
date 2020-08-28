@@ -5,18 +5,24 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CarbonModule } from '@app/carbon.module';
 
 // Kickermat Components
-import { PageHeadingComponent } from './page-heading.component';
+import { PageComponent } from './page.component';
+import { HeadingComponent } from './heading/heading.component';
+import { PeripheralStateComponent } from './peripheral-state/peripheral-state.component';
 
 @NgModule({
   declarations: [
-    PageHeadingComponent
+    PageComponent,
+    HeadingComponent,
+    PeripheralStateComponent,
   ],
   imports: [
     BrowserModule,
     CarbonModule,
   ],
   exports: [
-    PageHeadingComponent
+    PageComponent,
+    HeadingComponent,
+    PeripheralStateComponent,
   ]
 })
 export class PageModule { }

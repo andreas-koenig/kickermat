@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 namespace Api.Settings
 {
     public class Writable<T> : IWriteable<T>
-        where T : class, new()
+        where T : class, ISettings, new()
     {
         private static Action _onChange;
         private readonly IHostEnvironment _environment;

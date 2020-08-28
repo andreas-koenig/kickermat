@@ -11,7 +11,7 @@ namespace Motor {
         Faulhaber(uint8_t motorId);
 
         // Write PDOs
-        void RotateBar(int16_t angle, PositioningMethod positioningMethod);
+        void RotateBar(uint32_t angle, PositioningMethod positioningMethod);
 
         // Write SDOs
         void SetScaleNumerator(uint16_t numerator);

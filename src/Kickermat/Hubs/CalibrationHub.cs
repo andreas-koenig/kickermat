@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Webapp.Services;
+using Kickermat.Services;
 
-namespace Webapp.Hubs
+namespace Kickermat.Hubs
 {
     public class CalibrationHub : Hub
     {

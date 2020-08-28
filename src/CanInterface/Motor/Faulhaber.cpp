@@ -10,7 +10,7 @@ namespace Motor {
 
     Faulhaber::Faulhaber(uint8_t motorId) : BaseMotor(motorId) {}
 
-    void Faulhaber::RotateBar(int16_t angle, PositioningMethod positioningMethod) {
+    void Faulhaber::RotateBar(uint32_t angle, PositioningMethod positioningMethod) {
         const int32_t position = angle * (FH_NUMBER_OF_STEPS / 360);
 
         uint8_t command;

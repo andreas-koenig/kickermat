@@ -9,7 +9,7 @@ using Api;
 using Api.Settings;
 using Api.Settings.Parameter;
 
-namespace Webapp.Services.Settings
+namespace Kickermat.Services.Settings
 {
     public class SettingsService
     {

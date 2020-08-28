@@ -3,9 +3,9 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 
 import {
-  KickerParameter, Motor, KickermatPlayer, Settings, UpdateSettingsResponse,
-  ParameterUpdate, Game, ChannelsResponse, VideoChannel, Camera, UserInterface
-} from './api.model';
+  KickerParameter, KickermatPlayer, Settings, UpdateSettingsResponse,
+  ParameterUpdate, Game, ChannelsResponse, VideoChannel, Camera, UserInterface, Diagnostics, Peripheral
+} from './model';
 import { REST_BASE } from './api';
 
 @Injectable({
@@ -13,28 +13,6 @@ import { REST_BASE } from './api';
 })
 export class ApiService {
   constructor(private http: HttpClient) { }
-
-  // Game
-  public getGame(): Observable<Game> {
-    const url = REST_BASE + '/game';
-
-    return this.http.get<Game>(url);
-  }
-
-  public startGame(player: KickermatPlayer): Observable<Game> {
-    const url = REST_BASE + '/game/start';
-
-    const params = new HttpParams()
-      .append('player', player.name);
-
-    return this.http.post<Game>(url, undefined, { params });
-  }
-
-  public stopGame(): Observable<Game> {
-    const url = REST_BASE + '/game/stop';
-
-    return this.http.post<Game>(url, undefined);
-  }
 
   // Players
   public getKickermatPlayers(): Observable<KickermatPlayer[]> {
@@ -47,7 +25,7 @@ export class ApiService {
     const url = REST_BASE + '/ui';
 
     const params = new HttpParams()
-      .append('player', player.name);
+      .append('playerId', player.id);
 
     return this.http.get<UserInterface[]>(url, { params });
   }
@@ -57,7 +35,7 @@ export class ApiService {
     const url = REST_BASE + '/ui/video/channel';
 
     const params = new HttpParams()
-      .append('player', player.name);
+      .append('playerId', player.id);
 
     return this.http.get<ChannelsResponse>(url, { params });
   }
@@ -66,7 +44,7 @@ export class ApiService {
     const url = REST_BASE + '/ui/video/channel';
 
     const params = new HttpParams()
-      .append('player', player.name);
+      .append('playerId', player.id);
 
     return this.http.post<HttpResponse<never>>(url, channel, { params });
   }
@@ -78,21 +56,21 @@ export class ApiService {
     return this.http.get<Camera[]>(url);
   }
 
-  public getCamera(name: string): Observable<Camera> {
+  public getCamera(cameraId: string): Observable<Camera> {
     const url = REST_BASE + '/camera';
 
     const params = new HttpParams()
-      .append('name', name);
+      .append('id', cameraId);
 
     return this.http.get<Camera>(url, { params });
   }
 
   // Settings
-  public getSettings(id: string): Observable<Settings[]> {
+  public getSettings(entityId: string): Observable<Settings[]> {
     const url = REST_BASE + '/settings';
 
     const params = new HttpParams()
-      .append('id', id);
+      .append('entityId', entityId);
 
     return this.http.get<Settings[]>(url, { params });
   }
@@ -125,9 +103,9 @@ export class ApiService {
   }
 
   // Motor Diagnostics
-  public getMotorDiagnostics(): Observable<Motor[]> {
+  public getMotorDiagnostics(): Observable<Diagnostics> {
     const url = REST_BASE + '/motor';
 
-    return this.http.get<Motor[]>(url);
+    return this.http.get<Diagnostics>(url);
   }
 }

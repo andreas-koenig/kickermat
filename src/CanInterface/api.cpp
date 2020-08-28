@@ -1,7 +1,9 @@
 #include "pch.h"
 #include <thread>
+#include <iostream>
 
 #include "api.h"
+#include "CanOpen/CanOpen.h"
 
 #define KEEPER (uint8_t)0
 #define DEFENSE (uint8_t)1
@@ -9,7 +11,15 @@
 #define STRIKER (uint8_t)3
 
 CAN_API void* init() {
-    auto api = new ApiHandle{
+    NTCAN_RESULT res;
+    auto diagnostics = new Diagnostics(&res);
+
+    if (res != NTCAN_SUCCESS) {
+        delete diagnostics;
+        return nullptr;
+    }
+
+    auto api = new ApiHandle {
         new std::mutex(),
 
         new Faulhaber(ID_FH_GOALKEEPER),
@@ -22,6 +32,7 @@ CAN_API void* init() {
         new Telemecanique(ID_TM_STRIKER),
 
         CalibrationState::NotCalibrated,
+        diagnostics,
     };
 
     api->TelemecaniqueKeeper->EnableOperation();
@@ -48,8 +59,10 @@ CAN_API void destroy(void* apiHandle) {
     delete api->TelemecaniqueDefense;
     delete api->TelemecaniqueMidfield;
     delete api->TelemecaniqueStriker;
+    delete api->Diagnostics;
 
     delete api;
+    api = nullptr;
 }
 
 CAN_API void start_calibration(void* apiHandle, void __stdcall done_callback(void)) {
@@ -105,7 +118,7 @@ CAN_API CalibrationState get_calibration_state(void* apiHandle) {
     return state;
 }
 
-CAN_API void move_bar(void* apiHandle, uint8_t bar, uint8_t position, char angle, char rot_direction) {
+CAN_API void move_bar(void* apiHandle, uint8_t bar, int32_t position, int32_t angle) {
     auto api = (ApiHandle*)apiHandle;
     if (api == nullptr) {
         return;
@@ -138,15 +151,6 @@ CAN_API void move_bar(void* apiHandle, uint8_t bar, uint8_t position, char angle
     }
 
     if (faulhaber != nullptr && angle >= 0) {
-        // TODO: Include direction
         faulhaber->RotateBar((int16_t)angle, PositioningMethod::Absolute);
     }
-}
-
-CAN_API void shift_bar(void* api, uint8_t bar, uint8_t position) {
-    move_bar(api, bar, position, -1, 0);
-}
-
-CAN_API void rotate_bar(void* api, uint8_t bar, char angle, char rot_direction) {
-    move_bar(api, bar, -1, angle, rot_direction);
 }

@@ -19,11 +19,8 @@ namespace Video
         {
         }
 
-        public abstract string Name { get; }
-
         public abstract PeripheralState PeripheralState { get; set; }
-
-        public abstract Guid Id { get; }
+        public abstract string Name { get; }
     }
 }
 

@@ -11,10 +11,10 @@ using Api.Settings.Parameter;
 using Kickermat.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Webapp.Services;
-using Webapp.Services.Settings;
+using Kickermat.Services;
+using Kickermat.Services.Settings;
 
-namespace Webapp.Controllers.Settings
+namespace Kickermat.Controllers.Settings
 {
     [Route("api/settings")]
     [ApiController]
@@ -48,9 +48,9 @@ namespace Webapp.Controllers.Settings
                 return BadRequest();
             }
 
-            if (update.Settings == null)
+            if (update.SettingsId == null)
             {
-                return BadRequest(@"Please provide the name of the settings containing the
+                return BadRequest(@"Please provide the id of the settings object containing the
                     parameter to update");
             }
 
@@ -61,16 +61,16 @@ namespace Webapp.Controllers.Settings
 
             if (update.Value == null)
             {
-                return BadRequest($"{update.Settings}.{update.Parameter} cannot be set to null");
+                return BadRequest($"{update.SettingsId}.{update.Parameter} cannot be set to null");
             }
 
             try
             {
                 var newVal = _settingsService.UpdateParameter(
-                    update.Settings, update.Parameter, update.Value);
+                    update.SettingsId, update.Parameter, update.Value);
 
                 return Ok(new UpdateResponse(
-                    $"Successfully updated {update.Settings}.{update.Parameter}", newVal));
+                    $"Successfully updated {update.SettingsId}.{update.Parameter}", newVal));
             }
             catch (UpdateSettingsException ex)
             {
@@ -80,22 +80,22 @@ namespace Webapp.Controllers.Settings
 
         // GET: api/Settings
         [HttpGet]
-        public IActionResult GetSettings(
-            [FromQuery(Name = "id")] Guid id)
+        public IActionResult GetSettingsForEntity(
+            [FromQuery(Name = "entityId")] string entityId)
         {
-            if (id == null)
+            if (entityId == null)
             {
                 return BadRequest("No id was provided!");
             }
 
-            var identifiable = ControllersUtil.GetIdentifiable(
-                id, _playerService.Players.Values, _peripheralsService.Peripherals);
-            if (identifiable == default)
+            var namedService = ControllersUtil.GetNamedServiceById(
+                entityId, _playerService.Players.Values, _peripheralsService.Peripherals);
+            if (namedService == default)
             {
-                return BadRequest($"No configurable object found for ID {id}");
+                return BadRequest($"No configurable object found for ID {entityId}");
             }
 
-            var settings = _settingsService.GetSettings(identifiable.GetType());
+            var settings = _settingsService.GetSettings(namedService.GetType());
             var response = CreateResponse(settings);
 
             return Ok(response);
@@ -107,7 +107,7 @@ namespace Webapp.Controllers.Settings
 
             settings
                 .ToList()
-                .ForEach((Action<IWriteable>)(writeable =>
+                .ForEach(writeable =>
                 {
                     var attrs = new List<BaseParameterAttribute>();
 
@@ -125,11 +125,13 @@ namespace Webapp.Controllers.Settings
                             }
                         });
 
+                    var settingsObject = writeable.ValueObject as ISettings;
                     var serializedSettings = new SettingsResponse(
-                        (writeable.ValueObject as ISettings).Name,
+                        settingsObject.GetType().FullName,
+                        settingsObject.Name,
                         attrs);
                     settingsList.Add(serializedSettings);
-                }));
+                });
 
             return settingsList;
         }

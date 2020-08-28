@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NmtState } from '@api/api.model';
+import { NmtState } from '@api/model';
 
 @Component({
   selector: 'oth-nmt-state',

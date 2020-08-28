@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Api
 {
-    public interface IIdentifiable
+    public interface INamed
     {
-        public Guid Id { get; }
+        public string Name { get; }
     }
 }
 

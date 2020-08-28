@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { OperatingState, Motor, OperatingMode } from '@api/api.model';
+import { OperatingState, Motor, OperatingMode } from '@api/model';
 import { opStateToString, opModeToString } from '../names';
 
 @Component({

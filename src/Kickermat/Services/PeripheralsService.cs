@@ -7,7 +7,7 @@ using Api.Camera;
 using Api.Periphery;
 using Microsoft.Extensions.Logging;
 
-namespace Webapp.Services
+namespace Kickermat.Services
 {
     public class PeripheralsService
     {

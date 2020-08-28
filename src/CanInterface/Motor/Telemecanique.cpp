@@ -5,22 +5,12 @@ namespace Motor {
     Telemecanique::Telemecanique(uint8_t motorId) : BaseMotor(motorId) {}
 
     void Telemecanique::MoveBar(uint32_t position, PositioningMethod positioningMethod) {
-        /*
-        if (position > MaxPosition) {
-            position = MaxPosition;
-        }
-        else if (position < MinPosition) {
-            position = MinPosition;
-        }
-        */
-
         uint16_t controlWord = DCOM_CONTROL_WORD_SWITCH_ON
             | DCOM_CONTROL_WORD_QUICK_STOP
             | DCOM_CONTROL_WORD_ENABLE_VOLTAGE
             | DCOM_CONTROL_WORD_ENABLE_OPERATION;
 
-        switch (positioningMethod)
-        {
+        switch (positioningMethod) {
         case PositioningMethod::Absolute:
             controlWord &= ~(DCOM_CONTROL_WORD_POSITIONING_RELATIVE);
             break;
@@ -373,7 +363,6 @@ namespace Motor {
         // Untere und obere Positionsgrenze setzten, immer Toleranz mit einbeziehen
         SetMinPosLimit(calibrationMinPosition - 1850); // TODO: DefaultMinPosBuffer
         SetMaxPosLimit(calibrationMaxPosition + 1000); // TODO: DefaultMaxPosBuffer
-
 
         // Wenn Positionslimits gesetzt sind, kann Spannung wieder eingeschalten werden
         EnableOperation();

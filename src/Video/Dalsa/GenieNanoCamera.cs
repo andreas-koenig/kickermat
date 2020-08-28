@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Api;
 using Api.Periphery;
 using Api.Settings;
@@ -24,10 +25,12 @@ namespace Video.Dalsa
         private readonly GenieNanoDll.CameraDisconnected _cameraDisconnected;
 
         // Members
+        private readonly ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim();
         private readonly IWriteable<GenieNanoSettings> _options;
         private readonly ILogger _logger;
         private readonly string _name;
         private IntPtr _cameraPtr = IntPtr.Zero;
+        private PeripheralState _state;
 
         public GenieNanoCamera(
             ILogger<GenieNanoCamera> logger, IWriteable<GenieNanoSettings> options)
@@ -54,11 +57,26 @@ namespace Video.Dalsa
             }
         }
 
-        public override PeripheralState PeripheralState { get; set; }
+        public override PeripheralState PeripheralState
+        {
+            get
+            {
+                PeripheralState state;
+                _rwLock.EnterReadLock();
+                state = _state;
+                _rwLock.ExitReadLock();
+                return state;
+            }
+
+            set
+            {
+                _rwLock.EnterWriteLock();
+                _state = value;
+                _rwLock.ExitWriteLock();
+            }
+        }
 
         public override string Name => "Genie Nano C1280";
-
-        public override Guid Id => new Guid("DFDEB2E8-9EB9-42A3-B9A9-B300CD210303");
 
         protected override void StartAcquisition()
         {
@@ -78,21 +96,40 @@ namespace Video.Dalsa
 
         private void CreateCamera()
         {
-            var roi = new RegionOfInterest(XMin, YMin, Width, Height);
-            _cameraPtr = GenieNanoDll.CreateCamera(
-                _options.Value.CameraName, roi, _frameArrived, _cameraConnected, _cameraDisconnected);
-
-            if (!_cameraPtr.Equals(IntPtr.Zero))
+            try
             {
-                PeripheralState = PeripheralState.Ready;
-                try
-                {
-                    ApplyOptions();
-                }
-                catch (KickermatException ex)
-                {
-                    _logger.LogError(ex.Message);
-                }
+                var roi = new RegionOfInterest(XMin, YMin, Width, Height);
+                _cameraPtr = GenieNanoDll.CreateCamera(
+                    _options.Value.CameraName,
+                    roi,
+                    _frameArrived,
+                    _cameraConnected,
+                    _cameraDisconnected);
+            }
+            catch (DllNotFoundException)
+            {
+                _logger.LogError(
+                    "Failed to initialize GenieNanoCamera: The Camera SDK is not installed");
+                PeripheralState = PeripheralState.Error;
+                return;
+            }
+
+            if (_cameraPtr.Equals(IntPtr.Zero))
+            {
+                _logger.LogError(
+                    "Failed to initialize GenieNanoCamera: Camera was not found on the network");
+                PeripheralState = PeripheralState.NotConnected;
+                return;
+            }
+
+            PeripheralState = PeripheralState.Ready;
+            try
+            {
+                ApplyOptions();
+            }
+            catch (KickermatException ex)
+            {
+                _logger.LogError(ex.Message);
             }
         }
 

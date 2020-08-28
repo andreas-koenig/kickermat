@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MotorController": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -10,21 +10,21 @@ namespace Kickermat.Controllers
 {
     internal static class ControllersUtil
     {
-        internal static IIdentifiable GetIdentifiable(
-            Guid id, IEnumerable<IKickermatPlayer> players, IEnumerable<IPeripheral> peripherals)
+        internal static INamed GetNamedServiceById(
+            string id, IEnumerable<IKickermatPlayer> players, IEnumerable<IPeripheral> peripherals)
         {
-            var identifiable = players
-                .Where(player => player.Id.Equals(id))
-                .Cast<IIdentifiable>()
+            var service = players
+                .Where(player => player.GetType().FullName.Equals(id))
+                .Cast<INamed>()
                 .FirstOrDefault();
 
-            if (identifiable != null)
+            if (service != null)
             {
-                return identifiable;
+                return service;
             }
 
             return peripherals
-                .Where(p => p.Id.Equals(id))
+                .Where(p => p.GetType().FullName.Equals(id))
                 .FirstOrDefault();
         }
     }
