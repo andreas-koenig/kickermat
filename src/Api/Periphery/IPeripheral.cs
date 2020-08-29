@@ -11,6 +11,9 @@ namespace Api.Periphery
     /// </summary>
     public interface IPeripheral : INamed
     {
+        /// <summary>
+        /// The state of this peripheral.
+        /// </summary>
         public PeripheralState PeripheralState { get; }
     }
 }

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Api.UserInterface
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
     public class UserInterfaceAttribute : Attribute
     {

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Api.Settings.Parameter
 {
+    /// <summary>
+    /// A parameter for an HSV color range which can be used for classic image processing.
+    /// </summary>
     public class ColorRangeParameterAttribute : BaseParameterAttribute
     {
         public ColorRangeParameterAttribute(string name, string description, int hueLower,
@@ -20,6 +23,9 @@ namespace Api.Settings.Parameter
         public new ColorRange DefaultValue { get; protected set; }
     }
 
+    /// <summary>
+    /// An HSV color range with an upper and a lower bound.
+    /// </summary>
     public class ColorRange
     {
         public ColorRange() { }
@@ -37,11 +43,20 @@ namespace Api.Settings.Parameter
             Upper = new HsvColor(hueUpper, saturationUpper, valueUpper);
         }
 
+        /// <summary>
+        /// The lower bound.
+        /// </summary>
         public HsvColor Lower { get; set; }
 
+        /// <summary>
+        /// The upper bound.
+        /// </summary>
         public HsvColor Upper { get; set; }
     }
 
+    /// <summary>
+    /// A color value in the HSV color space.
+    /// </summary>
     public class HsvColor
     {
         public HsvColor() { }
@@ -53,10 +68,20 @@ namespace Api.Settings.Parameter
             Value = value;
         }
 
+        /// <summary>
+        /// The hue.
+        /// </summary>
         public int Hue { get; set; }
 
+        /// <summary>
+        /// The value.
+        /// </summary>
         public int Value { get; set; }
 
+        /// <summary>
+        /// The saturation.
+        /// </summary>
         public int Saturation { get; set; }
     }
 }
+

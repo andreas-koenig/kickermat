@@ -3,7 +3,7 @@
 namespace Api.Camera
 {
     /// <summary>
-    /// This is an common interface for an object that holds a frame. It is used by the
+    /// This is a common interface for an object that holds a frame. It is used by the
     /// <see cref="ICamera{T}"/> and the <see cref="IVideoInterface"/>.
     /// </summary>
     public interface IFrame : ICloneable, IDisposable

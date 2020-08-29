@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Api.Settings.Parameter
 {
+    /// <summary>
+    /// A parameter for a boolean value.
+    /// </summary>
     public class BooleanParameterAttribute : BaseParameterAttribute
     {
         public BooleanParameterAttribute(string name, string description, bool value,
