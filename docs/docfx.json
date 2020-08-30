@@ -5,10 +5,10 @@
         {
           "files": [
             "Api/Api.csproj",
-            "MotorController/MotorController.csproj",
-            "VideoSource/VideoSource.csproj"
+            "Motor/Motor.csproj",
+            "Video/Video.csproj"
           ],
-          "src": "../kicker"
+          "src": "../src"
         }
       ],
       "dest": "api",
