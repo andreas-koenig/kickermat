@@ -19,16 +19,6 @@ namespace Kickermat.Services
             _logger = services.GetService(typeof(ILogger<PlayerService>)) as ILogger;
 
             var count = Players.Count;
-            if (count > 0)
-            {
-                var players = Players.Select(p => $"- {p.Key} ({p.Value.GetType().FullName})\n")
-                    .Aggregate((p1, p2) => $"{p1}\n{p2}");
-                _logger.LogInformation($"Registered {Players.Count} players:\n{players}");
-            }
-            else
-            {
-                _logger.LogInformation("No players registered");
-            }
         }
 
         /// <summary>

@@ -45,7 +45,7 @@ export interface UpdateSettingsResponse<T extends KickerParameter<T>> {
 }
 
 export interface ParameterUpdate {
-  settings: string;
+  settingsId: string;
   parameter: string;
   value: any;
 }

@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 })
 export class BooleanParameterComponent implements OnInit, OnDestroy {
   @Input('param') public param!: BooleanParameter;
-  @Input('settings') public settings!: string;
+  @Input('settingsId') public settingsId!: string;
 
   public subs: Subscription[] = [];
   public isUpdating = false;
@@ -35,9 +35,10 @@ export class BooleanParameterComponent implements OnInit, OnDestroy {
     this.isUpdating = true;
 
     const sub = this.api.updateParam<BooleanParameter>(
-      this.settings,
+      this.settingsId,
       this.param.name,
       value,
+      !value,
       this.updateModel.bind(this),
       this.updateModel.bind(this));
 

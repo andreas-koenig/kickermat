@@ -41,8 +41,9 @@ namespace Player.Classic
 
     public enum Strategy
     {
-        Fast,
-        Safe,
-        Special,
+        Fast = 0,
+        Safe = 1,
+        Special = 2,
     }
 }
+

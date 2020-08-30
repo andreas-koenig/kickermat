@@ -7,12 +7,13 @@ import {
   ParameterUpdate, Game, ChannelsResponse, VideoChannel, Camera, UserInterface, Diagnostics, Peripheral
 } from './model';
 import { REST_BASE } from './api';
+import { NotificationService, NotificationContent } from 'carbon-components-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private notificationService: NotificationService) { }
 
   // Players
   public getKickermatPlayers(): Observable<KickermatPlayer[]> {
@@ -76,29 +77,34 @@ export class ApiService {
   }
 
   public updateParam<T extends KickerParameter<any>>(
-    settingsName: string,
+    settingsId: string,
     paramName: string,
-    value: T['value'],
+    newValue: T['value'],
+    currentValue: T['value'],
     onSuccess: (newVal: T['value']) => void,
     onError: (oldVal: T['value']) => void
   ): Subscription {
     const url = REST_BASE + '/settings';
 
     const body: ParameterUpdate = {
-      settings: settingsName,
+      settingsId: settingsId,
       parameter: paramName,
-      value
+      value: newValue,
     };
 
     return this.http.post<UpdateSettingsResponse<T>>(url, body)
       .subscribe(
         resp => {
-          // this.msg.create("success", resp.message as string);
           onSuccess(resp.value);
+          
+          this.showNotification("success", "Success", `Successfully updated ${paramName}`);
         },
         error => {
-          // this.msg.create("error", error.error.message);
-          onError(error.error.value);
+          error.error.value
+            ? onError(error.error.value)
+            : onError(currentValue);
+
+          this.showNotification("error", "Failure", error.error.message);
         });
   }
 
@@ -107,5 +113,15 @@ export class ApiService {
     const url = REST_BASE + '/motor';
 
     return this.http.get<Diagnostics>(url);
+  }
+
+  private showNotification(type: "error" | "success", title: string, message: string) {
+    this.notificationService.showNotification({
+      title,
+      type,
+      message,
+      smart: true,
+      target: "#notification-outlet",
+    });
   }
 }

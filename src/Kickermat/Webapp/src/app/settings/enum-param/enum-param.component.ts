@@ -12,17 +12,19 @@ import { ApiService } from '@api/api.service';
 })
 export class EnumParamComponent implements OnInit, OnDestroy {
   @Input('param') public param!: EnumParameter;
-  @Input('settings') public settings!: string;
+  @Input('settingsId') public settingsId!: string;
 
   public subs: Subscription[] = [];
   public isUpdating = false;
 
   public val!: EnumParameter['value'];
+  private oldVal: EnumParameter['value'];
 
   constructor(private api: ApiService) { }
 
   ngOnInit(): void {
     this.val = this.param.value;
+    this.oldVal = this.param.value;
   }
 
   ngOnDestroy(): void {
@@ -30,6 +32,7 @@ export class EnumParamComponent implements OnInit, OnDestroy {
   }
 
   private updateModel(value: number): void {
+    this.oldVal = this.val;
     this.val = value;
     this.isUpdating = false;
   }
@@ -38,9 +41,10 @@ export class EnumParamComponent implements OnInit, OnDestroy {
     this.isUpdating = true;
 
     const sub = this.api.updateParam<EnumParameter>(
-      this.settings,
+      this.settingsId,
       this.param.name,
       value,
+      this.oldVal,
       this.updateModel.bind(this),
       this.updateModel.bind(this)
     );

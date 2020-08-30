@@ -159,7 +159,7 @@ namespace Kickermat.Settings
             IConfiguration config,
             MethodInfo configureMethod)
         {
-            var name = (Activator.CreateInstance(settingsType) as ISettings).Name;
+            var name = (Activator.CreateInstance(settingsType) as ISettings).GetType().FullName;
             var iWriteableType = typeof(IWriteable<>).MakeGenericType(settingsType);
 
             // Call services.Configure<TOptions>(section) with settingsType as TOptions
@@ -176,35 +176,10 @@ namespace Kickermat.Settings
                 var environment = provider.GetService<IHostEnvironment>();
 
                 var writableOptions = Activator.CreateInstance(
-                    writableType, environment, optionsMonitor, name, "appsettings.json");
+                    writableType, environment, optionsMonitor, name, "kickermatsettings.json");
 
                 return writableOptions;
             });
-        }
-
-        /// <summary>
-        /// Add an OptionsMonitor whose updates are written back to its underlying JSON file.
-        /// </summary>
-        /// <typeparam name="TOptions">The type of the options.</typeparam>
-        /// <param name="services">The IServiceCollection to be extended.</param>
-        /// <param name="section">The configuration section within the JSON file.</param>
-        /// <param name="file">The JSON file.</param>
-        /// <returns>The IServiceCollection.</returns>
-        public static IServiceCollection ConfigureWritable<TOptions>(
-            this IServiceCollection services,
-            IConfigurationSection section,
-            string file = "appsettings.json")
-            where TOptions : class, ISettings, new()
-        {
-            services.Configure<TOptions>(section);
-            services.AddTransient<IWriteable<TOptions>>(provider =>
-            {
-                var environment = provider.GetService<IHostEnvironment>();
-                var options = provider.GetService<IOptionsMonitor<TOptions>>();
-                return new Writable<TOptions>(environment, options, section.Path, file);
-            });
-
-            return services;
         }
 
         private static void ValidateOptions(ISettings options)

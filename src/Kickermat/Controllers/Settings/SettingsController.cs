@@ -24,8 +24,6 @@ namespace Kickermat.Controllers.Settings
         private readonly PlayerService _playerService;
         private readonly PeripheralsService _peripheralsService;
 
-        private readonly JsonSerializerOptions _jsonOptions;
-
         public SettingsController(
             SettingsService settingsService,
             PlayerService playerService,
@@ -34,10 +32,6 @@ namespace Kickermat.Controllers.Settings
             _settingsService = settingsService;
             _playerService = playerService;
             _peripheralsService = peripheralsService;
-
-            _jsonOptions = new JsonSerializerOptions();
-            _jsonOptions.PropertyNameCaseInsensitive = true;
-            _jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         }
 
         // POST: api/settings
@@ -75,6 +69,15 @@ namespace Kickermat.Controllers.Settings
             catch (UpdateSettingsException ex)
             {
                 return BadRequest(new UpdateResponse(ex.Message, ex.Value));
+            }
+            catch (KickermatException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return BadRequest(
+                    $"Could not update parameter {update.SettingsId}.{update.Parameter}");
             }
         }
 

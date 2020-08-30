@@ -20,7 +20,9 @@ interface RgbColor {
 })
 export class ColorRangeParamComponent implements OnInit, OnDestroy {
   @Input('param') public param!: ColorRangeParameter;
-  @Input('settings') public settings!: string;
+  @Input('settingsId') public settingsId!: string;
+
+  private oldValue!: ColorRange;
 
   private subs: Subscription[] = [];
   public isUpdating = false;
@@ -59,6 +61,8 @@ export class ColorRangeParamComponent implements OnInit, OnDestroy {
     this.valRange = [l.value, u.value];
 
     this.isUpdating = false;
+
+    this.oldValue = this.getColorRange();
   }
 
   private getColorRange(): ColorRange {
@@ -84,9 +88,10 @@ export class ColorRangeParamComponent implements OnInit, OnDestroy {
     this.isUpdating = true;
 
     const sub = this.api.updateParam<ColorRangeParameter>(
-      this.settings,
+      this.settingsId,
       this.param.name,
       this.getColorRange(),
+      this.oldValue,
       this.updateModel.bind(this),
       this.updateModel.bind(this));
 

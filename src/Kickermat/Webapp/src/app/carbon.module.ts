@@ -14,6 +14,7 @@ import {
   ToggleModule,
   SliderModule,
   SelectModule,
+  NotificationModule,
 } from 'carbon-components-angular';
 
 // Carbon Icons
@@ -42,6 +43,7 @@ import {
     ToggleModule,
     SliderModule,
     SelectModule,
+    NotificationModule,
 
     // Icons
     RenewModule,

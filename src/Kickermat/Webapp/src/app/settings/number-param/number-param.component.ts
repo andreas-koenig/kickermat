@@ -12,18 +12,20 @@ import { NumberParameter } from '@api/model';
 })
 export class NumberParamComponent implements OnInit, OnDestroy {
   @Input('param') public param!: NumberParameter;
-  @Input('settings') public settings!: string;
+  @Input('settingsId') public settingsId!: string;
 
   public subs: Subscription[] = [];
   public isUpdating = false;
 
   public num: number | undefined;
+  private oldNum: number | undefined;
   public numSubject = new Subject<number>();
 
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
     this.num = this.param.value;
+    this.oldNum = this.num;
     const sub = this.numSubject
       .pipe(debounceTime(500), distinctUntilChanged(), skip(1))
       .subscribe(value => this.updateParam(value));
@@ -42,6 +44,7 @@ export class NumberParamComponent implements OnInit, OnDestroy {
 
   private updateModel(value: number): void {
     this.isUpdating = false;
+    this.oldNum = this.num;
     this.num = value;
   }
 
@@ -53,9 +56,10 @@ export class NumberParamComponent implements OnInit, OnDestroy {
     this.isUpdating = true;
 
     const sub = this.api.updateParam<NumberParameter>(
-      this.settings,
+      this.settingsId,
       this.param.name,
       value,
+      this.oldNum,
       this.updateModel.bind(this),
       this.updateModel.bind(this));
 

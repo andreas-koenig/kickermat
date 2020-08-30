@@ -30,7 +30,7 @@
             <p class="description">{{param.description}}</p>
             
             <ng-container
-              *ngTemplateOutlet="getParamTemplate(param); context: {$implicit: {param: param, settings: setting.name}}">
+              *ngTemplateOutlet="getParamTemplate(param); context: {$implicit: {param: param, settingsId: setting.id}}">
             </ng-container>
           </div>
         </div>
@@ -42,21 +42,21 @@
 
 <!-- Parameter templates -->
 <ng-template #numberTmpl let-ctx>
-  <oth-number-param [param]="ctx.param" [settings]="ctx.settings">
+  <oth-number-param [param]="ctx.param" [settingsId]="ctx.settingsId">
   </oth-number-param>
 </ng-template>
 
 <ng-template #colorRangeTmpl let-ctx>
-  <oth-color-range-param [param]="ctx.param" [settings]="ctx.settings">
+  <oth-color-range-param [param]="ctx.param" [settingsId]="ctx.settingsId">
   </oth-color-range-param>
 </ng-template>
 
 <ng-template #booleanTmpl let-ctx>
-  <oth-boolean-param [param]="ctx.param" [settings]="ctx.settings">
+  <oth-boolean-param [param]="ctx.param" [settingsId]="ctx.settingsId">
   </oth-boolean-param>
 </ng-template>
 
 <ng-template #enumTmpl let-ctx>
-  <oth-enum-param [param]="ctx.param" [settings]="ctx.settings">
+  <oth-enum-param [param]="ctx.param" [settingsId]="ctx.settingsId">
   </oth-enum-param>
 </ng-template>

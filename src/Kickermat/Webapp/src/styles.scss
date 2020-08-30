@@ -28,6 +28,17 @@ $carbon--theme: $carbon--theme--g10;
 @import "~carbon-components/scss/components/tabs/tabs";
 @import "~carbon-components/scss/components/content-switcher/content-switcher";
 @import "~carbon-components/scss/components/tag/tag";
+@import "~carbon-components/scss/components/notification/toast-notification";
+@import "~carbon-components/scss/components/notification/inline-notification";
 
 // Do no import all styles to reduce build time and bundle size:
 //import "~carbon-components/scss/globals/scss/styles.scss";
+
+// Notification outlet
+#notification-outlet {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  padding: 0 1rem;
+}

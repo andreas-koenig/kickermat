@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Api;
 using Api.Settings;
 using Api.Settings.Parameter;
+using Microsoft.Extensions.Logging;
 
 namespace Kickermat.Services.Settings
 {
@@ -15,18 +17,24 @@ namespace Kickermat.Services.Settings
     {
         private readonly PlayerService _playerService;
         private readonly IServiceProvider _services;
+        private readonly ILogger _logger;
 
         private readonly Dictionary<string, Type> _settingsDict;
         private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions();
 
-        public SettingsService(PlayerService playerService, IServiceProvider services)
+        public SettingsService(
+            PlayerService playerService, IServiceProvider services, ILogger<SettingsService> logger)
         {
             _playerService = playerService;
             _services = services;
+            _logger = logger;
 
             PlayerSettings = CollectPlayerSettings();
             _settingsDict = CollectSettings();
+
+            _jsonOptions = new JsonSerializerOptions();
             _jsonOptions.PropertyNameCaseInsensitive = true;
+            _jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         }
 
         public Dictionary<string, IEnumerable<IWriteable>> PlayerSettings { get; private set; }
@@ -62,13 +70,13 @@ namespace Kickermat.Services.Settings
                     writeable.Update(changes => prop.SetValue(changes, val));
                     return value;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // TODO: Log exception
+                    var msg = $"Failed to update {settingsName}.{paramName}";
+                    _logger.LogDebug($"{msg}: {ex.Message}");
 
                     var oldValue = prop.GetValue(writeable.ValueObject);
-                    throw new UpdateSettingsException(
-                        @$"Failed to update {settingsName}.{paramName}", oldValue);
+                    throw new UpdateSettingsException(msg, oldValue);
                 }
             }
 
@@ -149,9 +157,10 @@ namespace Kickermat.Services.Settings
                     {
                         if (type.GetInterfaces().Contains(typeof(ISettings)))
                         {
-                            var name = (Activator.CreateInstance(type) as ISettings).Name;
+                            var settingsId = (Activator.CreateInstance(type) as ISettings)
+                                .GetType().FullName;
                             var iWriteableType = typeof(IWriteable<>).MakeGenericType(type);
-                            settingsDict.Add(name, iWriteableType);
+                            settingsDict.Add(settingsId, iWriteableType);
                         }
                     }));
 
