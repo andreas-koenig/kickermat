@@ -20,6 +20,7 @@ namespace Video
         }
 
         public abstract PeripheralState PeripheralState { get; set; }
+
         public abstract string Name { get; }
     }
 }
