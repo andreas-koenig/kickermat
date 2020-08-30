@@ -81,22 +81,22 @@ build:
   tags:
     - build
   script:
-    - 'cd $CI_PROJECT_DIR/src/Kickermat/Webapp'
+    - 'cd $CI_PROJECT_DIR/framework/Kickermat/Webapp'
     - 'npm install'
     - 'ng build --prod'
-    - '.$KICKERMAT_HOME/NuGet/nuget.exe restore $CI_PROJECT_DIR/src/kicker.sln'
-    - '.$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/src/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - '.$KICKERMAT_HOME/NuGet/nuget.exe restore $CI_PROJECT_DIR/framework/kicker.sln'
+    - '.$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/framework/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
 test:
   stage: test
   tags:
     - test
   script:
-    - 'cd $CI_PROJECT_DIR/src'
+    - 'cd $CI_PROJECT_DIR/framework'
     - 'dotnet test --no-restore --logger "junit;LogFilePath=TestResult.xml"'
   artifacts:
     reports:
-      junit: $CI_PROJECT_DIR/src/UnitTesting/TestResult.xml
+      junit: $CI_PROJECT_DIR/framework/UnitTesting/TestResult.xml
 
 docs:
   stage: docs
@@ -113,4 +113,4 @@ release:
   tags:
     - release
   script: 
-    - 'Compress-Archive -Path $CI_PROJECT_DIR/src/bin/Release -DestinationPath $KICKERMAT_HOME/www/builds/release -Force'
+    - 'Compress-Archive -Path $CI_PROJECT_DIR/framework/bin/Release -DestinationPath $KICKERMAT_HOME/www/builds/release -Force'

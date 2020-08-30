@@ -8,7 +8,7 @@
             "Motor/Motor.csproj",
             "Video/Video.csproj"
           ],
-          "src": "../src"
+          "src": "../framework"
         }
       ],
       "dest": "api",
