@@ -3,12 +3,14 @@ variables:
   OBJECTS_DIRECTORY: 'obj'
   # 2) Name of directory used for keeping restored dependencies.
   NUGET_PACKAGES_DIRECTORY: '.nuget'
-  SOURCE_CODE_PATH: 'kicker'
   GIT_STRATEGY: none
+  GIT_CLONE_PATH: $CI_BUILDS_DIR/repo
 
 stages:
   - build
   - test
+  - docs
+  - release
 
 # ### Define global cache rule
 #
@@ -67,6 +69,7 @@ cache:
 #  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
 before_script:
+  - 'echo $CI_PROJECT_DIR'
   - 'cd $CI_PROJECT_DIR'
   - 'if ($CI_COMMIT_BRANCH -AND $CI_COMMIT_BRANCH -ne "") { $BRANCH=$CI_COMMIT_BRANCH } else { $BRANCH=$CI_DEFAULT_BRANCH }'
   - 'git fetch --all'
@@ -78,18 +81,36 @@ build:
   tags:
     - build
   script:
-    - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH/Webapp/ClientApp'
+    - 'cd $CI_PROJECT_DIR/framework/Kickermat/Webapp'
     - 'npm install'
     - 'ng build --prod'
-    - '.$MSBUILD_DIR/msbuild.exe $CI_PROJECT_DIR/$SOURCE_CODE_PATH/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
+    - '.$KICKERMAT_HOME/NuGet/nuget.exe restore $CI_PROJECT_DIR/framework/kicker.sln'
+    - '.$MSBUILD_DIR/msbuild $CI_PROJECT_DIR/framework/kicker.sln /t:Restore,Clean,Build /property:Configuration=Release'
 
-tests:
+test:
   stage: test
   tags:
     - test
   script:
-    - 'cd $CI_PROJECT_DIR/$SOURCE_CODE_PATH'
+    - 'cd $CI_PROJECT_DIR/framework'
     - 'dotnet test --no-restore --logger "junit;LogFilePath=TestResult.xml"'
   artifacts:
     reports:
-      junit: $CI_PROJECT_DIR/$SOURCE_CODE_PATH/UnitTesting/TestResult.xml
+      junit: $CI_PROJECT_DIR/framework/UnitTesting/TestResult.xml
+
+docs:
+  stage: docs
+  tags:
+    - docs
+  script:
+    - 'docfx $CI_PROJECT_DIR/docs/docfx.json'
+    - 'Remove-Item $KICKERMAT_HOME/www/docs -Recurse -Force'
+    - 'mkdir $KICKERMAT_HOME/www/docs'
+    - 'Copy-Item -Path $CI_PROJECT_DIR/docs/_site/* -Destination $KICKERMAT_HOME/www/docs -Recurse'
+
+release:
+  stage: release
+  tags:
+    - release
+  script: 
+    - 'Compress-Archive -Path $CI_PROJECT_DIR/framework/bin/Release -DestinationPath $KICKERMAT_HOME/www/builds/release -Force'

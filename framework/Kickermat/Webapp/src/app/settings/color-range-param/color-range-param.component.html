@@ -1,0 +1,53 @@
+<div class="gradient" [style.background]="getGradient()">
+</div>
+
+<div>
+  <div>Hue</div>
+  <div>
+    <ibm-slider
+      [min]="0"
+      [max]="360"
+      [step]="1"
+      [value]="hueRange"
+      [disabled]="isUpdating"
+      (valueChange)="update()"
+    >
+      <span minLabel>0°</span>
+      <span maxLabel>360°</span>
+    </ibm-slider>
+  </div>
+</div>
+
+<div>
+  <div>Saturation</div>
+  <div>
+    <ibm-slider
+      [min]="0"
+      [max]="100"
+      [step]="1"
+      [value]="satRange"
+      [disabled]="isUpdating"
+      (valueChange)="update()"
+    >
+      <span minLabel>0</span>
+      <span maxLabel>100</span>
+    </ibm-slider> 
+  </div>
+</div>
+
+<div>
+  <div>Value</div>
+  <div>
+    <ibm-slider
+      [min]="0"
+      [max]="100"
+      [step]="1"
+      [value]="valRange"
+      [disabled]="isUpdating"
+      (valueChange)="update()"
+    >
+      <span minLabel>0</span>
+      <span maxLabel>100</span>
+    </ibm-slider>
+  </div>
+</div>

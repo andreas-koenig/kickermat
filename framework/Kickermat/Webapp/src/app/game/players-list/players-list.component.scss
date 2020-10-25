@@ -1,0 +1,57 @@
+@import "styles";
+
+.player {
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: $layout-03;
+
+  &:focus {
+    border: 2px solid $focus;
+  }
+
+  &.selected {
+    border: 1px solid $ui-05;
+
+    .content {
+      padding: $spacing-05 calc(25% - 1px) $spacing-05 calc(#{$spacing-05} - 1px);
+    }
+  }
+
+  .emoji {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+    background: $ui-05;
+    text-shadow: 0 0 10px $icon-02;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-05 25% $spacing-05 $spacing-05;
+
+    .name {
+      @include carbon--type-style("productive-heading-03");
+    }
+
+    .authors {
+      @include carbon--type-style("productive-heading-01");
+      margin-top: $spacing-02;
+    }
+
+    .description {
+      @include carbon--type-style("body-long-02");
+      margin-top: $spacing-03;
+    }
+  }
+}
+
+.player-skeleton {
+  margin-bottom: $layout-03;
+
+  ibm-skeleton-text {
+    display: block;
+    margin-top: $spacing-05;
+  }
+}

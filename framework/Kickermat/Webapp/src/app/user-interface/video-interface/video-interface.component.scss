@@ -1,0 +1,87 @@
+@import "styles";
+
+#video {
+  background: $ui-05;
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .image {
+      max-width: 100%;
+      max-height: 100%;
+      display: none;
+
+      &.visible {
+        display: block;
+      }
+    }
+    
+    .error {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      p {
+        @include carbon--type-style("body-short-02");
+        color: $inverse-01;
+        text-align: center;
+        margin-bottom: $spacing-05;
+      }
+    }
+
+    &:hover {
+      .channels {
+        display: flex;
+        transition: display .5s ease-in-out;
+      }
+    }
+
+    .channels {
+      position: absolute;
+      align-self: end;
+      display: flex;
+      margin-bottom: $layout-01;
+      max-width: 100%;
+      padding: 0 $layout-01;
+      display: none;
+      transition: display .5s ease-in-out;
+
+      .channel {
+        margin-right: $layout-01;
+        width: 16rem;
+        background: $ui-05;
+        opacity: 0.9;
+        color: $inverse-01;
+        border: 1px solid $ui-05;
+        cursor: pointer;
+
+        &.selected, &:hover {
+          opacity: 1;
+          border: 1px solid $inverse-01;
+        }
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+
+        .content {
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          padding: $spacing-05;
+          
+          h3 {
+            @include carbon--type-style("productive-heading-03");
+          }
+
+          p {
+            @include carbon--type-style("body-short-02");
+            flex-grow: 1;
+          }
+        }
+      }
+    }
+  }
+}

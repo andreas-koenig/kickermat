@@ -1,0 +1,27 @@
+<ng-container *ngIf="camera">
+  <oth-page>
+
+    <oth-heading
+      [heading]="camera.name"
+      subHeading="Cameras"
+    >
+      <oth-peripheral-state
+        *ngIf="camera"
+        [peripheral]="camera">
+      </oth-peripheral-state>
+    </oth-heading>
+
+    <div ibmRow id="video">
+      <div ibmCol>
+        <oth-video-interface [videoSource]="camera"></oth-video-interface>
+      </div>
+    </div>
+
+    <div ibmRow id="settings">
+      <div ibmCol>
+        <oth-settings [id]="camera.id"></oth-settings>
+      </div>
+    </div>
+
+  </oth-page>
+</ng-container>

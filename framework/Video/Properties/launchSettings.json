@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Video": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

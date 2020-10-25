@@ -1,0 +1,23 @@
+<ibm-header [brand]="organization" [name]="application" route="">
+  <ibm-header-navigation>
+    <ibm-header-item [route]="['game']">Game</ibm-header-item>
+    <ibm-header-item [route]="['motor']">Motors</ibm-header-item>
+    <ibm-header-menu title="Cameras">
+      <ibm-header-item *ngFor="let cam of cameras" [route]="['camera']" [routeExtras]="getRouteExtras(cam)">
+        {{cam.name}}
+      </ibm-header-item>
+    </ibm-header-menu>
+  </ibm-header-navigation>
+  
+  <ibm-header-global>
+    <button
+      *ngIf="isGameRunning()"
+      ibmButton="danger"
+      class="stop-button"
+      (click)="stopGame()"
+    >
+      Stop game
+      <svg ibmIconStopFilled size="16" class="bx--btn__icon"></svg>
+    </button>
+  </ibm-header-global>
+</ibm-header>

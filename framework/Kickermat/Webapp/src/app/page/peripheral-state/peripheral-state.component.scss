@@ -1,0 +1,36 @@
+@import "styles";
+
+.state {
+  display: flex;
+  align-items: center;
+  padding: $spacing-03 $spacing-05;
+  background: $selected-ui;
+  border-radius: 2rem;
+
+  .dot {
+    border-radius: 8px;
+    width: $spacing-04;
+    height: $spacing-04;
+    margin-right: $spacing-04;
+
+    &.not-connected {
+      background: $inverse-02;
+    }
+
+    &.initializing {
+      background: $support-03;
+    }
+
+    &.error, &.drivers-not-installed {
+      background: $support-01;
+    }
+
+    &.ready {
+      background: $support-02;
+    }
+  }
+
+  .text {
+    @include carbon--type-style("code-02");
+  }
+}

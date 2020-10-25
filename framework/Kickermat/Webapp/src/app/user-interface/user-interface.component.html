@@ -1,0 +1,9 @@
+<ng-container *ngIf="interfaces">
+  <div *ngFor="let ui of interfaces">
+
+    <ng-container *ngIf="ui === uiEnum.Video">
+      <oth-video-interface [videoSource]="player"></oth-video-interface>
+    </ng-container>
+
+  </div>
+</ng-container>

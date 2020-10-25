@@ -1,0 +1,26 @@
+@import 'styles';
+
+.tab-content {
+  background: $ui-01;
+  padding-top: $spacing-08;
+  padding-bottom: $spacing-08;
+
+  .param {
+    margin-bottom: $spacing-08;
+
+    .name {
+      @include carbon--type-style("productive-heading-03");
+      margin-bottom: $spacing-02;
+    }
+
+    .description {
+      @include carbon--type-style("body-short-02");
+      margin-bottom: $layout-03;
+    }
+  }
+
+}
+
+.indent-span {
+  padding-left: $spacing-08;
+}

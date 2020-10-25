@@ -1,0 +1,83 @@
+<div *ngTemplateOutlet="isGameRunning() ? game : players">
+</div>
+
+<!-- No game running -->
+<ng-template #players>
+  <div ibmGrid id="game-not-running">
+    
+    <div ibmRow id="header">
+      <div ibmCol [columnNumbers]="{'lg': 5}">
+        <h1 class="heading">Kickermat - Game</h1>
+        <h2 class="players-heading">Kickermat players</h2>
+        <p class="introduction">
+          To start a game you have to select one
+          of the players listed below! Each of them
+          relies on different technologies and
+          comes with another set of features. Check
+          out which one you like the most!
+        </p>
+
+        <button
+          ibmButton="primary"
+          [disabled]="!player"
+          (click)="startGame()"
+        >
+          Start Game
+        </button>
+      </div>
+
+      <!-- Playing field SVG-->
+      <div ibmCol [columnNumbers]="{'lg': 6, 'md': 0, 'sm': 0}" class="playing-field bx--offset-lg-1">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1355px" height="867px" viewBox="-0.5 -0.5 1355 867">
+          <rect x="2" y="2" width="1350" height="860" rx="8.6" ry="8.6" fill="none" stroke-width="5" pointer-events="all"/>
+          <rect x="2" y="162" width="220" height="540" rx="2.2" ry="2.2" fill="none" stroke-width="5" pointer-events="all"/>
+          <rect x="1132" y="162" width="220" height="540" rx="2.2" ry="2.2" fill="none" stroke-width="5" pointer-events="all"/>
+          <rect x="2" y="307" width="80" height="250" rx="0.8" ry="0.8" fill="none" stroke-width="5" pointer-events="all"/>
+          <rect x="1272" y="307" width="80" height="250" rx="0.8" ry="0.8" fill="none" stroke-width="5" pointer-events="all"/>
+          <path d="M 677 862 L 677 2" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+          <ellipse cx="677" cy="432" rx="125" ry="125" fill="transparent" stroke-width="5" pointer-events="all"/>
+          <path d="M 1132.66 535.14 Q 1032 442 1132 337.5" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+          <path d="M 222.44 533.52 Q 322 442 222.44 335.88" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+          <ellipse class="filled" cx="677" cy="437" rx="5" ry="5" stroke-width="5" pointer-events="all"/>
+          <ellipse class="filled" cx="1207" cy="437" rx="5" ry="5" stroke-width="5" pointer-events="all"/>
+          <ellipse class="filled" cx="151" cy="437" rx="5" ry="5" stroke-width="5" pointer-events="all"/>
+          <path d="M 2 22 Q 22 22 22 2" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+          <path d="M 22 862 Q 22 842 2 842" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+          <path d="M 1332 2 Q 1332 22 1352 22" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+          <path d="M 1332 862 Q 1332 842 1352 842" fill="none" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke"/>
+        </svg>
+      </div>
+    </div>
+
+    <div ibmRow id="players">
+      <div ibmCol>
+        <oth-players (selected)="playerChanged($event)"></oth-players>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
+
+<!-- Game running -->
+<ng-template #game>
+  <oth-page id="game-running">
+
+    <oth-heading
+      [heading]="player ? player.name : 'Choose a player'"
+      subHeading="Game"
+    ></oth-heading>
+
+    <div ibmRow id="user-interface">
+      <div ibmCol>
+        <oth-user-interface [player]="player"></oth-user-interface>
+      </div>
+    </div>
+ 
+    <div ibmRow id="settings">
+      <div ibmCol>
+        <oth-settings [id]="player.id"></oth-settings>
+      </div>
+    </div>
+  
+  </oth-page>
+</ng-template>
